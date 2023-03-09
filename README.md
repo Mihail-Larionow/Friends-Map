@@ -1,2 +1,2 @@
 # Friends Map
-_Whatch out your friends!_
+_Watch out your friends!_

@@ -14,6 +14,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+        buildConfigField "String", "MAP_API_KEY", "\"" + properties.getProperty('MAP_API_KEY') + "\""
     }
 
     buildTypes {
@@ -29,7 +33,7 @@ android {
 }
 
 dependencies {
-
+    implementation 'com.yandex.android:maps.mobile:4.3.1-lite'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

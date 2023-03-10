@@ -3,38 +3,28 @@ package com.michel.friends_map;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.yandex.mapkit.Animation;
-import com.yandex.mapkit.MapKit;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
-import com.yandex.mapkit.layers.ObjectEvent;
+import com.yandex.mapkit.location.FilteringMode;
 import com.yandex.mapkit.location.Location;
 import com.yandex.mapkit.location.LocationListener;
+import com.yandex.mapkit.location.LocationManager;
 import com.yandex.mapkit.location.LocationStatus;
 import com.yandex.mapkit.map.CameraPosition;
-import com.yandex.mapkit.map.CompositeIcon;
-import com.yandex.mapkit.map.IconStyle;
-import com.yandex.mapkit.map.RotationType;
 import com.yandex.mapkit.mapview.MapView;
-import com.yandex.mapkit.user_location.UserLocationLayer;
-import com.yandex.mapkit.user_location.UserLocationObjectListener;
-import com.yandex.mapkit.user_location.UserLocationView;
-import com.yandex.runtime.image.ImageProvider;
-
-import java.util.Properties;
 
 public class MainActivity extends AppCompatActivity {
 
     private MapView mapView;
-    private UserLocationLayer userLocationLayer;
     private Point currentLocation;
+    private LocationListener locationListener;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,60 +32,81 @@ public class MainActivity extends AppCompatActivity {
         MapKitFactory.setApiKey(BuildConfig.MAP_API_KEY);
         MapKitFactory.initialize(this);
         setContentView(R.layout.activity_main);
-        mapView = (MapView)findViewById(R.id.mapview);
-        ImageView locationButton = (ImageView)findViewById(R.id.locationButton);
 
+        mapView = (MapView)findViewById(R.id.mapview);
+
+        ImageView locationButton = (ImageView)findViewById(R.id.locationButton);
         locationButtonClick(locationButton);
 
-        MapKit mapKit = MapKitFactory.getInstance();
+        locationListener = createListener();
+        locationManager = MapKitFactory.getInstance().createLocationManager();
+        locationManager.requestSingleUpdate(locationListener);
 
-        updateLocation(mapKit);
 
-        userLocationLayer = mapKit.createUserLocationLayer(mapView.getMapWindow());
-        userLocationLayer.setVisible(true);
+        User currentUser = new User(mapView);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.w("onStart()", "Started");
+        MapKitFactory.getInstance().onStart();
+        mapView.onStart();
+        subscribeToLocationUpdates();
     }
 
     @Override
     protected void onStop() {
         mapView.onStop();
         MapKitFactory.getInstance().onStop();
+        locationManager.unsubscribe(locationListener);
+        Log.w("onStop()", "Stopped");
         super.onStop();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MapKitFactory.getInstance().onStart();
-        mapView.onStart();
+    private void showLocation(Point location){
+        mapView.getMap().move(
+                new CameraPosition(location, 13.0f, 0.0f, 0.0f),
+                new Animation(Animation.Type.SMOOTH, 1),
+                null);
     }
 
-    private void updateLocation(MapKit mapKit){
-        mapKit.createLocationManager().requestSingleUpdate(new LocationListener() {
+    private LocationListener createListener(){
+        return new LocationListener() {
             @Override
             public void onLocationUpdated(@NonNull Location location) {
-                Log.d("TagCheck", "LocationUpdated " + location.getPosition().getLongitude());
-                Log.d("TagCheck", "LocationUpdated " + location.getPosition().getLatitude());
+                if(currentLocation == null){
+                    showLocation(location.getPosition());
+                }
                 currentLocation = location.getPosition();
-                mapView.getMap().move(
-                        new CameraPosition(location.getPosition(), 14.0f, 0.0f, 0.0f),
-                        new Animation(Animation.Type.SMOOTH, 1),
-                        null);
+                Log.w("Listener", "New location");
             }
 
             @Override
             public void onLocationStatusUpdated(@NonNull LocationStatus locationStatus) {
-
+                if (locationStatus == LocationStatus.NOT_AVAILABLE) {
+                    Log.w("ERROR", "Location is not available");
+                }
             }
-        });
+        };
+    }
+
+    private void subscribeToLocationUpdates(){
+        if(locationManager != null && locationListener != null){
+            locationManager.subscribeForLocationUpdates(
+                    0, 1000, 1, false, FilteringMode.OFF, locationListener
+            );
+            Log.w("LocationManager", "is Listening");
+        }
     }
 
     private void locationButtonClick(ImageView locationButton){
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.w("Button", currentLocation.getLatitude() + " " + currentLocation.getLongitude());
                 mapView.getMap().move(
-                        new CameraPosition(currentLocation, 14.0f, 0.0f, 0.0f),
+                        new CameraPosition(currentLocation, 13.0f, 0.0f, 0.0f),
                         new Animation(Animation.Type.SMOOTH, 1),
                         null);
             }

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "698257678975",
+    "firebase_url": "https://friends-map-558de-default-rtdb.firebaseio.com",
+    "project_id": "friends-map-558de",
+    "storage_bucket": "friends-map-558de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698257678975:android:94b4f1e0b0c814631b554a",
+        "android_client_info": {
+          "package_name": "com.michel.friends_map"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "698257678975-jtn8olaikj78buu35u9f3kgf550lni6l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAus7ZtONTfqYIh8E_c1e4aIqjXwXnUsY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "698257678975-jtn8olaikj78buu35u9f3kgf550lni6l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

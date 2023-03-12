@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
@@ -21,10 +22,12 @@ import com.yandex.mapkit.mapview.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final int ID = 1;
     private MapView mapView;
     private Point currentLocation;
     private LocationListener locationListener;
     private LocationManager locationManager;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         User currentUser = new User(mapView);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override
@@ -111,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
                         null);
             }
         });
+    }
+
+    private void database(){
+        Bundle bundle = new Bundle();
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
 }

@@ -25,13 +25,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final int ID = 1;
-    private MapView mapView;
-    private User currentUser;
-    private List<Friend> friends;
-    private LocationListener locationListener;
-    private LocationManager locationManager;
-    private DataBase dataBase;
+    private Map map;
+    private int USER_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,52 +40,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.w("onStart()", "Started");
         MapKitFactory.getInstance().onStart();
-        mapView.onStart();
-        subscribeToLocationUpdates();
+        map.start();
     }
 
     @Override
     protected void onStop() {
-        mapView.onStop();
+        map.stop();
         MapKitFactory.getInstance().onStop();
-        locationManager.unsubscribe(locationListener);
         Log.w("onStop()", "Stopped");
         super.onStop();
     }
 
     public void init(){
-        mapView = (MapView)findViewById(R.id.mapview);
-        currentUser = new User(mapView);
-        dataBase = new DataBase();
-        ImageView locationButton = (ImageView)findViewById(R.id.locationButton);
-        locationButtonClick(locationButton);
-        locationListener = currentUser.userLocationListener();
-        locationManager = MapKitFactory.getInstance().createLocationManager();
-        locationManager.requestSingleUpdate(locationListener);
-
-    }
-
-    private void subscribeToLocationUpdates(){
-        if(locationManager != null && locationListener != null){
-            locationManager.subscribeForLocationUpdates(
-                    0, 1000, 1, false, FilteringMode.OFF, locationListener
-            );
-            Log.w("LocationManager", "is Listening");
-        }
-    }
-
-    private void locationButtonClick(ImageView locationButton){
-        locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.w("Button", "Pressed");
-                currentUser.showUserLocation();
-                dataBase.saveData(currentUser);
-                dataBase.loadData(mapView);
-            }
-        });
+        DataBase dataBase = new DataBase(USER_ID);
+        map = new Map((MapView)findViewById(R.id.mapview), USER_ID, dataBase);
+        map.showUsers(dataBase);
+        map.setButtonOnListening((ImageView)findViewById(R.id.locationButton));
     }
 
 }

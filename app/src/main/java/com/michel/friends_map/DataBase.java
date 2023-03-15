@@ -17,22 +17,22 @@ import java.util.List;
 
 public class DataBase {
 
-    private MapView mapView;
     private final DatabaseReference database;
     private final String GROUP_KEY = "USERS";
-    private List<Friend> friends;
-    private int currentUserID = 2;
+    public List<Friend> friends;
+    private final int currentUserID;
 
-    public DataBase(){
+    public DataBase(int currentUserID){
+        this.currentUserID = currentUserID;
         database = FirebaseDatabase.getInstance().getReference(GROUP_KEY);
         database.addValueEventListener(dataChangeListener());
-        friends = new ArrayList<Friend>();
+        friends = new ArrayList<>();
         Log.w("DB", "Ready");
     }
 
     //Сохранение данных
-    public void saveData(User user){
-        DataPack dataPack = new DataPack(user.getUserLocation(), user.id);
+    public void saveUser(User user){
+        DataPack dataPack = new DataPack(user.getId(), user.getName(), user.getLocation());
         database.getDatabase().getReference(GROUP_KEY + "/" + dataPack.id).setValue(dataPack);
         Log.w("DB", "pushing data");
     }
@@ -40,7 +40,9 @@ public class DataBase {
     //Чтение данных
     public void loadData(MapView mapView){
         if(friends.size() > 0)
-            friends.get(0).showOnMap(mapView);
+            for(Friend friend : friends){
+                friend.showOnMap(mapView);
+            }
         else Log.w("Friends", "is empty ");
     }
 
@@ -53,8 +55,11 @@ public class DataBase {
                     DataPack dataPack = dataSnapshot.getValue(DataPack.class);
                     assert dataPack != null;
                     if(dataPack.id != currentUserID) {
-                        friends.add(new Friend(dataPack.location, dataPack.id));
-                        Log.w("DB", "reading data " + dataPack.id);
+                        Friend friend = new Friend();
+                        friend.setId(dataPack.id);
+                        friend.setLocation(dataPack.location);
+                        friends.add(friend);
+                        Log.w("DB", "reading user " + dataPack.id);
                     }
                 }
             }
@@ -67,18 +72,16 @@ public class DataBase {
     }
 
     private static class DataPack{
+        public int id;
+        public String name;
         public Point location;
-        private int id;
-        public DataPack(Point location, int id){
-            this.location = location;
+
+        public DataPack(int id, String name, Point location){
             this.id = id;
+            this.name = name;
+            this.location = location;
         }
-        public DataPack(){
+        public DataPack(){}
 
-        }
-
-        public int getId(){
-            return id;
-        }
     }
 }

@@ -18,16 +18,20 @@ import com.yandex.mapkit.location.LocationListener;
 import com.yandex.mapkit.location.LocationManager;
 import com.yandex.mapkit.location.LocationStatus;
 import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.map.MapObject;
 import com.yandex.mapkit.mapview.MapView;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private final int ID = 1;
     private MapView mapView;
-    private Point currentLocation;
+    private User currentUser;
+    private List<Friend> friends;
     private LocationListener locationListener;
     private LocationManager locationManager;
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private DataBase dataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,20 +39,7 @@ public class MainActivity extends AppCompatActivity {
         MapKitFactory.setApiKey(BuildConfig.MAP_API_KEY);
         MapKitFactory.initialize(this);
         setContentView(R.layout.activity_main);
-
-        mapView = (MapView)findViewById(R.id.mapview);
-
-        ImageView locationButton = (ImageView)findViewById(R.id.locationButton);
-        locationButtonClick(locationButton);
-
-        locationListener = createListener();
-        locationManager = MapKitFactory.getInstance().createLocationManager();
-        locationManager.requestSingleUpdate(locationListener);
-
-
-        User currentUser = new User(mapView);
-
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        init();
     }
 
     @Override
@@ -69,31 +60,16 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private void showLocation(Point location){
-        mapView.getMap().move(
-                new CameraPosition(location, 13.0f, 0.0f, 0.0f),
-                new Animation(Animation.Type.SMOOTH, 1),
-                null);
-    }
+    public void init(){
+        mapView = (MapView)findViewById(R.id.mapview);
+        currentUser = new User(mapView);
+        dataBase = new DataBase();
+        ImageView locationButton = (ImageView)findViewById(R.id.locationButton);
+        locationButtonClick(locationButton);
+        locationListener = currentUser.userLocationListener();
+        locationManager = MapKitFactory.getInstance().createLocationManager();
+        locationManager.requestSingleUpdate(locationListener);
 
-    private LocationListener createListener(){
-        return new LocationListener() {
-            @Override
-            public void onLocationUpdated(@NonNull Location location) {
-                if(currentLocation == null){
-                    showLocation(location.getPosition());
-                }
-                currentLocation = location.getPosition();
-                Log.w("Listener", "New location");
-            }
-
-            @Override
-            public void onLocationStatusUpdated(@NonNull LocationStatus locationStatus) {
-                if (locationStatus == LocationStatus.NOT_AVAILABLE) {
-                    Log.w("ERROR", "Location is not available");
-                }
-            }
-        };
     }
 
     private void subscribeToLocationUpdates(){
@@ -109,18 +85,12 @@ public class MainActivity extends AppCompatActivity {
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.w("Button", currentLocation.getLatitude() + " " + currentLocation.getLongitude());
-                mapView.getMap().move(
-                        new CameraPosition(currentLocation, 13.0f, 0.0f, 0.0f),
-                        new Animation(Animation.Type.SMOOTH, 1),
-                        null);
+                Log.w("Button", "Pressed");
+                currentUser.showUserLocation();
+                dataBase.saveData(currentUser);
+                dataBase.loadData(mapView);
             }
         });
-    }
-
-    private void database(){
-        Bundle bundle = new Bundle();
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
 }

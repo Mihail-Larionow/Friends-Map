@@ -5,6 +5,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import com.vk.api.sdk.VK;
 import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
@@ -28,13 +29,13 @@ public class Map {
     private final DataBase dataBase;
 
 
-    public Map(MapView mapView, int id, DataBase dataBase){
+    public Map(MapView mapView, int userID, DataBase dataBase){
         this.mapView = mapView;
         this.dataBase = dataBase;
         currentUser = new CurrentUser();
         currentUser.showOnMap(mapView);
-        currentUser.setName("Mihail");
-        currentUser.setId(id);
+        currentUser.setName("noname");
+        currentUser.setId(userID);
         friends = new ArrayList<>();
         locationManager = MapKitFactory.getInstance().createLocationManager();
     }

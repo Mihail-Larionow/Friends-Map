@@ -34,7 +34,7 @@ public class DataBase {
     public void saveUser(User user){
         DataPack dataPack = new DataPack(user.getId(), user.getName(), user.getLocation());
         database.getDatabase().getReference(GROUP_KEY + "/" + dataPack.id).setValue(dataPack);
-        Log.w("DB", "pushing data");
+        Log.w("DB", "pushing data id " + currentUserID);
     }
 
     //Чтение данных

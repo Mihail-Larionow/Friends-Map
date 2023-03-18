@@ -3,7 +3,7 @@ package com.michel.friends_map;
 import com.yandex.mapkit.geometry.Point;
 
 public abstract class User {
-    protected int id;
+    private int id;
     protected String name;
     protected Point location;
 

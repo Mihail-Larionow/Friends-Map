@@ -13,16 +13,20 @@ import com.vk.api.sdk.VK;
 import com.vk.api.sdk.auth.VKAccessToken;
 import com.vk.api.sdk.auth.VKAuthCallback;
 import com.vk.api.sdk.auth.VKScope;
+import com.vk.api.sdk.requests.VKRequest;
 import com.vk.api.sdk.utils.VKUtils;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.mapview.MapView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private Map map;
-    private int USER_ID = 1;
+    private CurrentUser currentUser;
+    private List<Friend> friends;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         MapKitFactory.getInstance().onStart();
         map.start();
-        USER_ID = VK.getUserId();
-        Log.w("ID", Integer.toString(USER_ID));
     }
 
     @Override
@@ -71,9 +73,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void init(){
-        USER_ID = VK.getUserId();
+        int USER_ID = VK.getUserId();
+        currentUser = new CurrentUser();
+        Log.w("ID", Integer.toString(USER_ID));
         DataBase dataBase = new DataBase(USER_ID);
         map = new Map((MapView)findViewById(R.id.mapview), USER_ID, dataBase);
+        dataBase.loadData(map.mapView);
         map.showUsers(dataBase);
         map.setButtonOnListening((ImageView)findViewById(R.id.locationButton));
     }

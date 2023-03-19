@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Map {
-    private final MapView mapView;
+    public final MapView mapView;
     private final LocationManager locationManager;
     private LocationListener locationListener;
     private final CurrentUser currentUser;
@@ -65,8 +65,6 @@ public class Map {
         mapButton.setOnClickListener(view -> {
             Log.w("Button", "Pressed");
             showLocation(currentUser.getLocation());
-            dataBase.saveUser(currentUser);
-            dataBase.loadData(mapView);
         });
     }
 

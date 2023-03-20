@@ -24,36 +24,26 @@ public class Map {
     public final MapView mapView;
     private final LocationManager locationManager;
     private LocationListener locationListener;
-    private final CurrentUser currentUser;
-    private List<Friend> friends;
-    private final DataBase dataBase;
 
 
-    public Map(MapView mapView, int userID, DataBase dataBase){
+    public Map(MapView mapView){
         this.mapView = mapView;
-        this.dataBase = dataBase;
-        currentUser = new CurrentUser();
-        currentUser.showOnMap(mapView);
-        currentUser.setName("noname");
-        currentUser.setId(userID);
-        friends = new ArrayList<>();
         locationManager = MapKitFactory.getInstance().createLocationManager();
     }
 
     public void start(){
         Log.w("Map", "Started");
         mapView.onStart();
-        setUserOnListening();
+
     }
     public void stop(){
-        removeUserFromListening();
         mapView.onStop();
         Log.w("Map", "Stopped");
     }
 
-    public void showUsers(DataBase dataBase){
-        Log.w("showUsers", "trying");
-        friends = dataBase.friends;
+    public void showUsers(CurrentUser currentUser, List<Friend> friends){
+        Log.w("showUsers", "is working");
+        currentUser.showOnMap();
         if(friends.size() > 0)
             for(Friend friend : friends){
                 friend.showOnMap(mapView);
@@ -61,11 +51,25 @@ public class Map {
         else Log.w("Friends", "is empty ");
     }
 
-    public void setButtonOnListening(ImageView mapButton){
+    public void setButtonOnListening(ImageView mapButton, CurrentUser currentUser){
         mapButton.setOnClickListener(view -> {
             Log.w("Button", "Pressed");
             showLocation(currentUser.getLocation());
         });
+    }
+
+    public void setUserOnListening(CurrentUser currentUser, DataBase dataBase){
+        locationListener = userLocationListener(currentUser, dataBase);
+        locationManager.requestSingleUpdate(locationListener);
+        locationManager.subscribeForLocationUpdates(
+                0, 1000, 1, false, FilteringMode.OFF, locationListener
+        );
+        Log.w("LocationManager", "is Listening");
+    }
+
+    public void removeUserFromListening(){
+        locationManager.unsubscribe(locationListener);
+        Log.w("LocationManager", "is not Listening");
     }
 
     private void showLocation(Point location){
@@ -76,21 +80,7 @@ public class Map {
         Log.w("Point", location.getLatitude() + " " + location.getLongitude());
     }
 
-    private void setUserOnListening(){
-        locationListener = userLocationListener();
-        locationManager.requestSingleUpdate(locationListener);
-        locationManager.subscribeForLocationUpdates(
-                0, 1000, 1, false, FilteringMode.OFF, locationListener
-        );
-        Log.w("LocationManager", "is Listening");
-    }
-
-    private void removeUserFromListening(){
-        locationManager.unsubscribe(locationListener);
-        Log.w("LocationManager", "is not Listening");
-    }
-
-    private LocationListener userLocationListener(){
+    private LocationListener userLocationListener(CurrentUser currentUser, DataBase dataBase){
         return new LocationListener() {
             @Override
             public void onLocationUpdated(@NonNull Location location) {

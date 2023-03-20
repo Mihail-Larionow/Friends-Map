@@ -8,9 +8,17 @@ public class CurrentUser extends User{
 
     private UserLocationLayer userLocationLayer;
 
-    public void showOnMap(MapView mapView){
-        userLocationLayer = MapKitFactory.getInstance().createUserLocationLayer(mapView.getMapWindow());
+    public CurrentUser(int id){
+        super();
+        this.setId(id);
+    }
+
+    public void showOnMap(){
         this.setVisible();
+    }
+
+    public void setUserLocationLayer(MapView mapView){
+        userLocationLayer = MapKitFactory.getInstance().createUserLocationLayer(mapView.getMapWindow());
     }
 
     public void setVisible(){

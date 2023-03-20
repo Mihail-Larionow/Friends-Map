@@ -24,9 +24,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private Map map;
-    private CurrentUser currentUser;
+    private DataBase dataBase;
     private List<Friend> friends;
-
+    private CurrentUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +42,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.w("onStart()", "Started");
         MapKitFactory.getInstance().onStart();
         map.start();
+        map.setUserOnListening(currentUser, dataBase);
+        dataBase.setOnDataChangeListening(friends, currentUser.getId());
+        map.showUsers(currentUser, friends);
     }
 
     @Override
     protected void onStop() {
+        map.removeUserFromListening();
         map.stop();
+        dataBase.removeFromDataChangeListening();
         MapKitFactory.getInstance().onStop();
         Log.w("onStop()", "Stopped");
         super.onStop();
@@ -72,15 +78,17 @@ public class MainActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void init(){
-        int USER_ID = VK.getUserId();
-        currentUser = new CurrentUser();
-        Log.w("ID", Integer.toString(USER_ID));
-        DataBase dataBase = new DataBase(USER_ID);
-        map = new Map((MapView)findViewById(R.id.mapview), USER_ID, dataBase);
-        dataBase.loadData(map.mapView);
-        map.showUsers(dataBase);
-        map.setButtonOnListening((ImageView)findViewById(R.id.locationButton));
+    private void init(){
+        Log.w("ID", Integer.toString(VK.getUserId()));
+        dataBase = new DataBase();
+        map = new Map((MapView)findViewById(R.id.mapview));
+        currentUser = new CurrentUser(VK.getUserId());
+        friends = new ArrayList<>();
+
+        currentUser.setUserLocationLayer(map.mapView);
+        map.setButtonOnListening((ImageView)findViewById(R.id.locationButton), currentUser);
+
+        Log.w("init()", "success");
     }
 
 }

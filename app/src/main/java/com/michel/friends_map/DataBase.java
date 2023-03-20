@@ -19,14 +19,10 @@ public class DataBase {
 
     private final DatabaseReference database;
     private final String GROUP_KEY = "USERS";
-    public List<Friend> friends;
-    private final int currentUserID;
+    private ValueEventListener eventListener;
 
-    public DataBase(int currentUserID){
-        this.currentUserID = currentUserID;
+    public DataBase(){
         database = FirebaseDatabase.getInstance().getReference(GROUP_KEY);
-        database.addValueEventListener(dataChangeListener());
-        friends = new ArrayList<>();
         Log.w("DB", "Ready");
     }
 
@@ -34,19 +30,19 @@ public class DataBase {
     public void saveUser(User user){
         DataPack dataPack = new DataPack(user.getId(), user.getName(), user.getLocation());
         database.getDatabase().getReference(GROUP_KEY + "/" + dataPack.id).setValue(dataPack);
-        Log.w("DB", "pushing data id " + currentUserID);
+        Log.w("DB", "pushing data id " + user.getId());
     }
 
-    //Чтение данных
-    public void loadData(MapView mapView){
-        if(friends.size() > 0)
-            for(Friend friend : friends){
-                friend.showOnMap(mapView);
-            }
-        else Log.w("Friends", "is empty ");
+    public void setOnDataChangeListening(List<Friend> friends, int currentUserID){
+        eventListener = dataChangeListener(friends, currentUserID);
+        database.addValueEventListener(eventListener);
     }
 
-    private ValueEventListener dataChangeListener() {
+    public void removeFromDataChangeListening(){
+        database.removeEventListener(eventListener);
+    }
+
+    private ValueEventListener dataChangeListener(List<Friend> friends, int currentUserID) {
         return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

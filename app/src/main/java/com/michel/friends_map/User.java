@@ -3,10 +3,14 @@ package com.michel.friends_map;
 import com.yandex.mapkit.geometry.Point;
 
 public abstract class User {
-    private int id;
+    protected int id;
     protected String name;
     protected Point location;
+    protected Placemark placemark_2;
 
+    public User(){
+        placemark_2 = new Placemark();
+    }
     public int getId() {
         return id;
     }

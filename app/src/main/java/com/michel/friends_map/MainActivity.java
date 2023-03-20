@@ -1,5 +1,7 @@
 package com.michel.friends_map;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,9 +12,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.vk.api.sdk.VK;
+import com.vk.api.sdk.VKApiConfig;
+import com.vk.api.sdk.VKApiManager;
 import com.vk.api.sdk.auth.VKAccessToken;
 import com.vk.api.sdk.auth.VKAuthCallback;
+import com.vk.api.sdk.auth.VKAuthenticationResult;
 import com.vk.api.sdk.auth.VKScope;
+import com.vk.api.sdk.exceptions.VKAuthException;
 import com.vk.api.sdk.requests.VKRequest;
 import com.vk.api.sdk.utils.VKUtils;
 import com.yandex.mapkit.MapKitFactory;
@@ -34,13 +40,16 @@ public class MainActivity extends AppCompatActivity {
         MapKitFactory.setApiKey(BuildConfig.MAP_API_KEY);
         MapKitFactory.initialize(this);
         setContentView(R.layout.activity_main);
-        VK.login(this);
-        init();
-
+        List<VKScope> scopes = new ArrayList<>();
+        scopes.add(VKScope.FRIENDS);
+        scopes.add(VKScope.PHOTOS);
+        ActivityResultLauncher authLauncher = VK.login(this, callback);
+        authLauncher.launch(scopes);
+        //init();
     }
 
-    @Override
-    protected void onStart() {
+    //@Override
+    protected void onStarts() {
         super.onStart();
         Log.w("onStart()", "Started");
         MapKitFactory.getInstance().onStart();
@@ -50,8 +59,22 @@ public class MainActivity extends AppCompatActivity {
         map.showUsers(currentUser, friends);
     }
 
-    @Override
-    protected void onStop() {
+
+    ActivityResultCallback callback = new ActivityResultCallback<VKAuthenticationResult>() {
+
+        @Override
+        public void onActivityResult(VKAuthenticationResult result) {
+            if (result instanceof VKAuthenticationResult.Success) {
+                // User passed authorization
+            }
+            if (result instanceof VKAuthenticationResult.Failed) {
+                // User didn't pass authorization
+            }
+        }
+    };
+
+    //@Override
+    protected void onStops() {
         map.removeUserFromListening();
         map.stop();
         dataBase.removeFromDataChangeListening();
@@ -60,29 +83,11 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        VKAuthCallback callback = new VKAuthCallback(){
-            @Override
-            public void onLoginFailed(int i) {
-                Toast.makeText(getApplicationContext(), "Authorisation failed", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onLogin(@NonNull VKAccessToken vkAccessToken) {
-
-            }
-        };
-
-        if(data == null || !VK.onActivityResult(requestCode, resultCode, data, callback))
-            super.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void init(){
-        Log.w("ID", Integer.toString(VK.getUserId()));
+        Log.w("ID", VK.getUserId().toString());
         dataBase = new DataBase();
         map = new Map((MapView)findViewById(R.id.mapview));
-        currentUser = new CurrentUser(VK.getUserId());
+        currentUser = new CurrentUser(VK.getUserId().toString());
         friends = new ArrayList<>();
 
         currentUser.setUserLocationLayer(map.mapView);

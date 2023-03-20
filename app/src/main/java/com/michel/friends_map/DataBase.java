@@ -33,7 +33,7 @@ public class DataBase {
         Log.w("DB", "pushing data id " + user.getId());
     }
 
-    public void setOnDataChangeListening(List<Friend> friends, int currentUserID){
+    public void setOnDataChangeListening(List<Friend> friends, String currentUserID){
         eventListener = dataChangeListener(friends, currentUserID);
         database.addValueEventListener(eventListener);
     }
@@ -42,7 +42,7 @@ public class DataBase {
         database.removeEventListener(eventListener);
     }
 
-    private ValueEventListener dataChangeListener(List<Friend> friends, int currentUserID) {
+    private ValueEventListener dataChangeListener(List<Friend> friends, String currentUserID) {
         return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -68,11 +68,11 @@ public class DataBase {
     }
 
     private static class DataPack{
-        public int id;
+        public String id;
         public String name;
         public Point location;
 
-        public DataPack(int id, String name, Point location){
+        public DataPack(String id, String name, Point location){
             this.id = id;
             this.name = name;
             this.location = location;

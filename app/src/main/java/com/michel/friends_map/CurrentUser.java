@@ -8,7 +8,7 @@ public class CurrentUser extends User{
 
     private UserLocationLayer userLocationLayer;
 
-    public CurrentUser(int id){
+    public CurrentUser(String id){
         super();
         this.setId(id);
     }

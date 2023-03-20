@@ -50,7 +50,7 @@ public class DataBase {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     DataPack dataPack = dataSnapshot.getValue(DataPack.class);
                     assert dataPack != null;
-                    if(dataPack.id != currentUserID) {
+                    if(!dataPack.id.equals(currentUserID)) {
                         Friend friend = new Friend();
                         friend.setId(dataPack.id);
                         friend.setLocation(dataPack.location);

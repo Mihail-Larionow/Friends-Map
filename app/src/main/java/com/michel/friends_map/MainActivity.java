@@ -5,22 +5,18 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.vk.api.sdk.VK;
-import com.vk.api.sdk.VKApiConfig;
-import com.vk.api.sdk.VKApiManager;
-import com.vk.api.sdk.auth.VKAccessToken;
-import com.vk.api.sdk.auth.VKAuthCallback;
+import com.vk.api.sdk.VKApiCallback;
 import com.vk.api.sdk.auth.VKAuthenticationResult;
 import com.vk.api.sdk.auth.VKScope;
-import com.vk.api.sdk.exceptions.VKAuthException;
 import com.vk.api.sdk.requests.VKRequest;
-import com.vk.api.sdk.utils.VKUtils;
+import com.vk.sdk.api.friends.FriendsService;
+import com.vk.sdk.api.friends.dto.FriendsGetFieldsResponse;
+import com.vk.sdk.api.users.dto.UsersUserFull;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.mapview.MapView;
 
@@ -43,38 +39,26 @@ public class MainActivity extends AppCompatActivity {
         List<VKScope> scopes = new ArrayList<>();
         scopes.add(VKScope.FRIENDS);
         scopes.add(VKScope.PHOTOS);
-        ActivityResultLauncher authLauncher = VK.login(this, callback);
+        ActivityResultLauncher authLauncher = VK.login(this, getVKCallback());
         authLauncher.launch(scopes);
-        //init();
+        init();
+
     }
 
-    //@Override
-    protected void onStarts() {
+    @Override
+    protected void onStart() {
         super.onStart();
         Log.w("onStart()", "Started");
         MapKitFactory.getInstance().onStart();
+        getFriends();
         map.start();
         map.setUserOnListening(currentUser, dataBase);
         dataBase.setOnDataChangeListening(friends, currentUser.getId());
         map.showUsers(currentUser, friends);
     }
 
-
-    ActivityResultCallback callback = new ActivityResultCallback<VKAuthenticationResult>() {
-
-        @Override
-        public void onActivityResult(VKAuthenticationResult result) {
-            if (result instanceof VKAuthenticationResult.Success) {
-                // User passed authorization
-            }
-            if (result instanceof VKAuthenticationResult.Failed) {
-                // User didn't pass authorization
-            }
-        }
-    };
-
-    //@Override
-    protected void onStops() {
+    @Override
+    protected void onStop() {
         map.removeUserFromListening();
         map.stop();
         dataBase.removeFromDataChangeListening();
@@ -96,4 +80,33 @@ public class MainActivity extends AppCompatActivity {
         Log.w("init()", "success");
     }
 
+    private ActivityResultCallback getVKCallback() {
+        return (ActivityResultCallback<VKAuthenticationResult>) result -> {
+            if (result instanceof VKAuthenticationResult.Success) {
+                Log.w("Authorization", "passed");
+            }
+            if (result instanceof VKAuthenticationResult.Failed) {
+                Log.w("Authorization", "didn't pass");
+            }
+        };
+    }
+
+    private void getFriends(){
+        VKRequest<FriendsGetFieldsResponse> request = new FriendsService().friendsGet(VK.getUserId(), null, null, null,
+                null,null,null, null);
+        Log.w("getFriends()", "starts");
+        VK.execute(request, new VKApiCallback<FriendsGetFieldsResponse>() {
+            @Override
+            public void success(FriendsGetFieldsResponse friendsGetFieldsResponse) {
+                Log.w("Friends number: ", Integer.toString(friendsGetFieldsResponse.getCount()));
+            }
+
+            @Override
+            public void fail(@NonNull Exception e) {
+                Log.w("Friends number: ", e.toString());
+            }
+        });
+
+        Log.w("getFriends()", "stops");
+    }
 }

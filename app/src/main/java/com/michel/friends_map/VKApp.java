@@ -2,6 +2,7 @@ package com.michel.friends_map;
 
 import android.app.Application;
 import android.content.Intent;
+import android.util.Log;
 
 import com.vk.api.sdk.VK;
 import com.vk.api.sdk.VKTokenExpiredHandler;
@@ -16,7 +17,9 @@ public class VKApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.w("App", "OnCreate() starts");
         VK.addTokenExpiredHandler(tokenTracker);
         VK.initialize(this);
+        Log.w("App", "OnCreate() stops");
     }
 }

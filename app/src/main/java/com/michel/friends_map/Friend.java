@@ -1,9 +1,5 @@
 package com.michel.friends_map;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.Log;
 import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.mapview.MapView;
@@ -13,6 +9,7 @@ public class Friend extends User{
 
     private PlacemarkMapObject placemark;
     private MapView mapView;
+    private Placemark placemark_2 = new Placemark();
 
     public void showOnMap(MapView mapView){
         this.mapView = mapView;

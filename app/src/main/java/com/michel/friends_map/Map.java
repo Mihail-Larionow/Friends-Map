@@ -41,9 +41,8 @@ public class Map {
         Log.w("Map", "Stopped");
     }
 
-    public void showUsers(CurrentUser currentUser, List<Friend> friends){
-        Log.w("showUsers", "is working");
-        currentUser.showOnMap();
+    public void showFriends(List<Friend> friends){
+        Log.w("showFriends", "is working");
         if(friends.size() > 0)
             for(Friend friend : friends){
                 friend.showOnMap(mapView);

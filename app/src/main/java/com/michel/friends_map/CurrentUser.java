@@ -13,12 +13,9 @@ public class CurrentUser extends User{
         this.setId(id);
     }
 
-    public void showOnMap(){
-        this.setVisible();
-    }
-
     public void setUserLocationLayer(MapView mapView){
         userLocationLayer = MapKitFactory.getInstance().createUserLocationLayer(mapView.getMapWindow());
+        this.setVisible();
     }
 
     public void setVisible(){

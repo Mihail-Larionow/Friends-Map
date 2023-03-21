@@ -2,6 +2,7 @@ package com.michel.friends_map;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -11,8 +12,14 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.vk.api.sdk.VK;
+import com.vk.api.sdk.VKApiValidationHandler;
 import com.vk.api.sdk.auth.VKAuthenticationResult;
 import com.vk.api.sdk.auth.VKScope;
+import com.vk.api.sdk.requests.VKRequest;
+import com.vk.api.sdk.utils.VKUtils;
+import com.vk.sdk.api.friends.FriendsService;
+import com.vk.sdk.api.photos.PhotosService;
+import com.vk.sdk.api.photos.dto.PhotosPhotoFull;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.mapview.MapView;
 
@@ -32,6 +39,8 @@ public class MapActivity extends AppCompatActivity {
         MapKitFactory.setApiKey(BuildConfig.MAP_API_KEY);
         MapKitFactory.initialize(this);
         setContentView(R.layout.activity_map);
+
+
         init();
     }
 
@@ -88,6 +97,9 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    private void getAvatar(){
+    }
+
     private boolean checkPermissions(){
         if (ActivityCompat.checkSelfPermission(MapActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(MapActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -97,4 +109,5 @@ public class MapActivity extends AppCompatActivity {
             return true;
         }
     }
+
 }

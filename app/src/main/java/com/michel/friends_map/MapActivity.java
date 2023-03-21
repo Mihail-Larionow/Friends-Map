@@ -12,17 +12,21 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.vk.api.sdk.VK;
+import com.vk.api.sdk.VKApiManager;
 import com.vk.api.sdk.VKApiValidationHandler;
 import com.vk.api.sdk.auth.VKAuthenticationResult;
 import com.vk.api.sdk.auth.VKScope;
+import com.vk.api.sdk.exceptions.VKApiException;
+import com.vk.api.sdk.internal.ApiCommand;
 import com.vk.api.sdk.requests.VKRequest;
 import com.vk.api.sdk.utils.VKUtils;
 import com.vk.sdk.api.friends.FriendsService;
 import com.vk.sdk.api.photos.PhotosService;
-import com.vk.sdk.api.photos.dto.PhotosPhotoFull;
+
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.mapview.MapView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +102,7 @@ public class MapActivity extends AppCompatActivity {
     }
 
     private void getAvatar(){
+
     }
 
     private boolean checkPermissions(){

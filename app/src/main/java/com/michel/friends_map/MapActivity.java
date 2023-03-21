@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.michel.friends_map.VKCommands.VKFriendsCommand;
 import com.vk.api.sdk.VK;
 import com.vk.api.sdk.VKApiManager;
 import com.vk.api.sdk.VKApiValidationHandler;
@@ -98,7 +99,28 @@ public class MapActivity extends AppCompatActivity {
 
 
     private void getFriends(){
+        Thread thread = new Thread(new Runnable() {
 
+            @Override
+            public void run() {
+                try  {
+                    VKFriendsCommand command = new VKFriendsCommand();
+                    try {
+                        VK.executeSync(command);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (VKApiException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
     }
 
     private void getAvatar(){

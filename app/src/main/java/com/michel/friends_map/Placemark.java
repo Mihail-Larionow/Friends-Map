@@ -17,6 +17,10 @@ import com.vk.api.sdk.VKApiManager;
 import com.vk.api.sdk.auth.VKScope;
 import com.vk.api.sdk.exceptions.VKApiCodes;
 import com.vk.api.sdk.exceptions.VKApiException;
+import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.mapview.MapView;
+import com.yandex.runtime.image.ImageProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,14 +33,32 @@ public class Placemark {
     public Object imageUrl;
     public Bitmap avatarBitmap;
     private String userID;
-    private Object lock;
-    public Placemark(String userID){
+    private Utils utils;
+    private PlacemarkMapObject placemark;
+
+    public Placemark(MapView mapView, String userID, Point location){
         this.userID = userID;
+        placemark = mapView.getMap().getMapObjects().addPlacemark(location);
+        placemark.setOpacity(1);
+        placemark.setDraggable(false);
+        placemark.setIcon(ImageProvider.fromBitmap(this.draw()));
         draw();
     }
 
+    public void setLocation(Point location){
+        placemark.setGeometry(location);
+    }
+
+    public Bitmap draw(){
+        utils = new Utils();
+        getAvatarUrl(userID);
+        getAvatarBitmap(imageUrl.toString());
+
+        Log.w("Bitmap", avatarBitmap.toString());
+        return drawPlacemark();
+    }
+
     public Bitmap drawPlacemark() {
-        String name = "Mihail";
         int picSize = 192;
         Paint paint = new Paint();
         Bitmap bitmap = Bitmap.createBitmap(picSize, picSize, Bitmap.Config.ARGB_8888);
@@ -57,9 +79,11 @@ public class Placemark {
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(20);
-        canvas.drawCircle(picSize / 2, picSize / 2, radius, paint);
+        canvas.drawCircle(picSize / 2, picSize / 2, picSize / 2 - 10, paint);
         return bitmap;
     }
+
+
 
     private void getAvatarUrl(String userID){
 
@@ -70,9 +94,7 @@ public class Placemark {
                     VKAvatarCommand command = new VKAvatarCommand(userID);
                     imageUrl = VK.executeSync(command);
                     Log.w("Thread", imageUrl.toString());
-                    synchronized (lock){
-                        lock.notify();
-                    }
+                    utils.lockNotify();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -80,7 +102,7 @@ public class Placemark {
             }
         });
         thread.start();
-        lockWait();
+        utils.lockWait();
     }
 
     private void getAvatarBitmap(String imageUrl){
@@ -95,9 +117,7 @@ public class Placemark {
                     connection.connect();
                     InputStream input = connection.getInputStream();
                     avatarBitmap = BitmapFactory.decodeStream(input);
-                    synchronized (lock){
-                        lock.notify();
-                    }
+                    utils.lockNotify();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -105,26 +125,8 @@ public class Placemark {
         });
 
         thread.start();
-        lockWait();
+        utils.lockWait();
     }
 
-    public Bitmap draw(){
-        lock = new Object();
-        getAvatarUrl(userID);
 
-        getAvatarBitmap(imageUrl.toString());
-
-        Log.w("Bitmap", avatarBitmap.toString());
-        return drawPlacemark();
-    }
-
-    public void lockWait() {
-        synchronized (lock) {
-            try {
-                lock.wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 }

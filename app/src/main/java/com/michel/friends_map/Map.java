@@ -41,15 +41,6 @@ public class Map {
         Log.w("Map", "Stopped");
     }
 
-    public void showFriends(List<Friend> friends){
-        Log.w("showFriends", "is working");
-        if(friends.size() > 0)
-            for(Friend friend : friends){
-                friend.showOnMap(mapView);
-            }
-        else Log.w("Friends", "is empty ");
-    }
-
     public void setButtonOnListening(ImageView mapButton, CurrentUser currentUser){
         mapButton.setOnClickListener(view -> {
             Log.w("Button", "Pressed");

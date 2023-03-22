@@ -30,14 +30,17 @@ import com.yandex.mapkit.mapview.MapView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class MapActivity extends AppCompatActivity {
 
     private Map map;
     private DataBase dataBase;
-    private List<Friend> friends;
     private CurrentUser currentUser;
+
+    HashMap<String, User> dictionary = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +48,6 @@ public class MapActivity extends AppCompatActivity {
         MapKitFactory.setApiKey(BuildConfig.MAP_API_KEY);
         MapKitFactory.initialize(this);
         setContentView(R.layout.activity_map);
-
-
         init();
     }
 
@@ -55,15 +56,12 @@ public class MapActivity extends AppCompatActivity {
         super.onStart();
         Log.w("onStart()", "Started");
         MapKitFactory.getInstance().onStart();
-        getFriends();
         map.start();
-        dataBase.setOnDataChangeListening(map.mapView, friends, currentUser.getId());
+        dataBase.setOnDataChangeListening(map.mapView, dictionary);
         if(checkPermissions()){
             Log.w("checkPermissions()", "Okay");
             map.setUserOnListening(currentUser, dataBase);
-            map.showFriends(friends);
         }
-
     }
     @Override
     protected void onResume(){
@@ -71,7 +69,6 @@ public class MapActivity extends AppCompatActivity {
         if(checkPermissions()){
             Log.w("checkPermissions()", "Okay");
             map.setUserOnListening(currentUser, dataBase);
-            map.showFriends(friends);
         }
     }
 
@@ -90,17 +87,12 @@ public class MapActivity extends AppCompatActivity {
         dataBase = new DataBase();
         map = new Map((MapView)findViewById(R.id.mapview));
         currentUser = new CurrentUser(VK.getUserId().toString());
-        friends = new ArrayList<>();
+        dataBase.setCurrentUserID(currentUser.getId());
 
         currentUser.setUserLocationLayer(map.mapView);
         map.setButtonOnListening((ImageView)findViewById(R.id.locationButton), currentUser);
 
         Log.w("init()", "success");
-    }
-
-
-    private void getFriends(){
-
     }
 
     private boolean checkPermissions(){

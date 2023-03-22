@@ -14,7 +14,6 @@ public class CurrentUser extends User{
 
     public void setUserLocationLayer(MapView mapView){
         userLocationLayer = MapKitFactory.getInstance().createUserLocationLayer(mapView.getMapWindow());
-        this.setVisible();
     }
 
     public void setVisible(){

@@ -1,16 +1,21 @@
 package com.michel.friends_map;
 
-import com.yandex.mapkit.geometry.Point;
+import android.util.Log;
 
-public abstract class User {
+import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.mapview.MapView;
+import com.yandex.runtime.image.ImageProvider;
+
+public class User {
     protected String id;
     protected String name;
     protected Point location;
-    protected Placemark placemark_view;
+    protected Placemark placemark;
+    private MapView mapView;
 
     public User(String id){
         this.id = id;
-        placemark_view = new Placemark(id);
     }
     public String getId() {
         return id;
@@ -35,4 +40,14 @@ public abstract class User {
     public void setLocation(Point location) {
         this.location = location;
     }
+
+    public void addPlacemark(MapView mapView){
+        placemark = new Placemark(mapView, id, location);
+        Log.w("Friend", "placemark is added");
+    }
+
+    public void movePlacemark(Point location){
+        placemark.setLocation(location);
+    }
+
 }

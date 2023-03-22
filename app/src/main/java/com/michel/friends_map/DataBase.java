@@ -51,8 +51,7 @@ public class DataBase {
                     DataPack dataPack = dataSnapshot.getValue(DataPack.class);
                     assert dataPack != null;
                     if(!dataPack.id.equals(currentUserID)) {
-                        Friend friend = new Friend();
-                        friend.setId(dataPack.id);
+                        Friend friend = new Friend(dataPack.id);
                         friend.setLocation(dataPack.location);
                         friend.showOnMap(mapView);
                         friends.add(friend);

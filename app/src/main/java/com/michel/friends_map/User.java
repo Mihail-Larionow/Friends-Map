@@ -6,10 +6,11 @@ public abstract class User {
     protected String id;
     protected String name;
     protected Point location;
-    protected Placemark placemark_2;
+    protected Placemark placemark_view;
 
-    public User(){
-        placemark_2 = new Placemark();
+    public User(String id){
+        this.id = id;
+        placemark_view = new Placemark(id);
     }
     public String getId() {
         return id;

@@ -9,14 +9,17 @@ public class Friend extends User{
 
     private PlacemarkMapObject placemark;
     private MapView mapView;
-    private Placemark placemark_2 = new Placemark();
+
+    public Friend(String id){
+        super(id);
+    }
 
     public void showOnMap(MapView mapView){
         this.mapView = mapView;
         placemark = mapView.getMap().getMapObjects().addPlacemark(location);
         placemark.setOpacity(1);
         placemark.setDraggable(false);
-        placemark.setIcon(ImageProvider.fromBitmap(placemark_2.drawPlacemark()));
+        placemark.setIcon(ImageProvider.fromBitmap(placemark_view.drawPlacemark()));
         Log.w("Friend", "placemark is added");
     }
 

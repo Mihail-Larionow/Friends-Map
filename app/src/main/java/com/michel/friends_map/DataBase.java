@@ -9,12 +9,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.michel.friends_map.YandexMap.Map;
 import com.michel.friends_map.VKCommands.VKFriendsCommand;
 import com.vk.api.sdk.VK;
 import com.yandex.mapkit.geometry.Point;
-import com.yandex.mapkit.mapview.MapView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,13 +29,9 @@ public class DataBase {
         Log.w("DB", "Ready");
     }
 
-    public void setCurrentUserID(String currentUserID){
-        this.currentUserID = currentUserID;
-    }
-
-    public void setOnDataChangeListening(MapView mapView, HashMap<String, User> users){
+    public void setOnDataChangeListening(Map map, HashMap<String, User> users){
         loadFriends();
-        eventListener = dataChangeListener(mapView, users);
+        eventListener = dataChangeListener(map, users);
         database.addValueEventListener(eventListener);
     }
 
@@ -44,14 +39,18 @@ public class DataBase {
         database.removeEventListener(eventListener);
     }
 
+    public void setCurrentUserID(String currentUserID){
+        this.currentUserID = currentUserID;
+    }
+
     //Сохранение данных
     public void saveUser(User user){
-        DataPack dataPack = new DataPack(user.getId(), user.getName(), user.getLocation());
+        DataPack dataPack = new DataPack(user.getId(), user.getLocation());
         database.getDatabase().getReference(GROUP_KEY + "/" + dataPack.id).setValue(dataPack);
         Log.w("DB", "pushing data id " + user.getId());
     }
 
-    private ValueEventListener dataChangeListener(MapView mapView, HashMap<String, User> users) {
+    private ValueEventListener dataChangeListener(Map map, HashMap<String, User> users) {
         return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -59,11 +58,11 @@ public class DataBase {
                     DataPack dataPack = dataSnapshot.getValue(DataPack.class);
                     assert dataPack != null;
                     String id = dataPack.id;
-                    if(friendList.contains(id) || id.equals(currentUserID)) {
+                    if(friendList.contains(id)) {
                         if (!users.containsKey(id)) {
                             users.put(id, new User(id));
                             users.get(id).setLocation(dataPack.location);
-                            users.get(id).addPlacemark(mapView);
+                            users.get(id).addPlacemark(map);
                         } else {
                             users.get(dataPack.id).movePlacemark(dataPack.location);
                         }
@@ -80,36 +79,33 @@ public class DataBase {
         };
     }
 
+    private void loadFriends(){
+        Utils utils = new Utils();
+        Thread thread = new Thread(() -> {
+            VKFriendsCommand command = new VKFriendsCommand();
+            try {
+                friendList = VK.executeSync(command);
+                Log.w("getFriends", friendList.toString());
+                utils.lockNotify();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        thread.start();
+        utils.lockWait();
+    }
+
     private static class DataPack{
+
         public String id;
-        public String name;
         public Point location;
 
-        public DataPack(String id, String name, Point location){
+        public DataPack(String id, Point location){
             this.id = id;
-            this.name = name;
             this.location = location;
         }
         public DataPack(){}
 
     }
 
-    private void loadFriends(){
-        Utils utils = new Utils();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                VKFriendsCommand command = new VKFriendsCommand();
-                try {
-                    friendList = VK.executeSync(command);
-                    Log.w("getFriends", friendList.toString());
-                    utils.lockNotify();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-        thread.start();
-        utils.lockWait();
-    }
 }

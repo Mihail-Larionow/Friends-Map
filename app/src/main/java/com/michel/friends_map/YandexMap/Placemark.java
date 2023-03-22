@@ -1,4 +1,4 @@
-package com.michel.friends_map;
+package com.michel.friends_map.YandexMap;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,38 +11,38 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.michel.friends_map.Utils;
 import com.michel.friends_map.VKCommands.VKAvatarCommand;
 import com.vk.api.sdk.VK;
-import com.vk.api.sdk.VKApiManager;
-import com.vk.api.sdk.auth.VKScope;
-import com.vk.api.sdk.exceptions.VKApiCodes;
-import com.vk.api.sdk.exceptions.VKApiException;
 import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.map.MapObject;
+import com.yandex.mapkit.map.MapObjectTapListener;
 import com.yandex.mapkit.map.PlacemarkMapObject;
-import com.yandex.mapkit.mapview.MapView;
 import com.yandex.runtime.image.ImageProvider;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Placemark {
 
     public Object imageUrl;
     public Bitmap avatarBitmap;
-    private String userID;
+    private final String userID;
     private Utils utils;
-    private PlacemarkMapObject placemark;
+    private Point location;
+    private final PlacemarkMapObject placemark;
 
-    public Placemark(MapView mapView, String userID, Point location){
+    public Placemark(Map map, String userID, Point location){
         this.userID = userID;
-        placemark = mapView.getMap().getMapObjects().addPlacemark(location);
+        this.location = location;
+        placemark = map.mapView.getMap().getMapObjects().addPlacemark(location);
         placemark.setOpacity(1);
         placemark.setDraggable(false);
         placemark.setIcon(ImageProvider.fromBitmap(this.draw()));
-        draw();
+        setOnTapListener(map);
     }
 
     public void setLocation(Point location){
@@ -53,7 +53,6 @@ public class Placemark {
         utils = new Utils();
         getAvatarUrl(userID);
         getAvatarBitmap(imageUrl.toString());
-
         Log.w("Bitmap", avatarBitmap.toString());
         return drawPlacemark();
     }
@@ -83,22 +82,16 @@ public class Placemark {
         return bitmap;
     }
 
-
-
     private void getAvatarUrl(String userID){
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try  {
-                    VKAvatarCommand command = new VKAvatarCommand(userID);
-                    imageUrl = VK.executeSync(command);
-                    Log.w("Thread", imageUrl.toString());
-                    utils.lockNotify();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        Thread thread = new Thread(() -> {
+            try  {
+                VKAvatarCommand command = new VKAvatarCommand(userID);
+                imageUrl = VK.executeSync(command);
+                Log.w("Thread", imageUrl.toString());
+                utils.lockNotify();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
         thread.start();
@@ -107,26 +100,31 @@ public class Placemark {
 
     private void getAvatarBitmap(String imageUrl){
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL(imageUrl);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setDoInput(true);
-                    connection.connect();
-                    InputStream input = connection.getInputStream();
-                    avatarBitmap = BitmapFactory.decodeStream(input);
-                    utils.lockNotify();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+        Thread thread = new Thread(() -> {
+            try {
+                URL url = new URL(imageUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                avatarBitmap = BitmapFactory.decodeStream(input);
+                utils.lockNotify();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         });
-
         thread.start();
         utils.lockWait();
     }
 
+    private void setOnTapListener(Map map){
+        placemark.addTapListener(new MapObjectTapListener() {
+            @Override
+            public boolean onMapObjectTap(@NonNull MapObject mapObject, @NonNull Point point) {
+                map.showLocation(location);
+                return false;
+            }
+        });
+    }
 
 }

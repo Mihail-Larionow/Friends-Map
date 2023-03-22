@@ -19,7 +19,7 @@ public class Friend extends User{
         placemark = mapView.getMap().getMapObjects().addPlacemark(location);
         placemark.setOpacity(1);
         placemark.setDraggable(false);
-        placemark.setIcon(ImageProvider.fromBitmap(placemark_view.drawPlacemark()));
+        placemark.setIcon(ImageProvider.fromBitmap(placemark_view.draw()));
         Log.w("Friend", "placemark is added");
     }
 

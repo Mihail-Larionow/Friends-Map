@@ -19,6 +19,8 @@ import com.yandex.mapkit.location.LocationStatus;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.mapview.MapView;
 
+import java.util.Date;
+
 public class Map {
 
     private Utils utils;
@@ -69,11 +71,8 @@ public class Map {
     public void setButtonOnListening(ImageView mapButton, User currentUser){
         mapButton.setOnClickListener(view -> {
             Log.w("Button", "Pressed");
-            try{
+            if(currentUser.getLocation() != null)
                 showLocation(currentUser.getLocation());
-            }catch (Exception e){
-
-            }
         });
     }
 
@@ -82,6 +81,7 @@ public class Map {
             @Override
             public void onLocationUpdated(@NonNull Location location) {
                 Point currentLocation = location.getPosition();
+                currentUser.setDateTime(new Date().getTime());
                 showLocation(location.getPosition());
                 if(currentUser.getLocation() == null){
                     currentUser.setLocation(currentLocation);

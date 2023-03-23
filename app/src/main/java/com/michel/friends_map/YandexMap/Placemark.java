@@ -25,6 +25,8 @@ import com.yandex.runtime.image.ImageProvider;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Placemark {
 
@@ -33,15 +35,22 @@ public class Placemark {
     private final String userID;
     private Utils utils;
     private Point location;
+    private long dateTime;
+    private final int PLACEMARK_SIZE = 192;
+    private final int LABEL_HEIGHT = 32;
+    private final int LABEL_WIDTH = 128;
+
+
     private final PlacemarkMapObject placemark;
 
-    public Placemark(Map map, String userID, Point location){
+    public Placemark(Map map, String userID, Point location, long dateTime){
         this.userID = userID;
         this.location = location;
+        this.dateTime = dateTime;
         placemark = map.mapView.getMap().getMapObjects().addPlacemark(location);
         placemark.setOpacity(1);
         placemark.setDraggable(false);
-        placemark.setIcon(ImageProvider.fromBitmap(this.draw()));
+        placemark.setIcon(ImageProvider.fromBitmap(this.drawPlacemark()));
         setOnTapListener(map);
     }
 
@@ -49,36 +58,49 @@ public class Placemark {
         placemark.setGeometry(location);
     }
 
-    public Bitmap draw(){
+    public Bitmap drawPlacemark(){
         utils = new Utils();
         getAvatarUrl(userID);
         getAvatarBitmap(imageUrl.toString());
         Log.w("Bitmap", avatarBitmap.toString());
-        return drawPlacemark();
+        return draw();
     }
 
-    public Bitmap drawPlacemark() {
-        int picSize = 192;
+    public Bitmap draw() {
+        float centerX = (float) PLACEMARK_SIZE / 2;
         Paint paint = new Paint();
-        Bitmap bitmap = Bitmap.createBitmap(picSize, picSize, Bitmap.Config.ARGB_8888);
-        float radius = bitmap.getWidth() > bitmap.getHeight() ? ((float) bitmap
-                .getHeight()) / 2f : ((float) bitmap.getWidth()) / 2f;
+        Bitmap bitmap = Bitmap.createBitmap(PLACEMARK_SIZE, PLACEMARK_SIZE + LABEL_HEIGHT, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
+
+        Rect rect = new Rect(0, 0, PLACEMARK_SIZE, PLACEMARK_SIZE);
+        RectF rectF = new RectF(rect);
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(Color.WHITE);
-        canvas.drawRoundRect(rectF, radius, radius, paint);
+        canvas.drawRoundRect(rectF, centerX, centerX, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(avatarBitmap, 0, 0, paint);
 
-        // отрисовка плейсмарка
         paint = new Paint();
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(20);
-        canvas.drawCircle(picSize / 2, picSize / 2, picSize / 2 - 10, paint);
+        canvas.drawCircle(centerX, centerX, centerX - 10, paint);
+
+        int offSet = (PLACEMARK_SIZE - LABEL_WIDTH) / 2;
+        rect = new Rect(offSet, PLACEMARK_SIZE - 16, offSet + LABEL_WIDTH, PLACEMARK_SIZE+LABEL_HEIGHT);
+        rectF = new RectF(rect);
+        paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawRoundRect(rectF, 10, 10, paint);
+
+        paint = new Paint();
+        paint.setColor(Color.GRAY);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(28);
+        canvas.drawText(utils.getDateString(dateTime), centerX, PLACEMARK_SIZE + 16, paint);
+
         return bitmap;
     }
 

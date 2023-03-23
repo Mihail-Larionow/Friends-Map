@@ -12,7 +12,7 @@ public class User {
     protected String name;
     protected Point location;
     protected Placemark placemark;
-    private MapView mapView;
+    private long dateTime;
 
     public User(String id){
         this.id = id;
@@ -41,8 +41,16 @@ public class User {
         this.location = location;
     }
 
+    public long getDateTime(){
+        return dateTime;
+    }
+
+    public void setDateTime(long dateTime){
+        this.dateTime = dateTime;
+    }
+
     public void addPlacemark(Map map){
-        placemark = new Placemark(map, id, location);
+        placemark = new Placemark(map, id, location, dateTime);
         Log.w("Friend", "placemark is added");
     }
 

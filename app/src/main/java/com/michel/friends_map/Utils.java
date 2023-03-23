@@ -6,9 +6,15 @@ import android.content.pm.PackageManager;
 
 import androidx.core.app.ActivityCompat;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Utils {
 
     private final Object lock;
+    private final int DAY = 86400000;
+    private final int HOUR = 3600000;
+    private final int MINUTE = 60000;
 
     public Utils(){
         lock = new Object();
@@ -38,6 +44,22 @@ public class Utils {
         }else{
             return true;
         }
+    }
+
+    public String getDateString(long dateTime){
+        long currentTime = new Date().getTime();
+        long difference = currentTime - dateTime;
+        if(difference < 1000)
+            return "online";
+        else if(difference < MINUTE)
+            return difference / 1000 + "s";
+        else if(difference < HOUR)
+            return difference / 60000 + "m";
+        else if(difference < DAY)
+            return difference / 3600000 + "h";
+        else if (currentTime - dateTime < 2*DAY)
+            return "yesterday";
+        return new SimpleDateFormat("dd.MM").format(new Date(dateTime));
     }
 
 }

@@ -24,9 +24,9 @@ import java.util.Date;
 public class Map {
 
     private Utils utils;
-    private final float ZOOM = 15f;
+    private final float STANDARD_ZOOM = 15f;
     public final MapView mapView;
-    private LocationListener locationListener;
+    private LocationListener singleUpdate, locationListener;
     private final LocationManager locationManager;
 
 
@@ -48,17 +48,18 @@ public class Map {
 
     public void showLocation(Point location){
         mapView.getMap().move(
-                new CameraPosition(location, ZOOM, 0, 0),
+                new CameraPosition(location, STANDARD_ZOOM, 0, 0),
                 new Animation(Animation.Type.SMOOTH, 1),
                 null);
         Log.w("Point", location.getLatitude() + " " + location.getLongitude());
     }
 
     public void setUserOnListening(User currentUser, DataBase dataBase){
+        singleUpdate = userLocationListener(currentUser, dataBase);
+        locationManager.requestSingleUpdate(singleUpdate);
         locationListener = userLocationListener(currentUser, dataBase);
-        locationManager.requestSingleUpdate(locationListener);
         locationManager.subscribeForLocationUpdates(
-                0, 2000, 5, false, FilteringMode.OFF, locationListener
+                0, 0, 5, false, FilteringMode.OFF, locationListener
         );
         Log.w("LocationManager", "is Listening");
     }
@@ -82,10 +83,10 @@ public class Map {
             public void onLocationUpdated(@NonNull Location location) {
                 Point currentLocation = location.getPosition();
                 currentUser.setDateTime(new Date().getTime());
-                showLocation(location.getPosition());
                 if(currentUser.getLocation() == null){
                     currentUser.setLocation(currentLocation);
                     currentUser.addPlacemark(Map.this);
+                    showLocation(currentLocation);
                 }
                 else {
                     currentUser.setLocation(currentLocation);

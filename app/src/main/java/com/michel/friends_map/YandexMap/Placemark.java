@@ -32,6 +32,7 @@ public class Placemark {
 
     public Object imageUrl;
     public Bitmap avatarBitmap;
+    private Bitmap bitmap;
     private final String userID;
     private Utils utils;
     private Point location;
@@ -39,6 +40,7 @@ public class Placemark {
     private final int PLACEMARK_SIZE = 192;
     private final int LABEL_HEIGHT = 32;
     private final int LABEL_WIDTH = 128;
+    private Canvas canvas;
 
 
     private final PlacemarkMapObject placemark;
@@ -47,31 +49,38 @@ public class Placemark {
         this.userID = userID;
         this.location = location;
         this.dateTime = dateTime;
+        utils = new Utils();
+        getAvatarUrl(userID);
+        getAvatarBitmap(imageUrl.toString());
         placemark = map.mapView.getMap().getMapObjects().addPlacemark(location);
-        placemark.setOpacity(1);
-        placemark.setDraggable(false);
-        placemark.setIcon(ImageProvider.fromBitmap(this.drawPlacemark()));
+        drawPlacemark();
         setOnTapListener(map);
+        Log.w("Placemark", "created");
     }
 
     public void setLocation(Point location){
         placemark.setGeometry(location);
     }
 
-    public Bitmap drawPlacemark(){
-        utils = new Utils();
-        getAvatarUrl(userID);
-        getAvatarBitmap(imageUrl.toString());
-        Log.w("Bitmap", avatarBitmap.toString());
-        return draw();
+    public void drawPlacemark(){
+        bitmap = Bitmap.createBitmap(PLACEMARK_SIZE, PLACEMARK_SIZE + LABEL_HEIGHT, Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
+        drawIcon();
+        drawTimeLabel(dateTime);
+        placemark.setIcon(ImageProvider.fromBitmap(bitmap));
+        placemark.setOpacity(1);
+        placemark.setDraggable(false);
+        Log.w("Placemark", "drawPlacemark()");
     }
 
-    public Bitmap draw() {
+    public void changePlacemarkTime(long time){
+        drawTimeLabel(time);
+        placemark.setIcon(ImageProvider.fromBitmap(bitmap));
+        Log.w("Placemark", "changePlacemarkTime()");
+    }
+    private void drawIcon() {
         float centerX = (float) PLACEMARK_SIZE / 2;
         Paint paint = new Paint();
-        Bitmap bitmap = Bitmap.createBitmap(PLACEMARK_SIZE, PLACEMARK_SIZE + LABEL_HEIGHT, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-
         Rect rect = new Rect(0, 0, PLACEMARK_SIZE, PLACEMARK_SIZE);
         RectF rectF = new RectF(rect);
         paint.setAntiAlias(true);
@@ -86,11 +95,14 @@ public class Placemark {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(20);
         canvas.drawCircle(centerX, centerX, centerX - 10, paint);
+    }
 
+    private Bitmap drawTimeLabel(long time){
+        float centerX = (float) PLACEMARK_SIZE / 2;
         int offSet = (PLACEMARK_SIZE - LABEL_WIDTH) / 2;
-        rect = new Rect(offSet, PLACEMARK_SIZE - 16, offSet + LABEL_WIDTH, PLACEMARK_SIZE+LABEL_HEIGHT);
-        rectF = new RectF(rect);
-        paint = new Paint();
+        Rect rect = new Rect(offSet, PLACEMARK_SIZE - 16, offSet + LABEL_WIDTH, PLACEMARK_SIZE+LABEL_HEIGHT);
+        RectF rectF = new RectF(rect);
+        Paint paint = new Paint();
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRoundRect(rectF, 10, 10, paint);
@@ -99,8 +111,8 @@ public class Placemark {
         paint.setColor(Color.GRAY);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(28);
-        canvas.drawText(utils.getDateString(dateTime), centerX, PLACEMARK_SIZE + 16, paint);
-
+        canvas.drawText(utils.getDateString(time), centerX, PLACEMARK_SIZE + 16, paint);
+        Log.w("TextLabel", "draw");
         return bitmap;
     }
 

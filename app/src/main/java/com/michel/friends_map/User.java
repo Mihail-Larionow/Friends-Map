@@ -58,4 +58,7 @@ public class User {
         placemark.setLocation(location);
     }
 
+    public void changePlacemarkTime(long time){
+        placemark.changePlacemarkTime(time);
+    }
 }

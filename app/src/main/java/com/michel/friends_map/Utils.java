@@ -49,7 +49,7 @@ public class Utils {
     public String getDateString(long dateTime){
         long currentTime = new Date().getTime();
         long difference = currentTime - dateTime;
-        if(difference < 1000)
+        if(difference < 5000)
             return "online";
         else if(difference < MINUTE)
             return difference / 1000 + "s";

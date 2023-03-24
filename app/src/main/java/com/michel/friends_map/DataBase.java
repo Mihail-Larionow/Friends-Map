@@ -45,7 +45,10 @@ public class DataBase {
 
     //Сохранение данных
     public void saveUser(User user){
-        DataPack dataPack = new DataPack(user.getId(), user.getLocation(), user.getDateTime());
+        DataPack dataPack = new DataPack();
+        dataPack.id = user.getId();
+        dataPack.location = user.getLocation();
+        dataPack.dateTime = user.getDateTime();
         database.getDatabase().getReference(GROUP_KEY + "/" + dataPack.id).setValue(dataPack);
         Log.w("DB", "pushing data id " + user.getId());
     }
@@ -62,9 +65,15 @@ public class DataBase {
                         if (!users.containsKey(id)) {
                             users.put(id, new User(id));
                             users.get(id).setLocation(dataPack.location);
+                            users.get(id).setDateTime(dataPack.dateTime);
                             users.get(id).addPlacemark(map);
                         } else {
-                            users.get(dataPack.id).movePlacemark(dataPack.location);
+                            if (users.get(dataPack.id).getLocation() != dataPack.location){
+                                users.get(dataPack.id).movePlacemark(dataPack.location);
+                            }
+                            if (users.get(dataPack.id).getDateTime() != dataPack.dateTime){
+                                users.get(dataPack.id).changePlacemarkTime(dataPack.dateTime);
+                            }
                         }
                         Log.w("DB", "reading user " + dataPack.id);
                     }
@@ -100,13 +109,6 @@ public class DataBase {
         public String id;
         public Point location;
         public long dateTime;
-
-        public DataPack(String id, Point location, long dateTime){
-            this.id = id;
-            this.location = location;
-            this.dateTime = dateTime;
-        }
-        public DataPack(){}
 
     }
 

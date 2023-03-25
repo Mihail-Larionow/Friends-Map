@@ -55,7 +55,7 @@ public class User {
     }
 
     public void movePlacemark(Point location){
-        placemark.setLocation(location);
+        placemark.changePlacemarkPosition(location);
     }
 
     public void changePlacemarkTime(long time){

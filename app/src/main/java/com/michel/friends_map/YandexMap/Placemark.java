@@ -1,5 +1,6 @@
 package com.michel.friends_map.YandexMap;
 
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,33 +34,29 @@ public class Placemark {
     public Object imageUrl;
     public Bitmap avatarBitmap;
     private Bitmap bitmap;
-    private final String userID;
-    private Utils utils;
-    private Point location;
+    private final Utils utils;
     private long dateTime;
     private final int PLACEMARK_SIZE = 192;
     private final int LABEL_HEIGHT = 32;
     private final int LABEL_WIDTH = 128;
     private Canvas canvas;
+    private Point placemarkLocation;
+    private final MapObjectTapListener tapListener;
 
 
     private final PlacemarkMapObject placemark;
 
     public Placemark(Map map, String userID, Point location, long dateTime){
-        this.userID = userID;
-        this.location = location;
+        placemarkLocation = location;
         this.dateTime = dateTime;
         utils = new Utils();
         getAvatarUrl(userID);
         getAvatarBitmap(imageUrl.toString());
-        placemark = map.mapView.getMap().getMapObjects().addPlacemark(location);
+        placemark = map.mapView.getMap().getMapObjects().addPlacemark(placemarkLocation);
         drawPlacemark();
-        setOnTapListener(map);
+        tapListener = createTapListener(map);
+        setOnTapListener();
         Log.w("Placemark", "created");
-    }
-
-    public void setLocation(Point location){
-        placemark.setGeometry(location);
     }
 
     public void drawPlacemark(){
@@ -78,6 +75,23 @@ public class Placemark {
         placemark.setIcon(ImageProvider.fromBitmap(bitmap));
         Log.w("Placemark", "changePlacemarkTime()");
     }
+    public void changePlacemarkPosition(Point newLocation) {
+        ValueAnimator animation = ValueAnimator.ofFloat(0f, 100f);
+        double deltaLatitude = (newLocation.getLatitude() - placemarkLocation.getLatitude()) / 100;
+        double deltaLongitude = (newLocation.getLongitude() - placemarkLocation.getLongitude()) / 100;
+        animation.setDuration(1500);
+        animation.addUpdateListener(current_animation -> {
+            placemarkLocation = new Point(
+                    placemarkLocation.getLatitude() + deltaLatitude,
+                    placemarkLocation.getLongitude() + deltaLongitude
+            );
+            placemark.setGeometry(placemarkLocation);
+        });
+        animation.start();
+        Log.w("changePlacemarkPosition()", "done");
+    }
+
+
     private void drawIcon() {
         float centerX = (float) PLACEMARK_SIZE / 2;
         Paint paint = new Paint();
@@ -97,7 +111,7 @@ public class Placemark {
         canvas.drawCircle(centerX, centerX, centerX - 10, paint);
     }
 
-    private Bitmap drawTimeLabel(long time){
+    private void drawTimeLabel(long time){
         float centerX = (float) PLACEMARK_SIZE / 2;
         int offSet = (PLACEMARK_SIZE - LABEL_WIDTH) / 2;
         Rect rect = new Rect(offSet, PLACEMARK_SIZE - 16, offSet + LABEL_WIDTH, PLACEMARK_SIZE+LABEL_HEIGHT);
@@ -112,8 +126,8 @@ public class Placemark {
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(28);
         canvas.drawText(utils.getDateString(time), centerX, PLACEMARK_SIZE + 16, paint);
+        dateTime = time;
         Log.w("TextLabel", "draw");
-        return bitmap;
     }
 
     private void getAvatarUrl(String userID){
@@ -151,14 +165,15 @@ public class Placemark {
         utils.lockWait();
     }
 
-    private void setOnTapListener(Map map){
-        placemark.addTapListener(new MapObjectTapListener() {
-            @Override
-            public boolean onMapObjectTap(@NonNull MapObject mapObject, @NonNull Point point) {
-                map.showLocation(location);
-                return false;
-            }
-        });
+    private MapObjectTapListener createTapListener(Map map){
+     return (mapObject, point) -> {
+         map.showLocation(placemarkLocation);
+         return false;
+     };
+    }
+
+    private void setOnTapListener(){
+        placemark.addTapListener(tapListener);
     }
 
 }

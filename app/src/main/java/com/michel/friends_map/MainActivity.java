@@ -4,11 +4,16 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.michel.friends_map.YandexMap.MapActivity;
@@ -25,21 +30,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView textView = (TextView) findViewById(R.id.textView);
-        textView.setText("Waiting connection");
-        while(!isNetworkConnected()){
-
+        TextView textView = findViewById(R.id.textView);
+        if(!isNetworkConnected()) {
+            makeDialog();
         }
         textView.setText("Connected");
         checkVKAuth();
         textView.setText("");
     }
 
+    private void makeDialog(){
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.warning_layout);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().getAttributes().windowAnimations = android.R.style.Animation_Dialog;
+        setButtonOnClickListener(dialog.findViewById(R.id.restartButton));
+        dialog.show();
+    }
+
     private boolean isNetworkConnected() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connectivityManager.getActiveNetworkInfo() != null
-                && connectivityManager.getActiveNetworkInfo().isConnected();
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return !(networkInfo == null || !networkInfo.isConnected() || !networkInfo.isAvailable());
     }
 
     private void checkVKAuth(){
@@ -69,5 +85,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.w("Authorization", "didn't pass");
             }
         };
+    }
+
+    private void setButtonOnClickListener(ImageView restartButton){
+        restartButton.setOnClickListener(view -> recreate());
     }
 }

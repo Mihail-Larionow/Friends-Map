@@ -32,10 +32,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         TextView textView = findViewById(R.id.textView);
         if(!isNetworkConnected()) {
+            Log.w("Internet", "isn't connected");
             makeDialog();
         }
-        textView.setText("Connected");
-        checkVKAuth();
+        else {
+            textView.setText("Connected");
+            checkVKAuth();
+        }
         textView.setText("");
     }
 

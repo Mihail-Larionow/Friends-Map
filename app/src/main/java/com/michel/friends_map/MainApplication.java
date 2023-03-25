@@ -17,9 +17,7 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.w("App", "OnCreate() starts");
         VK.addTokenExpiredHandler(tokenTracker);
         VK.initialize(this);
-        Log.w("App", "OnCreate() stops");
     }
 }

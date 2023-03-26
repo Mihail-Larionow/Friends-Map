@@ -35,10 +35,11 @@ public class Placemark {
     public Bitmap avatarBitmap;
     private Bitmap bitmap;
     private final Utils utils;
-    private long dateTime;
+    private String timeLabelText;
     private final int PLACEMARK_SIZE = 192;
     private final int LABEL_HEIGHT = 32;
     private final int LABEL_WIDTH = 128;
+    private float centerX;
     private Canvas canvas;
     private Point placemarkLocation;
     private final MapObjectTapListener tapListener;
@@ -48,8 +49,8 @@ public class Placemark {
 
     public Placemark(Map map, String userID, Point location, long dateTime){
         placemarkLocation = location;
-        this.dateTime = dateTime;
         utils = new Utils();
+        timeLabelText = utils.getDateString(dateTime);
         getAvatarUrl(userID);
         getAvatarBitmap(imageUrl.toString());
         placemark = map.mapView.getMap().getMapObjects().addPlacemark(placemarkLocation);
@@ -63,7 +64,10 @@ public class Placemark {
         bitmap = Bitmap.createBitmap(PLACEMARK_SIZE, PLACEMARK_SIZE + LABEL_HEIGHT, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         drawIcon();
-        drawTimeLabel(dateTime);
+        if(timeLabelText.equals("online"))
+            drawBorder(Color.GREEN);
+        else drawBorder(Color.WHITE);
+        drawTimeLabel(timeLabelText);
         placemark.setIcon(ImageProvider.fromBitmap(bitmap));
         placemark.setOpacity(1);
         placemark.setDraggable(false);
@@ -71,10 +75,15 @@ public class Placemark {
     }
 
     public void changePlacemarkTime(long time){
-        drawTimeLabel(time);
+        timeLabelText = utils.getDateString(time);
+        if(timeLabelText.equals("online"))
+            drawBorder(Color.GREEN);
+        else drawBorder(Color.WHITE);
+        drawTimeLabel(timeLabelText);
         placemark.setIcon(ImageProvider.fromBitmap(bitmap));
         Log.w("Placemark", "changePlacemarkTime()");
     }
+
     public void changePlacemarkPosition(Point newLocation) {
         ValueAnimator animation = ValueAnimator.ofFloat(0f, 100f);
         double deltaLatitude = (newLocation.getLatitude() - placemarkLocation.getLatitude()) / 100;
@@ -93,7 +102,8 @@ public class Placemark {
 
 
     private void drawIcon() {
-        float centerX = (float) PLACEMARK_SIZE / 2;
+        centerX = (float) PLACEMARK_SIZE / 2;
+
         Paint paint = new Paint();
         Rect rect = new Rect(0, 0, PLACEMARK_SIZE, PLACEMARK_SIZE);
         RectF rectF = new RectF(rect);
@@ -104,29 +114,30 @@ public class Placemark {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(avatarBitmap, 0, 0, paint);
 
-        paint = new Paint();
-        paint.setColor(Color.WHITE);
+    }
+
+    public void drawBorder(int color){
+        Paint paint = new Paint();
+        paint.setColor(color);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(20);
         canvas.drawCircle(centerX, centerX, centerX - 10, paint);
-    }
 
-    private void drawTimeLabel(long time){
-        float centerX = (float) PLACEMARK_SIZE / 2;
         int offSet = (PLACEMARK_SIZE - LABEL_WIDTH) / 2;
         Rect rect = new Rect(offSet, PLACEMARK_SIZE - 16, offSet + LABEL_WIDTH, PLACEMARK_SIZE+LABEL_HEIGHT);
         RectF rectF = new RectF(rect);
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
+        paint = new Paint();
+        paint.setColor(color);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRoundRect(rectF, 10, 10, paint);
+    }
 
-        paint = new Paint();
+    private void drawTimeLabel(String timeLabelText){
+        Paint paint = new Paint();
         paint.setColor(Color.GRAY);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(28);
-        canvas.drawText(utils.getDateString(time), centerX, PLACEMARK_SIZE + 16, paint);
-        dateTime = time;
+        canvas.drawText(timeLabelText, centerX, PLACEMARK_SIZE + 16, paint);
         Log.w("TextLabel", "draw");
     }
 

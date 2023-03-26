@@ -71,9 +71,7 @@ public class DataBase {
                             if (users.get(dataPack.id).getLocation() != dataPack.location){
                                 users.get(dataPack.id).movePlacemark(dataPack.location);
                             }
-                            if (users.get(dataPack.id).getDateTime() != dataPack.dateTime){
-                                users.get(dataPack.id).changePlacemarkTime(dataPack.dateTime);
-                            }
+                            users.get(dataPack.id).changePlacemarkTime(dataPack.dateTime);
                         }
                         Log.w("DB", "reading user " + dataPack.id);
                     }

@@ -1,5 +1,5 @@
 # Friends Map
-<img src="https://img.shields.io/badge/stage-pre%20release-green.svg" alt="stage"> 
+<img src="https://img.shields.io/badge/stage-released-green.svg" alt="stage"> 
 
 _This application uses Yandex MapKit, VK API and FireBase Realtime Database._
 

@@ -1,32 +1,27 @@
 package com.michel.friends_map;
 
-import android.util.Log;
-
+import java.util.List;
+import java.util.HashMap;
+import com.vk.api.sdk.VK;
 import androidx.annotation.NonNull;
-
+import com.yandex.mapkit.geometry.Point;
+import com.michel.friends_map.YandexMap.Map;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.michel.friends_map.YandexMap.Map;
 import com.michel.friends_map.VKCommands.VKFriendsCommand;
-import com.vk.api.sdk.VK;
-import com.yandex.mapkit.geometry.Point;
 
-import java.util.HashMap;
-import java.util.List;
 
 public class DataBase {
     private List<String> friendList;
     private final DatabaseReference database;
     private final String GROUP_KEY = "USERS";
     private ValueEventListener eventListener;
-    private String currentUserID;
 
     public DataBase(){
         database = FirebaseDatabase.getInstance().getReference(GROUP_KEY);
-        Log.w("DB", "Ready");
     }
 
     public void setOnDataChangeListening(Map map, HashMap<String, User> users){
@@ -39,18 +34,12 @@ public class DataBase {
         database.removeEventListener(eventListener);
     }
 
-    public void setCurrentUserID(String currentUserID){
-        this.currentUserID = currentUserID;
-    }
-
-    //Сохранение данных
     public void saveUser(User user){
         DataPack dataPack = new DataPack();
         dataPack.id = user.getId();
         dataPack.location = user.getLocation();
         dataPack.dateTime = user.getDateTime();
         database.getDatabase().getReference(GROUP_KEY + "/" + dataPack.id).setValue(dataPack);
-        Log.w("DB", "pushing data id " + user.getId());
     }
 
     private ValueEventListener dataChangeListener(Map map, HashMap<String, User> users) {
@@ -73,7 +62,6 @@ public class DataBase {
                             }
                             users.get(dataPack.id).changePlacemarkTime(dataPack.dateTime);
                         }
-                        Log.w("DB", "reading user " + dataPack.id);
                     }
 
                 }
@@ -92,7 +80,6 @@ public class DataBase {
             VKFriendsCommand command = new VKFriendsCommand();
             try {
                 friendList = VK.executeSync(command);
-                Log.w("getFriends", friendList.toString());
                 utils.lockNotify();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -105,8 +92,8 @@ public class DataBase {
     private static class DataPack{
 
         public String id;
-        public Point location;
         public long dateTime;
+        public Point location;
 
     }
 

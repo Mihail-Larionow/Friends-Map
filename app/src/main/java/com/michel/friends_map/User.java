@@ -1,22 +1,22 @@
 package com.michel.friends_map;
 
-import android.util.Log;
-
+import com.yandex.mapkit.geometry.Point;
 import com.michel.friends_map.YandexMap.Map;
 import com.michel.friends_map.YandexMap.Placemark;
-import com.yandex.mapkit.geometry.Point;
-import com.yandex.mapkit.mapview.MapView;
+
 
 public class User {
+
     protected String id;
     protected String name;
+    private long dateTime;
     protected Point location;
     protected Placemark placemark;
-    private long dateTime;
 
     public User(String id){
         this.id = id;
     }
+
     public String getId() {
         return id;
     }
@@ -51,7 +51,6 @@ public class User {
 
     public void addPlacemark(Map map){
         placemark = new Placemark(map, id, location, dateTime);
-        Log.w("Friend", "placemark is added");
     }
 
     public void movePlacemark(Point location){

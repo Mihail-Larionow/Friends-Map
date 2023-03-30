@@ -1,13 +1,12 @@
 package com.michel.friends_map;
 
+import java.util.Date;
 import android.app.Activity;
 import android.content.Context;
+import java.text.SimpleDateFormat;
+import androidx.core.app.ActivityCompat;
 import android.content.pm.PackageManager;
 
-import androidx.core.app.ActivityCompat;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Utils {
 

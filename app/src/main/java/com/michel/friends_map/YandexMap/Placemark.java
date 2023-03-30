@@ -1,51 +1,42 @@
 package com.michel.friends_map.YandexMap;
 
-import android.animation.ValueAnimator;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
+import java.net.URL;
+import com.vk.api.sdk.VK;
+import java.io.InputStream;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import com.michel.friends_map.Utils;
-import com.michel.friends_map.VKCommands.VKAvatarCommand;
-import com.vk.api.sdk.VK;
-import com.yandex.mapkit.geometry.Point;
-import com.yandex.mapkit.map.MapObject;
-import com.yandex.mapkit.map.MapObjectTapListener;
-import com.yandex.mapkit.map.PlacemarkMapObject;
-import com.yandex.runtime.image.ImageProvider;
-
-import java.io.InputStream;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Canvas;
+import android.graphics.Bitmap;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import android.graphics.PorterDuff;
+import com.michel.friends_map.Utils;
+import android.graphics.BitmapFactory;
+import android.animation.ValueAnimator;
+import com.yandex.mapkit.geometry.Point;
+import android.graphics.PorterDuffXfermode;
+import com.yandex.runtime.image.ImageProvider;
+import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.map.MapObjectTapListener;
+import com.michel.friends_map.VKCommands.VKAvatarCommand;
+
 
 public class Placemark {
 
-    public Object imageUrl;
-    public Bitmap avatarBitmap;
-    private Bitmap bitmap;
-    private final Utils utils;
-    private String timeLabelText;
-    private final int PLACEMARK_SIZE = 192;
-    private final int LABEL_HEIGHT = 32;
-    private final int LABEL_WIDTH = 128;
     private float centerX;
     private Canvas canvas;
+    private Bitmap bitmap;
+    public Object imageUrl;
+    private final Utils utils;
+    public Bitmap avatarBitmap;
+    private String timeLabelText;
+    private final int LABEL_HEIGHT = 32;
+    private final int LABEL_WIDTH = 128;
+    private final int PLACEMARK_SIZE = 192;
     private Point placemarkLocation;
-    private final MapObjectTapListener tapListener;
-
-
     private final PlacemarkMapObject placemark;
+    private final MapObjectTapListener tapListener;
 
     public Placemark(Map map, String userID, Point location, long dateTime){
         placemarkLocation = location;
@@ -57,7 +48,6 @@ public class Placemark {
         drawPlacemark();
         tapListener = createTapListener(map);
         setOnTapListener();
-        Log.w("Placemark", "created");
     }
 
     public void drawPlacemark(){
@@ -71,7 +61,6 @@ public class Placemark {
         placemark.setIcon(ImageProvider.fromBitmap(bitmap));
         placemark.setOpacity(1);
         placemark.setDraggable(false);
-        Log.w("Placemark", "drawPlacemark()");
     }
 
     public void changePlacemarkTime(long time){
@@ -81,7 +70,6 @@ public class Placemark {
         else drawBorder(Color.WHITE);
         drawTimeLabel(timeLabelText);
         placemark.setIcon(ImageProvider.fromBitmap(bitmap));
-        Log.w("Placemark", "changePlacemarkTime()");
     }
 
     public void changePlacemarkPosition(Point newLocation) {
@@ -97,13 +85,11 @@ public class Placemark {
             placemark.setGeometry(placemarkLocation);
         });
         animation.start();
-        Log.w("changePlacemarkPosition()", "done");
     }
 
 
     private void drawIcon() {
         centerX = (float) PLACEMARK_SIZE / 2;
-
         Paint paint = new Paint();
         Rect rect = new Rect(0, 0, PLACEMARK_SIZE, PLACEMARK_SIZE);
         RectF rectF = new RectF(rect);
@@ -138,7 +124,6 @@ public class Placemark {
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(28);
         canvas.drawText(timeLabelText, centerX, PLACEMARK_SIZE + 16, paint);
-        Log.w("TextLabel", "draw");
     }
 
     private void getAvatarUrl(String userID){
@@ -147,7 +132,6 @@ public class Placemark {
             try  {
                 VKAvatarCommand command = new VKAvatarCommand(userID);
                 imageUrl = VK.executeSync(command);
-                Log.w("Thread", imageUrl.toString());
                 utils.lockNotify();
             } catch (Exception e) {
                 e.printStackTrace();

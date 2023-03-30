@@ -1,11 +1,10 @@
 package com.michel.friends_map;
 
-import android.app.Application;
-import android.content.Intent;
-import android.util.Log;
-
 import com.vk.api.sdk.VK;
+import android.content.Intent;
+import android.app.Application;
 import com.vk.api.sdk.VKTokenExpiredHandler;
+
 
 public class MainApplication extends Application {
     private final VKTokenExpiredHandler tokenTracker = () -> {

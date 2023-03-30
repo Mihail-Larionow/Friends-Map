@@ -1,26 +1,17 @@
 package com.michel.friends_map.VKCommands;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import com.vk.api.sdk.VK;
-import com.vk.api.sdk.VKApiJSONResponseParser;
+import java.io.IOException;
+import java.util.ArrayList;
+import org.json.JSONObject;
+import org.json.JSONException;
 import com.vk.api.sdk.VKApiManager;
 import com.vk.api.sdk.VKMethodCall;
-import com.vk.api.sdk.exceptions.VKApiException;
-import com.vk.api.sdk.exceptions.VKApiExecutionException;
-import com.vk.api.sdk.exceptions.VKApiIllegalResponseException;
+import androidx.annotation.NonNull;
 import com.vk.api.sdk.internal.ApiCommand;
+import com.vk.api.sdk.VKApiJSONResponseParser;
+import com.vk.api.sdk.exceptions.VKApiException;
+import com.vk.api.sdk.exceptions.VKApiIllegalResponseException;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 public class VKFriendsCommand extends ApiCommand<ArrayList<String>> {
 
@@ -28,7 +19,6 @@ public class VKFriendsCommand extends ApiCommand<ArrayList<String>> {
 
     @Override
     protected ArrayList<String> onExecute(@NonNull VKApiManager vkApiManager) throws InterruptedException, IOException, VKApiException {
-        Log.w("onExecute()", "is working!!!");
         friendList = new ArrayList<>();
         VKMethodCall call = new VKMethodCall.Builder()
                 .method("friends.get")
@@ -42,9 +32,8 @@ public class VKFriendsCommand extends ApiCommand<ArrayList<String>> {
     private class ResponseApiParser implements VKApiJSONResponseParser {
 
         @Override
-        public ArrayList<String> parse(@NonNull JSONObject jsonObject) throws VKApiException, VKApiExecutionException, JSONException, Exception {
+        public ArrayList<String> parse(@NonNull JSONObject jsonObject) throws Exception {
             try {
-                Log.w("FriendsCommand", jsonObject.getJSONObject("response").toString());
                 int count = jsonObject.getJSONObject("response").getInt("count");
                 for(int i=0; i<count; i++){
                     friendList.add(jsonObject.getJSONObject("response").getJSONArray("items").getString(i));

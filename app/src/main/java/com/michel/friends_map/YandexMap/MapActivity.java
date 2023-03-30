@@ -1,20 +1,16 @@
 package com.michel.friends_map.YandexMap;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.vk.api.sdk.VK;
+import java.util.HashMap;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageView;
-
-import com.michel.friends_map.BuildConfig;
-import com.michel.friends_map.DataBase;
 import com.michel.friends_map.R;
 import com.michel.friends_map.User;
 import com.michel.friends_map.Utils;
-import com.vk.api.sdk.VK;
-
 import com.yandex.mapkit.MapKitFactory;
-import com.yandex.mapkit.mapview.MapView;
-import java.util.HashMap;
+import com.michel.friends_map.DataBase;
+import com.michel.friends_map.BuildConfig;
+import androidx.appcompat.app.AppCompatActivity;
+
 
 public class MapActivity extends AppCompatActivity {
 
@@ -36,20 +32,18 @@ public class MapActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.w("onStart()", "Started");
         MapKitFactory.getInstance().onStart();
         map.start();
         dataBase.setOnDataChangeListening(map, users);
         if(utils.isPermissionGranted(this.getApplicationContext(), this)){
-            Log.w("checkPermissions()", "Okay");
             map.setUserOnListening(currentUser, dataBase);
         }
     }
+
     @Override
     protected void onResume(){
         super.onResume();
         if(utils.isPermissionGranted(this.getApplicationContext(), this)){
-            Log.w("checkPermissions()", "Okay");
             map.setUserOnListening(currentUser, dataBase);
         }
     }
@@ -60,7 +54,6 @@ public class MapActivity extends AppCompatActivity {
         map.stop();
         dataBase.removeFromDataChangeListening();
         MapKitFactory.getInstance().onStop();
-        Log.w("onStop()", "Stopped");
         super.onStop();
     }
 
@@ -68,15 +61,10 @@ public class MapActivity extends AppCompatActivity {
         utils = new Utils();
         users = new HashMap<>();
         String userID = VK.getUserId().toString();
-        Log.w("ID", VK.getUserId().toString());
-
         dataBase = new DataBase();
         currentUser = new User(userID);
-        map = new Map((MapView)findViewById(R.id.mapview));
-        map.setButtonOnListening((ImageView)findViewById(R.id.locationButton), currentUser);
-        dataBase.setCurrentUserID(currentUser.getId());
-
-        Log.w("init()", "success");
+        map = new Map(findViewById(R.id.mapview));
+        map.setButtonOnListening(findViewById(R.id.locationButton), currentUser);
     }
 
 }

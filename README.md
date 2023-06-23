@@ -6,7 +6,9 @@ _This application uses Yandex MapKit, VK API and FireBase Realtime Database._
 
 ## About
 
-Friends Map is an application that allows you to find out the location of a VK friend who uses this.  
+<div class="about">
+ <p> Friends Map is an application that allows you to find out the location of a VK friend who uses this. </p>  
+</div>
 
 <img src="https://github.com/Mihail-Larionow/Friends-Map/blob/master/images/logo_1_without_border.png"/>  
 

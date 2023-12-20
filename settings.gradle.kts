@@ -15,4 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "VKMap"
 include(":app")
- 
+include(":data")
+include(":domain")

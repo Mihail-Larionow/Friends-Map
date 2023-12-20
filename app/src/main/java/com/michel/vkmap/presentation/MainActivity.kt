@@ -1,4 +1,4 @@
-package com.michel.vkmap
+package com.michel.vkmap.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

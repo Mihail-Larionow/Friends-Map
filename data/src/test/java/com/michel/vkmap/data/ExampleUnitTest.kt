@@ -1,4 +1,4 @@
-package com.michel.data
+package com.michel.vkmap.data
 
 import org.junit.Test
 

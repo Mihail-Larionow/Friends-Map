@@ -12,7 +12,7 @@ class App: Application() {
     override fun onCreate(){
         super.onCreate()
 
-        MapKitFactory.setApiKey("")
+        MapKitFactory.setApiKey(BuildConfig.MAP_API_KEY)
 
         startKoin{
             androidLogger(Level.DEBUG)

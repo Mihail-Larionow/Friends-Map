@@ -1,3 +1,7 @@
+val mapKitApiKey: String = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(
+    rootDir
+).getProperty("MAPKIT_API_KEY")
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -17,6 +21,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures{
+        buildConfig = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -24,6 +32,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            buildConfigField("String", "MAP_API_KEY", mapKitApiKey)
         }
     }
     compileOptions {

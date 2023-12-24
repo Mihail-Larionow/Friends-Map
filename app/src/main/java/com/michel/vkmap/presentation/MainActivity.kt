@@ -25,11 +25,11 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         Log.d("MainActivity", "onStart()")
-        map.start()
+        //map.start()
     }
 
     override fun onStop() {
-        map.stop()
+        //map.stop()
         super.onStop()
         Log.d("MainActivity", "onStop()")
     }

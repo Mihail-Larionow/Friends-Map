@@ -1,4 +1,4 @@
-val mapKitApiKey: String = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(
+val mapkitApiKey: String = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(
     rootDir
 ).getProperty("MAPKIT_API_KEY")
 
@@ -34,7 +34,7 @@ android {
             )
         }
         debug {
-            buildConfigField("String", "MAP_API_KEY", mapKitApiKey)
+            buildConfigField("String", "MAP_API_KEY", mapkitApiKey)
         }
     }
     compileOptions {

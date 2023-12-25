@@ -1,7 +1,6 @@
 package com.michel.vkmap.presentation.map
 
-import com.michel.vkmap.presentation.map.IMap
-import com.yandex.mapkit.mapview.MapView
+import com.michel.vkmap.presentation.models.MapViewModel
 
 class Map(private val iMap: IMap){
     fun start(){
@@ -12,7 +11,7 @@ class Map(private val iMap: IMap){
         iMap.stop()
     }
 
-    fun set(view: MapView){
+    fun set(view: MapViewModel){
         iMap.set(view)
     }
 }

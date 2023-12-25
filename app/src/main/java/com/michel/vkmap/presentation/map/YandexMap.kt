@@ -3,11 +3,11 @@ package com.michel.vkmap.presentation.map
 import android.content.Context
 import android.util.Log
 import com.yandex.mapkit.MapKitFactory
-import com.yandex.mapkit.mapview.MapView
+import com.michel.vkmap.presentation.models.MapViewModel
 
 class YandexMap (context: Context) : IMap {
 
-    private lateinit var mapView: MapView
+    private lateinit var mapView: MapViewModel
 
     init {
         Log.d("YandexMap", "init()")
@@ -17,16 +17,16 @@ class YandexMap (context: Context) : IMap {
     override fun start(){
         Log.d("YandexMap", "start()")
         MapKitFactory.getInstance().onStart()
-        mapView.onStart()
+        mapView.mapView.onStart()
     }
 
     override fun stop(){
-        mapView.onStop()
+        mapView.mapView.onStop()
         MapKitFactory.getInstance().onStop()
         Log.d("YandexMap", "stop()")
     }
 
-    override fun set(view: MapView) {
+    override fun set(view: MapViewModel) {
         mapView = view
     }
 

@@ -51,6 +51,9 @@ dependencies {
     implementation(project(path = ":data"))
     implementation(project(path = ":domain"))
 
+    implementation("com.vk:android-sdk-core:4.1.0")
+    implementation("com.vk:android-sdk-api:4.1.0")
+
     implementation("com.yandex.android:maps.mobile:4.4.0-lite")
 
     implementation("io.insert-koin:koin-core:3.5.3")

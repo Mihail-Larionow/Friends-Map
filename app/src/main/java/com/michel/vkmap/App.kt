@@ -20,6 +20,8 @@ class App: Application() {
     override fun onCreate(){
         super.onCreate()
 
+        Log.d("VKMAP", "App onCreate()")
+
         MapKitFactory.setApiKey(BuildConfig.MAP_API_KEY)
 
         startKoin{

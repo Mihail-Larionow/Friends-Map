@@ -19,26 +19,26 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("MainActivity", "onCreate()")
+        Log.d("VKMAP", "MainActivity onCreate()")
         map = Map(YandexMap(this))
         setContentView(R.layout.activity_main)
         map.set(MapViewModel(findViewById(R.id.mapView)))
         auth.start()
-
     }
 
     override fun onStart() {
         super.onStart()
-        Log.d("MainActivity", "onStart()")
-        //map.start()
+        Log.d("VKMAP", "MainActivity onStart()")
+
+        map.start()
+        val location = viewModel.getLocation()
+        map.move(location)
     }
 
     override fun onStop() {
-        //map.stop()
+        map.stop()
         super.onStop()
-        Log.d("MainActivity", "onStop()")
+        Log.d("VKMAP", "MainActivity onStop()")
     }
-
-
 
 }

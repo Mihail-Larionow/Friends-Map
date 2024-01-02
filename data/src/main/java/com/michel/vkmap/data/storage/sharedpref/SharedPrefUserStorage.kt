@@ -3,7 +3,7 @@ package com.michel.vkmap.data.storage.sharedpref
 import android.content.Context
 import android.util.Log
 import com.michel.vkmap.data.storage.IUserStorage
-import com.michel.vkmap.data.storage.models.LocationModel
+import com.michel.vkmap.data.models.LocationModel
 
 private const val KEY_LATITUDE = "latitude"
 private const val KEY_LONGITUDE = "longitude"
@@ -19,13 +19,11 @@ class SharedPrefUserStorage(context: Context): IUserStorage {
     override fun saveLocation(userLocation: LocationModel) {
         sharedPreferences.edit().putFloat(KEY_LATITUDE, userLocation.latitude).apply()
         sharedPreferences.edit().putFloat(KEY_LONGITUDE, userLocation.longitude).apply()
-        Log.d("VKMAP", "SharedPref saveLocation()")
     }
 
     override fun getLocation(): LocationModel {
         val latitude = sharedPreferences.getFloat(KEY_LATITUDE, -1f)
-        val longitude = sharedPreferences.getFloat(KEY_LATITUDE, -1f)
-        Log.d("VKMAP", "SharedPref getLocation() " + latitude + " " + longitude)
+        val longitude = sharedPreferences.getFloat(KEY_LONGITUDE, -1f)
         return LocationModel(latitude = latitude, longitude = longitude)
     }
 }

@@ -1,5 +1,7 @@
 package com.michel.vkmap.presentation.map
 
+import com.michel.vkmap.domain.models.UserLocationModel
+import com.michel.vkmap.domain.map.IMap
 import com.michel.vkmap.presentation.models.MapViewModel
 
 class Map(private val iMap: IMap){
@@ -11,7 +13,11 @@ class Map(private val iMap: IMap){
         iMap.stop()
     }
 
-    fun set(view: MapViewModel){
-        iMap.set(view)
+    fun setView(view: MapViewModel){
+
+    }
+
+    fun move(locationModel: UserLocationModel){
+        iMap.move(locationModel)
     }
 }

@@ -20,9 +20,11 @@ class App: Application() {
     override fun onCreate(){
         super.onCreate()
 
-        Log.d("VKMAP", "App onCreate()")
+        Log.i("VKMAP", "APPLICATION STARTED")
 
         MapKitFactory.setApiKey(BuildConfig.MAP_API_KEY)
+        MapKitFactory.initialize(this)
+
 
         startKoin{
             androidLogger(Level.DEBUG)

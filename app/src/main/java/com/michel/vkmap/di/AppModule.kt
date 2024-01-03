@@ -9,8 +9,7 @@ val appModule = module {
         MainViewModel(
             getLocationUseCase = get(),
             saveLocationUseCase = get(),
-            startLocationTrackingUseCase = get(),
-            stopLocationTrackingUseCase = get()
+            trackLocationUseCase = get(),
         )
     }
 }

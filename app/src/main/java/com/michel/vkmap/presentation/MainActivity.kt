@@ -4,17 +4,16 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import com.michel.vkmap.R
+import com.michel.vkmap.domain.usecases.DisplayMapUseCase
 import com.michel.vkmap.domain.usecases.UserAuthenticateUseCase
-import com.michel.vkmap.presentation.map.YandexMap
 import com.michel.vkmap.presentation.map.Map
-import com.michel.vkmap.presentation.models.MapViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModel<MainViewModel>()
 
-    private lateinit var map: Map
+    private lateinit var displayMapUseCase: DisplayMapUseCase
     private val userAuthenticateUseCase = UserAuthenticateUseCase(Authentication(activity = this))
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,21 +23,21 @@ class MainActivity : ComponentActivity() {
         userAuthenticateUseCase.execute()
 
         setContentView(R.layout.activity_main)
-        map = Map(YandexMap(findViewById(R.id.mapView)))
+        displayMapUseCase = DisplayMapUseCase(Map(findViewById(R.id.mapView)))
 
     }
 
     override fun onStart() {
         super.onStart()
         Log.v("VKMAP", "MainActivity started")
-        map.start()
+        displayMapUseCase.execute()
 
         val location = viewModel.getLocation()
         //map.move(location)
     }
 
     override fun onStop() {
-        map.stop()
+        displayMapUseCase.abandon()
         super.onStop()
         Log.v("VKMAP", "MainActivity stopped")
     }

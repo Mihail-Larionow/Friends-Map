@@ -33,9 +33,6 @@ android {
 }
 
 dependencies {
-    implementation("com.vk:android-sdk-core:4.1.0")
-    implementation("com.vk:android-sdk-api:4.1.0")
-
     implementation("com.yandex.android:maps.mobile:4.4.0-lite")
 
     testImplementation("junit:junit:4.13.2")

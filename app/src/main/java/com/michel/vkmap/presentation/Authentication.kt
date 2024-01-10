@@ -21,7 +21,7 @@ class Authentication(activity: MainActivity): IAuthentication{
     }
 
     override fun launch() {
-        authLauncher.launch(arrayListOf(VKScope.WALL, VKScope.PHOTOS))
+        authLauncher.launch(arrayListOf(VKScope.FRIENDS, VKScope.PHOTOS))
     }
 
 }

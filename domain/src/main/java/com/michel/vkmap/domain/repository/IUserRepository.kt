@@ -8,4 +8,8 @@ interface IUserRepository {
 
     fun getLocation(): UserLocationModel
 
+    fun getPhoto(userId: String)
+
+    fun getFriendsList()
+
 }

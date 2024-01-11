@@ -7,9 +7,9 @@ import com.yandex.runtime.image.ImageProvider
 
 class AddPlaceMarkUseCase(private val iMap: IMap) {
 
-    fun execute(userLocation: UserLocationModel, placeMarkIcon: ImageProvider) {
+    fun execute(userLocation: UserLocationModel, placeMarkView: ImageProvider) {
         Log.d("VKMAP", "UseCase: AddPlaceMark")
-        iMap.addPlaceMark(userLocation, placeMarkIcon)
+        iMap.addPlaceMark(userLocation, placeMarkView)
     }
 
 }

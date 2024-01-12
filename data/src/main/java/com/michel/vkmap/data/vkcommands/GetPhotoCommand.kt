@@ -5,7 +5,6 @@ import com.vk.api.sdk.VKApiManager
 import com.vk.api.sdk.VKMethodCall
 import com.vk.api.sdk.exceptions.VKApiIllegalResponseException
 import com.vk.api.sdk.internal.ApiCommand
-import com.vk.dto.common.id.UserId
 import org.json.JSONException
 import org.json.JSONObject
 

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "53469482031",
+    "firebase_url": "https://vkmap-37d78-default-rtdb.firebaseio.com",
+    "project_id": "vkmap-37d78",
+    "storage_bucket": "vkmap-37d78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:53469482031:android:090b1cc354c95c00c5cada",
+        "android_client_info": {
+          "package_name": "com.michel.vkmap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFWi1bs_6UhmvBJNtX5_iNLGEttVqbmZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

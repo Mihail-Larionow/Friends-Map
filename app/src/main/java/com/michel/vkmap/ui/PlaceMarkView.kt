@@ -1,6 +1,7 @@
 package com.michel.vkmap.ui
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -8,13 +9,11 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.RectF
-import android.graphics.drawable.Drawable
 import android.util.Log
 import com.yandex.runtime.image.ImageProvider
 
 class PlaceMarkView(
-    val resourceBitmap: Bitmap? = null,
-    private val noResourceDrawable: Drawable?
+    private val resourceBitmap: Bitmap? = null,
 ): ImageProvider() {
 
     private val centerX: Float = (DEFAULT_ICON_SIZE / 2).toFloat()
@@ -33,7 +32,7 @@ class PlaceMarkView(
 
     override fun getId(): String {
         Log.e("VKMAP", "ImageProvider getId()")
-        return "id"
+        return "placemark"
     }
 
     override fun getImage(): Bitmap {
@@ -53,10 +52,13 @@ class PlaceMarkView(
 
         paint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.SRC_IN))
 
-        noResourceDrawable?.draw(canvas)
+        val resultBitmap = resourceBitmap ?: Bitmap.createBitmap(
+            DEFAULT_ICON_SIZE,
+            DEFAULT_ICON_SIZE,
+            Bitmap.Config.ALPHA_8
+        )
 
-        if(resourceBitmap != null)
-            canvas.drawBitmap(resourceBitmap, 0f, 0f, paint)
+        canvas.drawBitmap(resultBitmap, 0f, 0f, paint)
     }
 
     private fun drawBorder(canvas: Canvas){
@@ -71,7 +73,7 @@ class PlaceMarkView(
         val rect = RectF(Rect(offSet, DEFAULT_ICON_SIZE -16, offSet+ DEFAULT_LABEL_WIDTH, DEFAULT_ICON_SIZE+ DEFAULT_LABEL_HEIGHT))
 
         paint = Paint()
-        paint.color = OFFLINE_BORDER_COLOR
+        paint.color = ONLINE_BORDER_COLOR
         paint.style = Paint.Style.FILL
         canvas.drawRoundRect(rect, DEFAULT_BORDER_WIDTH/2, DEFAULT_BORDER_WIDTH/2, paint)
     }

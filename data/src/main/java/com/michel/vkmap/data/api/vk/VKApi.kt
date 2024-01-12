@@ -9,7 +9,7 @@ import com.vk.api.sdk.VKApiCallback
 
 class VKApi: IApi {
 
-    override fun photoRequest(userId: String){
+    override fun photoRequest(userId: String, resultUrl: String){
         VK.execute(GetPhotoCommand(userId), object: VKApiCallback<String> {
             override fun fail(error: Exception) {
                 Log.e("VKMAP", error.message.toString())

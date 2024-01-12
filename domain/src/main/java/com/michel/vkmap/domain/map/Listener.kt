@@ -2,7 +2,8 @@ package com.michel.vkmap.domain.map
 
 
 import android.util.Log
-import com.michel.vkmap.domain.models.UserLocationModel
+import com.michel.vkmap.domain.models.LocationModel
+import com.michel.vkmap.domain.models.LocationPackModel
 import com.michel.vkmap.domain.usecases.SaveLocationUseCase
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.location.Location
@@ -18,12 +19,12 @@ class Listener(
         Log.d("VKMAP", "location update")
         val locationPoint: Point = updatedLocation.position
 
-        val location = UserLocationModel(
-            latitude = locationPoint.latitude.toFloat(),
-            longitude = locationPoint.longitude.toFloat()
+        val data = LocationModel(
+            latitude = locationPoint.latitude,
+            longitude = locationPoint.longitude,
         )
 
-        saveLocationUseCase.execute(location)
+        saveLocationUseCase.execute(data)
     }
 
     override fun onLocationStatusUpdated(updatedLocationStatus: LocationStatus) {

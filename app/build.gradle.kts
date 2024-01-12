@@ -5,6 +5,7 @@ val mapkitApiKey: String = com.android.build.gradle.internal.cxx.configure.gradl
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {

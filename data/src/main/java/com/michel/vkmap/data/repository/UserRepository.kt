@@ -1,42 +1,48 @@
 package com.michel.vkmap.data.repository
 
-import android.graphics.Bitmap
-import android.util.Log
 import com.michel.vkmap.data.api.IApi
+import com.michel.vkmap.data.database.IDataBase
 import com.michel.vkmap.data.storage.IUserStorage
-import com.michel.vkmap.data.models.LocationModel
-import com.michel.vkmap.domain.models.UserLocationModel
+import com.michel.vkmap.data.models.LocationDataModel
+import com.michel.vkmap.data.models.LocationDataPackModel
+import com.michel.vkmap.domain.models.LocationPackModel
+import com.michel.vkmap.domain.models.LocationModel
 import com.michel.vkmap.domain.repository.IUserRepository
 
 class UserRepository(
     private val iUserStorage: IUserStorage,
+    private val iDataBase: IDataBase,
     private val iApi: IApi
 ): IUserRepository {
 
-    override fun saveLocation(userLocation: UserLocationModel){
-        val location = LocationModel(
-            latitude = userLocation.latitude,
-            longitude = userLocation.longitude
+    override fun saveLocation(dataPack: LocationPackModel){
+
+        val location = LocationDataModel(
+            latitude = dataPack.latitude,
+            longitude = dataPack.longitude
+        )
+
+        val data = LocationDataPackModel(
+            latitude = dataPack.latitude,
+            longitude = dataPack.longitude,
+            userId = dataPack.id
         )
 
         iUserStorage.saveLocation(userLocation = location)
-
-        Log.i("VKMAP", "Repository saved " + location.latitude + " " + location.longitude)
+        iDataBase.saveLocation(dataPack = data)
     }
 
-    override fun getLocation(): UserLocationModel {
-        val userLocation = iUserStorage.getLocation()
+    override fun getLocation(): LocationModel {
+        val location = iUserStorage.getLocation()
 
-        Log.i("VKMAP", "Repository got " + userLocation.latitude + " " + userLocation.longitude)
-
-        return UserLocationModel(
-            latitude = userLocation.latitude,
-            longitude = userLocation.longitude
+        return LocationModel(
+            latitude = location.latitude,
+            longitude = location.longitude
         )
     }
 
     override fun getPhoto(userId: String){
-        iApi.photoRequest(userId)
+        iApi.photoRequest(userId, "")
     }
 
     override fun getFriendsList() {

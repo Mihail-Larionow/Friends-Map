@@ -25,7 +25,6 @@ class App: Application() {
         MapKitFactory.setApiKey(BuildConfig.MAP_API_KEY)
         MapKitFactory.initialize(this)
 
-
         startKoin{
             androidLogger(Level.DEBUG)
             androidContext(this@App)

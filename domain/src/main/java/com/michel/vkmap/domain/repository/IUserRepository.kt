@@ -1,12 +1,13 @@
 package com.michel.vkmap.domain.repository
 
-import com.michel.vkmap.domain.models.UserLocationModel
+import com.michel.vkmap.domain.models.LocationPackModel
+import com.michel.vkmap.domain.models.LocationModel
 
 interface IUserRepository {
 
-    fun saveLocation(userLocation: UserLocationModel)
+    fun saveLocation(dataPack: LocationPackModel)
 
-    fun getLocation(): UserLocationModel
+    fun getLocation(): LocationModel
 
     fun getPhoto(userId: String)
 

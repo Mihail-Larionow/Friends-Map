@@ -36,9 +36,15 @@ dependencies {
 
     implementation(project(path = ":domain"))
 
+    implementation("com.google.firebase:firebase-database:20.3.0")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
 
     implementation("com.vk:android-sdk-core:4.1.0")
     implementation("com.vk:android-sdk-api:4.1.0")
+
+
+
 }

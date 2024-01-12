@@ -7,6 +7,7 @@ import com.michel.vkmap.domain.map.Manager
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
 import com.michel.vkmap.domain.map.Listener
 import com.michel.vkmap.domain.usecases.DisplayMapUseCase
+import com.vk.api.sdk.VK
 import com.yandex.mapkit.location.LocationListener
 import org.koin.dsl.module
 
@@ -17,7 +18,9 @@ val domainModule = module {
     }
 
     factory<SaveLocationUseCase> {
-        SaveLocationUseCase(iUserRepository = get())
+        SaveLocationUseCase(
+            iUserRepository = get(),
+            userId = VK.getUserId().toString())
     }
 
 

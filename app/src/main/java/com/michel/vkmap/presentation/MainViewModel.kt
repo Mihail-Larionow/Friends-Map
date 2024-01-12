@@ -1,11 +1,16 @@
 package com.michel.vkmap.presentation
 
+import android.graphics.Bitmap
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import com.michel.vkmap.data.api.vk.VKApi
 import com.michel.vkmap.domain.usecases.GetLocationUseCase
 import com.michel.vkmap.domain.usecases.SaveLocationUseCase
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
-import com.michel.vkmap.presentation.models.LocationModel
+import com.michel.vkmap.presentation.models.Location
+import com.vk.api.sdk.VK
 
 class MainViewModel(
     private val getLocationUseCase: GetLocationUseCase,
@@ -13,9 +18,13 @@ class MainViewModel(
     private val trackLocationUseCase: TrackLocationUseCase,
 ): ViewModel() {
 
+    var url = MutableLiveData<String>()
+
     init{
         Log.v("VKMAP", "MainViewModel created")
         trackLocationUseCase.execute()
+        val vkapi = VKApi()
+        vkapi.photoRequest(VK.getUserId().toString(), "")
     }
 
     override fun onCleared() {
@@ -24,10 +33,10 @@ class MainViewModel(
         super.onCleared()
     }
 
-    fun getLocation(): LocationModel{
+    fun getLocation(): Location{
         Log.v("VKMAP", "MainViewModel got location")
         val location = getLocationUseCase.execute()
-        return LocationModel(location.latitude, location.longitude)
+        return Location(location.latitude, location.longitude)
     }
 
 }

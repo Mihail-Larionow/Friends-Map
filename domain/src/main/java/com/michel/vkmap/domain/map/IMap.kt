@@ -1,15 +1,16 @@
 package com.michel.vkmap.domain.map
 
 import com.michel.vkmap.domain.models.LocationModel
+import com.michel.vkmap.domain.models.MapViewModel
 import com.yandex.runtime.image.ImageProvider
 
 interface IMap {
 
-    fun start()
+    fun start(view: MapViewModel)
 
     fun stop()
 
-    fun move(location: LocationModel)
+    fun zoom(location: LocationModel)
 
     fun addPlaceMark(
         location: LocationModel,

@@ -2,6 +2,7 @@ package com.michel.vkmap.domain.repository
 
 import com.michel.vkmap.domain.models.LocationPackModel
 import com.michel.vkmap.domain.models.LocationModel
+import java.io.InputStream
 
 interface IUserRepository {
 
@@ -9,7 +10,7 @@ interface IUserRepository {
 
     fun getLocation(): LocationModel
 
-    fun getPhoto(userId: String)
+    fun getPhoto(userId: String): ByteArray
 
     fun getFriendsList()
 

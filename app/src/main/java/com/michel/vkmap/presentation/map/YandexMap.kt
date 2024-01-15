@@ -3,6 +3,7 @@ package com.michel.vkmap.presentation.map
 import android.util.Log
 import com.michel.vkmap.domain.models.LocationModel
 import com.michel.vkmap.domain.map.IMap
+import com.michel.vkmap.domain.models.MapViewModel
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
@@ -10,14 +11,16 @@ import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
 
-class YandexMap (private val mapView: MapView) : IMap {
+class YandexMap () : IMap {
 
     private val placeMarkList: MutableMap<String, PlacemarkMapObject> = mutableMapOf()
+    private lateinit var mapView: MapView
 
-    override fun start(){
-        Log.v("VKMAP", "YandexMap started")
+    override fun start(view: MapViewModel){
+        mapView = view.mapView
         MapKitFactory.getInstance().onStart()
         mapView.onStart()
+        Log.v("VKMAP", "YandexMap started")
     }
 
     override fun stop(){
@@ -26,8 +29,7 @@ class YandexMap (private val mapView: MapView) : IMap {
         Log.v("VKMAP", "YandexMap stopped")
     }
 
-    override fun move(location: LocationModel) {
-        Log.v("VKMAP", "YandexMap moved")
+    override fun zoom(location: LocationModel) {
         mapView.mapWindow.map.move(
             CameraPosition(
                 Point(
@@ -39,6 +41,7 @@ class YandexMap (private val mapView: MapView) : IMap {
                 DEFAULT_TILT
             )
         )
+        Log.v("VKMAP", "YandexMap zoomed")
     }
 
     override fun addPlaceMark(
@@ -64,8 +67,8 @@ class YandexMap (private val mapView: MapView) : IMap {
         Log.v("VKMAP", userId + " PlaceMark moved")
         val placeMark = placeMarkList[userId]
         placeMark?.geometry = Point(
-            location.latitude.toDouble(),
-            location.longitude.toDouble()
+            location.latitude,
+            location.longitude
         )
     }
 

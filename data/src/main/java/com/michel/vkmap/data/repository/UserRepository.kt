@@ -8,6 +8,7 @@ import com.michel.vkmap.data.models.LocationDataPackModel
 import com.michel.vkmap.domain.models.LocationPackModel
 import com.michel.vkmap.domain.models.LocationModel
 import com.michel.vkmap.domain.repository.IUserRepository
+import java.net.URL
 
 class UserRepository(
     private val iUserStorage: IUserStorage,
@@ -41,13 +42,17 @@ class UserRepository(
         )
     }
 
-    override fun getPhoto(userId: String){
-        iApi.photoRequest(userId, "")
+    override fun getPhoto(userId: String): ByteArray{
+        val imageUrl = iApi.photoRequest(userId)
+        return urlToByteArray(url = imageUrl)
     }
 
     override fun getFriendsList() {
         iApi.friendsListRequest()
     }
 
+    private fun urlToByteArray(url: String): ByteArray {
+        return URL(url).readBytes()
+    }
 
 }

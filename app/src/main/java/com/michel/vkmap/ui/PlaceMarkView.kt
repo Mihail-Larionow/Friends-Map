@@ -13,31 +13,29 @@ import android.util.Log
 import com.yandex.runtime.image.ImageProvider
 
 class PlaceMarkView(
-    private val resourceBitmap: Bitmap? = null,
+    private val resourceBitmap: Bitmap,
 ): ImageProvider() {
 
     private val centerX: Float = (DEFAULT_ICON_SIZE / 2).toFloat()
-    private val placeMarkIconBitMap = Bitmap.createBitmap(
+    private val placeMarkIconBitmap = Bitmap.createBitmap(
         DEFAULT_ICON_SIZE,
         (DEFAULT_ICON_SIZE + DEFAULT_LABEL_HEIGHT),
         Bitmap.Config.ARGB_8888
     )
 
     init{
-        val canvas = Canvas(placeMarkIconBitMap)
+        val canvas = Canvas(placeMarkIconBitmap)
         drawIcon(canvas)
         drawBorder(canvas)
         drawLabel(canvas)
     }
 
     override fun getId(): String {
-        Log.e("VKMAP", "ImageProvider getId()")
         return "placemark"
     }
 
     override fun getImage(): Bitmap {
-        Log.e("VKMAP", "ImageProvider getImage()")
-        return placeMarkIconBitMap
+        return placeMarkIconBitmap
     }
 
     private fun drawIcon(canvas: Canvas){
@@ -52,13 +50,7 @@ class PlaceMarkView(
 
         paint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.SRC_IN))
 
-        val resultBitmap = resourceBitmap ?: Bitmap.createBitmap(
-            DEFAULT_ICON_SIZE,
-            DEFAULT_ICON_SIZE,
-            Bitmap.Config.ALPHA_8
-        )
-
-        canvas.drawBitmap(resultBitmap, 0f, 0f, paint)
+        canvas.drawBitmap(resourceBitmap, 0f, 0f, paint)
     }
 
     private fun drawBorder(canvas: Canvas){
@@ -70,7 +62,7 @@ class PlaceMarkView(
         canvas.drawCircle(centerX, centerX, centerX - DEFAULT_BORDER_WIDTH/2, paint)
 
         val offSet = (DEFAULT_ICON_SIZE - DEFAULT_LABEL_WIDTH)/2
-        val rect = RectF(Rect(offSet, DEFAULT_ICON_SIZE -16, offSet+ DEFAULT_LABEL_WIDTH, DEFAULT_ICON_SIZE+ DEFAULT_LABEL_HEIGHT))
+        val rect = RectF(Rect(offSet, DEFAULT_ICON_SIZE -16, offSet + DEFAULT_LABEL_WIDTH, DEFAULT_ICON_SIZE+ DEFAULT_LABEL_HEIGHT))
 
         paint = Paint()
         paint.color = ONLINE_BORDER_COLOR

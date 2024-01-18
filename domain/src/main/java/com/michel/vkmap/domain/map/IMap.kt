@@ -23,4 +23,9 @@ interface IMap {
         userId: String
     )
 
+    fun updateLocation(
+        location: LocationModel,
+        userId: String
+    )
+
 }

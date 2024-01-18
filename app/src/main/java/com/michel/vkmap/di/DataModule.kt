@@ -19,7 +19,7 @@ val dataModule = module {
     }
 
     single<ValueEventListener>{
-        FireBaseListener(movePlaceMarkUseCase = get())
+        FireBaseListener(updateLocationUseCase = get())
     }
 
     single<IDataBase>{

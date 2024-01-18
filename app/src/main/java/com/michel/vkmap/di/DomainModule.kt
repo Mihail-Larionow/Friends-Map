@@ -10,6 +10,7 @@ import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
 import com.michel.vkmap.domain.usecases.DisplayMapUseCase
 import com.michel.vkmap.domain.usecases.GetPhotosUseCase
 import com.michel.vkmap.domain.usecases.MovePlaceMarkUseCase
+import com.michel.vkmap.domain.usecases.UpdateLocationUseCase
 import com.michel.vkmap.domain.usecases.ZoomUseCase
 import com.vk.api.sdk.VK
 import com.yandex.mapkit.location.LocationListener
@@ -41,6 +42,10 @@ val domainModule = module {
 
     factory<MovePlaceMarkUseCase> {
         MovePlaceMarkUseCase(iMap = get())
+    }
+
+    factory<UpdateLocationUseCase> {
+        UpdateLocationUseCase(iMap = get())
     }
 
     single<LocationListener>{

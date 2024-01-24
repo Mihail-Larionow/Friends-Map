@@ -14,7 +14,6 @@ interface IMap {
 
     fun addPlaceMark(
         location: LocationModel,
-        placeMarkView: ImageProvider,
         userId: String
     )
 

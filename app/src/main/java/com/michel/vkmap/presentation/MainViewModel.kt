@@ -15,9 +15,11 @@ import com.michel.vkmap.domain.usecases.GetLocationUseCase
 import com.michel.vkmap.domain.usecases.GetPhotosUseCase
 import com.michel.vkmap.domain.usecases.SaveLocationUseCase
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
+import com.michel.vkmap.domain.usecases.UpdateLocationUseCase
 import com.michel.vkmap.domain.usecases.ZoomUseCase
 import com.michel.vkmap.ui.PlaceMarkView
 import com.vk.api.sdk.VK
+import org.koin.java.KoinJavaComponent.inject
 
 class MainViewModel(
     private val getLocationUseCase: GetLocationUseCase,
@@ -29,13 +31,11 @@ class MainViewModel(
     private val addPlaceMarkUseCase: AddPlaceMarkUseCase,
 ): ViewModel() {
 
-    val photo = MutableLiveData<Bitmap>()
     val id = VK.getUserId().toString()
 
     init{
         Log.v("VKMAP", "MainViewModel created")
         trackLocationUseCase.execute()
-        uploadPhotos()
     }
 
     override fun onCleared() {
@@ -53,28 +53,12 @@ class MainViewModel(
         return getLocationUseCase.execute()
     }
 
-    fun addPlaceMark(location: LocationModel, bitmap: Bitmap, userId: String){
-        addPlaceMarkUseCase.execute(
-            userLocation = location,
-            placeMarkView = PlaceMarkView(bitmap),
-            userId = userId
-        )
-    }
-
     fun startDisplayingMap(view: MapViewModel){
         displayMapUseCase.execute(view = view)
     }
 
     fun stopDisplayingMap(){
         displayMapUseCase.abandon()
-    }
-
-    private fun uploadPhotos(){
-        getPhotosUseCase.execute(VK.getUserId().toString()){
-            Handler(Looper.getMainLooper()).post{
-                photo.value = BitmapFactory.decodeByteArray(it, 0, it.size)
-            }
-        }
     }
 
 }

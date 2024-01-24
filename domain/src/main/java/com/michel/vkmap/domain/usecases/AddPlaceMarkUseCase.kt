@@ -9,7 +9,7 @@ class AddPlaceMarkUseCase(private val iMap: IMap) {
 
     fun execute(userLocation: LocationModel, placeMarkView: ImageProvider, userId: String) {
         Log.d("VKMAP", "UseCase: AddPlaceMark")
-        iMap.addPlaceMark(userLocation, placeMarkView, userId)
+        iMap.addPlaceMark(userLocation, userId)
     }
 
 }

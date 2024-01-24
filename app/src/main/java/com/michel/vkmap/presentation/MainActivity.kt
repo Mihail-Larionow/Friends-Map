@@ -46,14 +46,6 @@ class MainActivity : ComponentActivity() {
             )
         )
 
-        viewModel.photo.observe(this){
-            viewModel.addPlaceMark(
-                location = viewModel.getLocation(),
-                bitmap = it,
-                userId = viewModel.id
-            )
-        }
-
         val zoomButton = findViewById<Button>(R.id.zoomButton)
         zoomButton.setOnClickListener {
             val location = viewModel.getLocation()

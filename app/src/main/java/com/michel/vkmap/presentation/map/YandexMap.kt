@@ -1,17 +1,23 @@
 package com.michel.vkmap.presentation.map
 
+import android.graphics.BitmapFactory
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.michel.vkmap.domain.models.LocationModel
 import com.michel.vkmap.domain.map.IMap
 import com.michel.vkmap.domain.models.MapViewModel
+import com.michel.vkmap.domain.usecases.GetPhotosUseCase
 import com.michel.vkmap.presentation.models.Location
 import com.michel.vkmap.ui.PlaceMarkView
+import com.vk.api.sdk.VK
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
+import org.koin.java.KoinJavaComponent.inject
 
 class YandexMap () : IMap {
 
@@ -52,7 +58,6 @@ class YandexMap () : IMap {
 
     override fun addPlaceMark(
         location: LocationModel,
-        view: ImageProvider,
         userId: String
     ){
         Log.v("VKMAP", userId + " PlaceMark added")
@@ -61,12 +66,15 @@ class YandexMap () : IMap {
                 location.latitude,
                 location.longitude
             )
-            setIcon(view)
             isDraggable = false
             opacity = 1f
         }
 
         placeMarkList[userId] = placeMark
+
+        val image = imageList[userId]
+        if(image != null) placeMark.setIcon(image)
+        else uploadImage(userId)
     }
 
     override fun updateLocation(location: LocationModel, userId: String){
@@ -74,17 +82,33 @@ class YandexMap () : IMap {
             latitude = location.latitude,
             longitude = location.longitude
         )
+
         locationList[userId] = location
+
+        if(placeMarkList[userId] != null){
+            movePlaceMark(location, userId)
+        }
+        else{
+            addPlaceMark(location, userId)
+        }
     }
 
     override fun movePlaceMark(location: LocationModel, userId: String){
         Log.v("VKMAP", userId + " PlaceMark moved")
-        val placeMark = placeMarkList[userId]
 
-        placeMark?.geometry = Point(
+        placeMarkList[userId]?.geometry = Point(
             location.latitude,
             location.longitude
         )
+    }
+
+    private fun uploadImage(userId: String){
+        getPhotosUseCase.execute(userId){
+            val photo = BitmapFactory.decodeByteArray(it, 0, it.size)
+            val view = PlaceMarkView(photo)
+            imageList[userId] = view
+            placeMarkList[userId]?.setIcon(view)
+        }
     }
 
     companion object{

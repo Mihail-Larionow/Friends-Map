@@ -6,11 +6,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.michel.vkmap.data.models.FirebaseDataModel
-import com.michel.vkmap.data.models.LocationDataModel
-import com.michel.vkmap.data.models.LocationDataPackModel
 import com.michel.vkmap.domain.models.LocationModel
-import com.michel.vkmap.domain.models.LocationPackModel
-import com.michel.vkmap.domain.usecases.MovePlaceMarkUseCase
 import com.michel.vkmap.domain.usecases.UpdateLocationUseCase
 
 class FireBaseListener(private val updateLocationUseCase: UpdateLocationUseCase): ValueEventListener {
@@ -23,10 +19,9 @@ class FireBaseListener(private val updateLocationUseCase: UpdateLocationUseCase)
             data?.let{
                 if(it.latitude != null && it.longitude != null && userId != null){
                     val location = LocationModel(it.latitude, it.longitude)
-                    updateLocationUseCase.execute(locationModel = location, userId)
-                    }
-            }
 
+                }
+            }
         }
 
 

@@ -13,7 +13,6 @@ import java.net.URL
 class UserRepository(
     private val iUserStorage: IUserStorage,
     private val iDataBase: IDataBase,
-    private val iApi: IApi
 ): IUserRepository {
 
     override fun saveLocation(dataPack: LocationPackModel){
@@ -40,19 +39,6 @@ class UserRepository(
             latitude = location.latitude,
             longitude = location.longitude
         )
-    }
-
-    override fun getPhoto(userId: String): ByteArray{
-        val imageUrl = iApi.photoRequest(userId)
-        return urlToByteArray(url = imageUrl)
-    }
-
-    override fun getFriendsList() {
-        iApi.friendsListRequest()
-    }
-
-    private fun urlToByteArray(url: String): ByteArray {
-        return URL(url).readBytes()
     }
 
 }

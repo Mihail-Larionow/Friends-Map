@@ -9,6 +9,7 @@ import com.vk.api.sdk.VKApiCallback
 
 class VKApi: IApi {
 
+
     override fun photoRequest(userId: String): String{
         return VK.executeSync(GetPhotoCommand(userId))
     }

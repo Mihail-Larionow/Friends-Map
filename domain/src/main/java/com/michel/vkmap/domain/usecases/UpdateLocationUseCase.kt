@@ -8,7 +8,7 @@ class UpdateLocationUseCase(private val iMap: IMap) {
 
     fun execute(locationModel: LocationModel, userId: String){
         Log.d("VKMAP", "UseCase: UpdateLocation")
-        //iMap.updateLocation(locationModel, userId)
+        iMap.updateLocation(locationModel, userId)
     }
 
 }

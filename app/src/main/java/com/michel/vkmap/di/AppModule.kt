@@ -21,6 +21,6 @@ val appModule = module {
     }
 
     single<IMap>{
-        YandexMap()
+        YandexMap(getPhotosUseCase = get())
     }
 }

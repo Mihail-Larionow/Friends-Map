@@ -19,13 +19,11 @@ class FireBaseListener(private val updateLocationUseCase: UpdateLocationUseCase)
             data?.let{
                 if(it.latitude != null && it.longitude != null && userId != null){
                     val location = LocationModel(it.latitude, it.longitude)
-
+                    updateLocationUseCase.execute(location, userId)
                 }
             }
         }
 
-
-        //updateLocationUseCase.execute()
         Log.e("VKMAP", "Firebase data changed")
     }
 

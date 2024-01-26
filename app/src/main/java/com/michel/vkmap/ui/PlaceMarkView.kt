@@ -12,9 +12,13 @@ import android.graphics.RectF
 import android.util.Log
 import com.yandex.runtime.image.ImageProvider
 
-class PlaceMarkView(
-    private val resourceBitmap: Bitmap,
-): ImageProvider() {
+class PlaceMarkView(){
+
+    var resourceBitmap: Bitmap = Bitmap.createBitmap(
+        DEFAULT_ICON_SIZE,
+        (DEFAULT_ICON_SIZE + DEFAULT_LABEL_HEIGHT),
+        Bitmap.Config.ARGB_8888
+    )
 
     private val centerX: Float = (DEFAULT_ICON_SIZE / 2).toFloat()
     private val placeMarkIconBitmap = Bitmap.createBitmap(
@@ -23,19 +27,23 @@ class PlaceMarkView(
         Bitmap.Config.ARGB_8888
     )
 
-    init{
+    fun getImage(): ImageProvider {
+        this.update()
+        return ImageProvider.fromBitmap(placeMarkIconBitmap)
+    }
+
+    fun changeColor(){
         val canvas = Canvas(placeMarkIconBitmap)
         drawIcon(canvas)
-        drawBorder(canvas)
+        drawBorder(canvas, OFFLINE_BORDER_COLOR)
         drawLabel(canvas)
     }
 
-    override fun getId(): String {
-        return "placemark"
-    }
-
-    override fun getImage(): Bitmap {
-        return placeMarkIconBitmap
+    private fun update(){
+        val canvas = Canvas(placeMarkIconBitmap)
+        drawIcon(canvas)
+        drawBorder(canvas, ONLINE_BORDER_COLOR)
+        drawLabel(canvas)
     }
 
     private fun drawIcon(canvas: Canvas){
@@ -53,9 +61,9 @@ class PlaceMarkView(
         canvas.drawBitmap(resourceBitmap, 0f, 0f, paint)
     }
 
-    private fun drawBorder(canvas: Canvas){
+    private fun drawBorder(canvas: Canvas, borderColor: Int){
         var paint = Paint()
-        paint.color = ONLINE_BORDER_COLOR
+        paint.color = borderColor
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = DEFAULT_BORDER_WIDTH
 
@@ -65,7 +73,7 @@ class PlaceMarkView(
         val rect = RectF(Rect(offSet, DEFAULT_ICON_SIZE -16, offSet + DEFAULT_LABEL_WIDTH, DEFAULT_ICON_SIZE+ DEFAULT_LABEL_HEIGHT))
 
         paint = Paint()
-        paint.color = ONLINE_BORDER_COLOR
+        paint.color = borderColor
         paint.style = Paint.Style.FILL
         canvas.drawRoundRect(rect, DEFAULT_BORDER_WIDTH/2, DEFAULT_BORDER_WIDTH/2, paint)
     }

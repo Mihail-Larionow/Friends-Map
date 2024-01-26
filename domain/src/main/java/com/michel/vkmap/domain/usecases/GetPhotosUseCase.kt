@@ -2,17 +2,14 @@ package com.michel.vkmap.domain.usecases
 
 import android.util.Log
 import com.michel.vkmap.domain.repository.IUserRepository
+import com.michel.vkmap.domain.repository.IVKRepository
 import java.io.InputStream
 
-class GetPhotosUseCase(private val iUserRepository: IUserRepository) {
+class GetPhotosUseCase(private val iVKRepository: IVKRepository) {
 
-    fun execute(userId: String, callback: (ByteArray) -> Unit){
-        Thread{
-            val input = iUserRepository.getPhoto(userId = userId)
-            callback.invoke(input)
-            Log.d("VKMAP", "UseCase: GetPhotos")
-        }.start()
-
+    fun execute(userId: String): ByteArray{
+        Log.d("VKMAP", "UseCase: GetPhotos")
+        return iVKRepository.getPhoto(userId = userId)
     }
 
 }

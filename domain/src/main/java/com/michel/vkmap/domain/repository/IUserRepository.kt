@@ -10,8 +10,4 @@ interface IUserRepository {
 
     fun getLocation(): LocationModel
 
-    fun getPhoto(userId: String): ByteArray
-
-    fun getFriendsList()
-
 }

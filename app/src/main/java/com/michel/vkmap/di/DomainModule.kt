@@ -29,7 +29,7 @@ val domainModule = module {
     }
 
     factory<GetPhotosUseCase> {
-        GetPhotosUseCase(iUserRepository = get())
+        GetPhotosUseCase(iVKRepository = get())
     }
 
     factory<ZoomUseCase> {

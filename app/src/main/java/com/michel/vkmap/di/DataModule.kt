@@ -7,9 +7,11 @@ import com.michel.vkmap.data.database.IDataBase
 import com.michel.vkmap.data.database.firebase.FireBaseDataBase
 import com.michel.vkmap.data.database.firebase.FireBaseListener
 import com.michel.vkmap.data.repository.UserRepository
+import com.michel.vkmap.data.repository.VKRepository
 import com.michel.vkmap.data.storage.IUserStorage
 import com.michel.vkmap.data.storage.sharedpref.SharedPrefUserStorage
 import com.michel.vkmap.domain.repository.IUserRepository
+import com.michel.vkmap.domain.repository.IVKRepository
 import org.koin.dsl.module
 
 val dataModule = module {
@@ -34,6 +36,11 @@ val dataModule = module {
         UserRepository(
             iUserStorage = get(),
             iDataBase = get(),
+        )
+    }
+
+    single<IVKRepository> {
+        VKRepository(
             iApi = get()
         )
     }

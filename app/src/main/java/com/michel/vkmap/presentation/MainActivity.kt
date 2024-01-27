@@ -2,12 +2,15 @@ package com.michel.vkmap.presentation
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.ComponentActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.michel.vkmap.R
@@ -51,14 +54,28 @@ class MainActivity : ComponentActivity() {
             val location = viewModel.getLocation()
             viewModel.zoom(location)
         }
+
+        val logoutButton = findViewById<Button>(R.id.logoutButton)
+        logoutButton.setOnClickListener {
+            VK.logout()
+            WelcomeActivity.startFrom(this)
+            finish()
+        }
     }
 
     override fun onStop() {
-
         viewModel.stopDisplayingMap()
 
         super.onStop()
         Log.v("VKMAP", "MainActivity stopped")
+    }
+
+    private fun checkPermission(permission: String){
+        when {
+            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED -> {
+                Log.i("VKMAP", "Permission granted")
+            }
+        }
     }
 
     companion object{

@@ -1,6 +1,8 @@
-package com.michel.vkmap.domain.repository
+package com.michel.vkmap.data.storage.vk
 
-interface IVKRepository {
+import com.michel.vkmap.data.api.IApi
+
+interface IVKStorage {
 
     fun getPhoto(userId: String): ByteArray
 

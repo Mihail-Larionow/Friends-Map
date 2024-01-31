@@ -27,31 +27,30 @@ import org.koin.java.KoinJavaComponent.inject
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 
-class YandexMap (private val getPhotosUseCase: GetPhotosUseCase) : IMap {
+class YandexMap: IMap {
 
     private val locationList: MutableMap<String, LocationModel> = mutableMapOf()
     private val placeMarkList: MutableMap<String, PlaceMark> = mutableMapOf()
-    private val imageList: MutableMap<String, ByteArray> = mutableMapOf()
-    private val bitmapList: MutableMap<String, Bitmap> = mutableMapOf()
 
     private lateinit var mapView: MapView
 
     override fun start(view: MapViewModel){
+        Log.v("VKMAP", "YandexMap starting")
+
         placeMarkList.clear()
         mapView = view.mapView
         MapKitFactory.getInstance().onStart()
         mapView.onStart()
 
         locationList.forEach{
-            (userId, location) -> updateLocation(location, userId)
+            (userId, location) -> updatePlaceMark(location, userId)
         }
-
-        Log.v("VKMAP", "YandexMap started")
     }
 
     override fun stop(){
         mapView.onStop()
         MapKitFactory.getInstance().onStop()
+
         Log.v("VKMAP", "YandexMap stopped")
     }
 
@@ -74,8 +73,6 @@ class YandexMap (private val getPhotosUseCase: GetPhotosUseCase) : IMap {
         location: LocationModel,
         userId: String
     ){
-        Log.v("VKMAP", userId + " PlaceMark added")
-
         val placeMarkMapObject = mapView.mapWindow.map.mapObjects.addPlacemark()
 
         val placeMark = PlaceMark(
@@ -86,18 +83,10 @@ class YandexMap (private val getPhotosUseCase: GetPhotosUseCase) : IMap {
         placeMark.setLocation(location)
 
         placeMarkList[userId] = placeMark
-
-        if(imageList[userId] != null){
-            placeMarkList[userId]?.setIcon(imageList[userId]!!)
-        }
-        else{
-            uploadImage(userId)
-        }
     }
 
-    override fun updateLocation(location: LocationModel, userId: String){
-
-        Log.v("VKMAP", "Updating placemark $userId")
+    override fun updatePlaceMark(location: LocationModel, userId: String) {
+        Log.v("VKMAP", "Placemark $userId updating")
         locationList[userId] = location
 
         if(placeMarkList[userId] != null){
@@ -108,24 +97,9 @@ class YandexMap (private val getPhotosUseCase: GetPhotosUseCase) : IMap {
         }
     }
 
-    override fun movePlaceMark(location: LocationModel, userId: String){
-        Log.v("VKMAP", userId + " PlaceMark moved")
+    private fun movePlaceMark(location: LocationModel, userId: String){
         placeMarkList[userId]?.setLocation(location)
-    }
-
-    private fun uploadImage(userId: String){
-        Log.e("VKMAP", "Start uploading")
-        runBlocking{
-            launch{
-                val input = withContext(Dispatchers.IO){
-                    getPhotosUseCase.execute(userId)
-                }
-                Log.d("VKMAP", "input = " + input.toString())
-                imageList[userId] = input
-                placeMarkList[userId]?.setIcon(input)
-            }
-        }
-
+        Log.v("VKMAP", "PlaceMark $userId moved")
     }
 
     companion object{

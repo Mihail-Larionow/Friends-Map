@@ -17,12 +17,7 @@ interface IMap {
         userId: String
     )
 
-    fun movePlaceMark(
-        location: LocationModel,
-        userId: String
-    )
-
-    fun updateLocation(
+    fun updatePlaceMark(
         location: LocationModel,
         userId: String
     )

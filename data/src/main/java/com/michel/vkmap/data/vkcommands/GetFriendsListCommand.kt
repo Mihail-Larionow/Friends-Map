@@ -9,9 +9,7 @@ import com.vk.api.sdk.internal.ApiCommand
 import org.json.JSONException
 import org.json.JSONObject
 
-class GetFriendsListCommand: ApiCommand<ArrayList<String>>() {
-
-    private val userId = VK.getUserId().toString()
+class GetFriendsListCommand(private val userId: String): ApiCommand<ArrayList<String>>() {
 
     override fun onExecute(manager: VKApiManager): ArrayList<String>{
         val call = VKMethodCall.Builder()

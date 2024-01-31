@@ -17,15 +17,16 @@ class PlaceMarkView(){
     var resourceBitmap: Bitmap = Bitmap.createBitmap(
         DEFAULT_ICON_SIZE,
         (DEFAULT_ICON_SIZE + DEFAULT_LABEL_HEIGHT),
-        Bitmap.Config.ARGB_8888
+        Bitmap.Config.ALPHA_8
     )
 
-    private val centerX: Float = (DEFAULT_ICON_SIZE / 2).toFloat()
     private val placeMarkIconBitmap = Bitmap.createBitmap(
         DEFAULT_ICON_SIZE,
         (DEFAULT_ICON_SIZE + DEFAULT_LABEL_HEIGHT),
         Bitmap.Config.ARGB_8888
     )
+
+    private val centerX: Float = (DEFAULT_ICON_SIZE / 2).toFloat()
 
     fun getImage(): ImageProvider {
         this.update()

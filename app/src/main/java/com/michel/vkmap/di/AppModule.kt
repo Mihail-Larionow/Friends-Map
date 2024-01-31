@@ -1,6 +1,5 @@
 package com.michel.vkmap.di
 
-import com.michel.vkmap.R
 import com.michel.vkmap.domain.map.IMap
 import com.michel.vkmap.presentation.MainViewModel
 import com.michel.vkmap.presentation.map.YandexMap
@@ -13,7 +12,6 @@ val appModule = module {
             getLocationUseCase = get(),
             saveLocationUseCase = get(),
             trackLocationUseCase = get(),
-            getPhotosUseCase = get(),
             zoomUseCase = get(),
             displayMapUseCase = get(),
             addPlaceMarkUseCase = get()
@@ -21,6 +19,6 @@ val appModule = module {
     }
 
     single<IMap>{
-        YandexMap(getPhotosUseCase = get())
+        YandexMap()
     }
 }

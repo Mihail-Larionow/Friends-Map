@@ -7,11 +7,13 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.michel.vkmap.data.models.FirebaseDataModel
 import com.michel.vkmap.domain.models.LocationModel
-import com.michel.vkmap.domain.usecases.UpdateLocationUseCase
+import com.michel.vkmap.domain.usecases.UpdateMapUseCase
 
-class FireBaseListener(private val updateLocationUseCase: UpdateLocationUseCase): ValueEventListener {
+class FireBaseListener(private val updateMapUseCase: UpdateMapUseCase): ValueEventListener {
 
     override fun onDataChange(snapshot: DataSnapshot) {
+        Log.v("VKMAP", "Firebase data changed")
+
         snapshot.children.forEach{ dataPack ->
             val userId = dataPack.key
             val data = dataPack.getValue<FirebaseDataModel>()
@@ -19,12 +21,10 @@ class FireBaseListener(private val updateLocationUseCase: UpdateLocationUseCase)
             data?.let{
                 if(it.latitude != null && it.longitude != null && userId != null){
                     val location = LocationModel(it.latitude, it.longitude)
-                    updateLocationUseCase.execute(location, userId)
+                    updateMapUseCase.execute(location, userId)
                 }
             }
         }
-
-        Log.e("VKMAP", "Firebase data changed")
     }
 
     override fun onCancelled(error: DatabaseError) {

@@ -9,27 +9,33 @@ import com.michel.vkmap.data.database.firebase.FireBaseListener
 import com.michel.vkmap.data.repository.UserRepository
 import com.michel.vkmap.data.repository.VKRepository
 import com.michel.vkmap.data.storage.IUserStorage
+import com.michel.vkmap.data.storage.vk.IVKStorage
 import com.michel.vkmap.data.storage.sharedpref.SharedPrefUserStorage
+import com.michel.vkmap.data.storage.vk.VKStorage
 import com.michel.vkmap.domain.repository.IUserRepository
 import com.michel.vkmap.domain.repository.IVKRepository
 import org.koin.dsl.module
 
 val dataModule = module {
 
+    single<IApi>{
+        VKApi()
+    }
+
     single<IUserStorage> {
         SharedPrefUserStorage(context = get())
     }
 
+    single<IVKStorage> {
+        VKStorage(api = get())
+    }
+
     single<ValueEventListener>{
-        FireBaseListener(updateLocationUseCase = get())
+        FireBaseListener(updateMapUseCase = get())
     }
 
     single<IDataBase>{
         FireBaseDataBase(dataListener = get())
-    }
-
-    single<IApi>{
-        VKApi()
     }
 
     single<IUserRepository> {
@@ -41,7 +47,7 @@ val dataModule = module {
 
     single<IVKRepository> {
         VKRepository(
-            iApi = get()
+            storage = get()
         )
     }
 

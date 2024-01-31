@@ -1,24 +1,16 @@
 package com.michel.vkmap.data.repository
 
-import android.util.Log
-import com.michel.vkmap.data.api.IApi
+import com.michel.vkmap.data.storage.vk.IVKStorage
 import com.michel.vkmap.domain.repository.IVKRepository
-import java.net.URL
 
-class VKRepository(private val iApi: IApi): IVKRepository {
+class VKRepository(private val storage: IVKStorage): IVKRepository {
 
     override fun getPhoto(userId: String): ByteArray{
-        val imageUrl = iApi.photoRequest(userId)
-        return urlToByteArray(url = imageUrl)
+        return storage.getPhoto(userId = userId)
     }
 
-    override fun getFriendsList() {
-        iApi.friendsListRequest()
-    }
-
-    private fun urlToByteArray(url: String): ByteArray {
-        Log.e("VKMAP", url)
-        return URL(url).readBytes()
+    override fun getFriendsList(userId: String): ArrayList<String> {
+        return storage.getFriendsList(userId = userId)
     }
 
 }

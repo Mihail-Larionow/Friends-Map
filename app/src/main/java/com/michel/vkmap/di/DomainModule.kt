@@ -8,9 +8,10 @@ import com.michel.vkmap.domain.usecases.TrackLocationUseCase
 import com.michel.vkmap.domain.map.Listener
 import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
 import com.michel.vkmap.domain.usecases.DisplayMapUseCase
+import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetPhotosUseCase
 import com.michel.vkmap.domain.usecases.MovePlaceMarkUseCase
-import com.michel.vkmap.domain.usecases.UpdateLocationUseCase
+import com.michel.vkmap.domain.usecases.UpdateMapUseCase
 import com.michel.vkmap.domain.usecases.ZoomUseCase
 import com.vk.api.sdk.VK
 import com.yandex.mapkit.location.LocationListener
@@ -29,7 +30,11 @@ val domainModule = module {
     }
 
     factory<GetPhotosUseCase> {
-        GetPhotosUseCase(iVKRepository = get())
+        GetPhotosUseCase(repository = get())
+    }
+
+    factory<GetFriendsListUseCase> {
+        GetFriendsListUseCase(repository = get())
     }
 
     factory<ZoomUseCase> {
@@ -44,8 +49,8 @@ val domainModule = module {
         MovePlaceMarkUseCase(iMap = get())
     }
 
-    factory<UpdateLocationUseCase> {
-        UpdateLocationUseCase(iMap = get())
+    factory<UpdateMapUseCase> {
+        UpdateMapUseCase(iMap = get())
     }
 
     single<LocationListener>{

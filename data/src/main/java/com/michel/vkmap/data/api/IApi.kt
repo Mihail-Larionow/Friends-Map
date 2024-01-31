@@ -4,6 +4,6 @@ interface IApi {
 
     fun photoRequest(userId: String): String
 
-    fun friendsListRequest()
+    fun friendsListRequest(userId: String): ArrayList<String>
 
 }

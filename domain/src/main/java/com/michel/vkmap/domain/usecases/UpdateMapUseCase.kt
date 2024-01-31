@@ -4,11 +4,11 @@ import android.util.Log
 import com.michel.vkmap.domain.map.IMap
 import com.michel.vkmap.domain.models.LocationModel
 
-class UpdateLocationUseCase(private val iMap: IMap) {
+class UpdateMapUseCase(private val iMap: IMap) {
 
-    fun execute(locationModel: LocationModel, userId: String){
+    fun execute(location: LocationModel, userId: String){
         Log.d("VKMAP", "UseCase: UpdateLocation")
-        iMap.updateLocation(locationModel, userId)
+        iMap.updatePlaceMark(location, userId)
     }
 
 }

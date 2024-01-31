@@ -9,13 +9,12 @@ import com.vk.api.sdk.VKApiCallback
 
 class VKApi: IApi {
 
-
     override fun photoRequest(userId: String): String{
-        return VK.executeSync(GetPhotoCommand(userId))
+        return VK.executeSync(GetPhotoCommand(userId = userId))
     }
 
-    override fun friendsListRequest() {
-        VK.executeSync(GetFriendsListCommand())
+    override fun friendsListRequest(userId: String): ArrayList<String> {
+        return VK.executeSync(GetFriendsListCommand(userId = userId))
     }
 
 }

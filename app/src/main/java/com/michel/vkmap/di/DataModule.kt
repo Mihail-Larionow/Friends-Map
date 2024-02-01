@@ -31,7 +31,10 @@ val dataModule = module {
     }
 
     single<ValueEventListener>{
-        FireBaseListener(updateMapUseCase = get())
+        FireBaseListener(
+            updateMapUseCase = get(),
+            getFriendsListUseCase = get()
+        )
     }
 
     single<IDataBase>{

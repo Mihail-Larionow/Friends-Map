@@ -5,7 +5,7 @@ import com.michel.vkmap.domain.usecases.GetLocationUseCase
 import com.michel.vkmap.domain.usecases.SaveLocationUseCase
 import com.michel.vkmap.domain.map.Manager
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
-import com.michel.vkmap.domain.map.Listener
+import com.michel.vkmap.domain.map.YandexListener
 import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
 import com.michel.vkmap.domain.usecases.DisplayMapUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
@@ -16,6 +16,8 @@ import com.michel.vkmap.domain.usecases.ZoomUseCase
 import com.vk.api.sdk.VK
 import com.yandex.mapkit.location.LocationListener
 import org.koin.dsl.module
+
+val userId = VK.getUserId().toString()
 
 val domainModule = module {
 
@@ -54,7 +56,11 @@ val domainModule = module {
     }
 
     single<LocationListener>{
-        Listener(saveLocationUseCase = get())
+        YandexListener(
+            userId = userId,
+            updateMapUseCase = get(),
+            saveLocationUseCase = get()
+        )
     }
 
     single<ILocationManager>{

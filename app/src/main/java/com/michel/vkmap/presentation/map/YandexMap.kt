@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import com.michel.vkmap.anim.PlaceMarkMoveAnimation
 import com.michel.vkmap.domain.models.LocationModel
 import com.michel.vkmap.domain.map.IMap
 import com.michel.vkmap.domain.models.MapViewModel
@@ -69,6 +70,17 @@ class YandexMap: IMap {
         )
     }
 
+    override fun updatePlaceMark(location: LocationModel, userId: String) {
+        Log.v("VKMAP", "Placemark $userId updating")
+
+        val placeMark = placeMarkList[userId]
+
+        if(placeMark != null) placeMark.move(newLocation = location)
+        else this.addPlaceMark(location = location, userId = userId)
+
+        locationList[userId] = location
+    }
+
     override fun addPlaceMark(
         location: LocationModel,
         userId: String
@@ -77,29 +89,11 @@ class YandexMap: IMap {
 
         val placeMark = PlaceMark(
             id = userId,
-            mark = placeMarkMapObject
+            mark = placeMarkMapObject,
+            location = location
         )
 
-        placeMark.setLocation(location)
-
         placeMarkList[userId] = placeMark
-    }
-
-    override fun updatePlaceMark(location: LocationModel, userId: String) {
-        Log.v("VKMAP", "Placemark $userId updating")
-        locationList[userId] = location
-
-        if(placeMarkList[userId] != null){
-            movePlaceMark(location, userId)
-        }
-        else{
-            addPlaceMark(location, userId)
-        }
-    }
-
-    private fun movePlaceMark(location: LocationModel, userId: String){
-        placeMarkList[userId]?.setLocation(location)
-        Log.v("VKMAP", "PlaceMark $userId moved")
     }
 
     companion object{

@@ -15,10 +15,15 @@ class PlaceMarkMoveAnimation(private val mark: PlacemarkMapObject) {
     fun execute(startLocation: LocationModel, endLocation: LocationModel){
         val deltaLatitude = (startLocation.latitude - endLocation.latitude) / MAX_VALUE
         val deltaLongitude = (startLocation.longitude - endLocation.longitude) / MAX_VALUE
+        var latitude = startLocation.latitude
+        var longitude = startLocation.longitude
+
         animation.addUpdateListener {
+            latitude += deltaLatitude
+            longitude += deltaLongitude
             val location = Point(
-                startLocation.latitude + deltaLatitude,
-                startLocation.longitude + deltaLongitude
+                latitude,
+                longitude
             )
             mark.geometry = location
         }

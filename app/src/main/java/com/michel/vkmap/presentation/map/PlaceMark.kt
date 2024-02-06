@@ -2,6 +2,7 @@ package com.michel.vkmap.presentation.map
 
 import android.graphics.BitmapFactory
 import android.util.Log
+import com.michel.vkmap.anim.PlaceMarkAppearAnimation
 import com.michel.vkmap.anim.PlaceMarkMoveAnimation
 import com.michel.vkmap.domain.models.LocationModel
 import com.michel.vkmap.domain.usecases.GetPhotosUseCase
@@ -37,7 +38,6 @@ class PlaceMark(
         )
 
         mark.geometry = point
-        mark.opacity = DEFAULT_OPACITY
         mark.isDraggable = DRAGGABLE
         mark.setIcon(view.getImage())
 

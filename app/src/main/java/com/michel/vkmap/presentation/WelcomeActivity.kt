@@ -14,6 +14,8 @@ import com.vk.api.sdk.exceptions.VKAuthException
 
 class WelcomeActivity : ComponentActivity() {
 
+    private lateinit var loginButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.v("VKMAP", "WelcomeActivity created")
@@ -33,8 +35,9 @@ class WelcomeActivity : ComponentActivity() {
             }
         }
 
-        val loginButton = findViewById<Button>(R.id.loginButton)
+        loginButton = findViewById<Button>(R.id.loginButton)
         loginButton.setOnClickListener{
+            loginButton.isClickable = false
             authLauncher.launch(arrayListOf(VKScope.FRIENDS, VKScope.PHOTOS))
         }
     }
@@ -48,6 +51,7 @@ class WelcomeActivity : ComponentActivity() {
     private fun onLoginFailed(exception: VKAuthException){
         Log.w("VKMAP", "User didn't pass authorization")
         Log.e("VKMAP", exception.toString())
+        loginButton.isClickable = true
     }
 
     companion object{

@@ -49,6 +49,9 @@ class MainActivity : ComponentActivity() {
             )
         )
 
+        val startLocation = viewModel.getLocation()
+        viewModel.zoom(startLocation)
+
         val zoomButton = findViewById<Button>(R.id.zoomButton)
         zoomButton.setOnClickListener {
             val location = viewModel.getLocation()

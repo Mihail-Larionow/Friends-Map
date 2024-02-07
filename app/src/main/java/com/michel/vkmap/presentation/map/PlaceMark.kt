@@ -28,6 +28,7 @@ class PlaceMark(
 
     private val getPhotosUseCase by inject<GetPhotosUseCase>()
     private val moveAnimation = PlaceMarkMoveAnimation(mark = mark)
+    private val appearAnimation = PlaceMarkAppearAnimation(mark = mark)
 
     init{
         Log.v("VKMAP","PlaceMark $id added")
@@ -42,6 +43,7 @@ class PlaceMark(
         mark.setIcon(view.getImage())
 
         uploadIcon(userId = id)
+        appearAnimation.execute()
     }
 
     fun move(newLocation: LocationModel){

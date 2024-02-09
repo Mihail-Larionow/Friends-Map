@@ -37,17 +37,25 @@ class MainActivity : ComponentActivity() {
         setContentView(R.layout.activity_main)
 
         Log.v("VKMAP", "MainActivity created")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.v("VKMAP", "MainActivity starting")
 
         viewModel.startDisplayingMap(
             MapViewModel(
                 findViewById(R.id.mapView)
             )
         )
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.v("VKMAP", "MainActivity starting")
+
+        val logoutButton = findViewById<Button>(R.id.logoutButton)
+        logoutButton.setOnClickListener {
+            VK.logout()
+            WelcomeActivity.startFrom(this)
+            finish()
+        }
 
         val startLocation = viewModel.getLocation()
         viewModel.zoom(startLocation)
@@ -58,19 +66,22 @@ class MainActivity : ComponentActivity() {
             viewModel.zoom(location)
         }
 
-        val logoutButton = findViewById<Button>(R.id.logoutButton)
-        logoutButton.setOnClickListener {
-            VK.logout()
-            WelcomeActivity.startFrom(this)
-            finish()
+        val chatButton = findViewById<Button>(R.id.chatButton)
+        chatButton.setOnClickListener {
+            ChatActivity.startFrom(this)
         }
+
     }
 
     override fun onStop() {
-        viewModel.stopDisplayingMap()
-
         super.onStop()
         Log.v("VKMAP", "MainActivity stopped")
+    }
+
+    override fun onDestroy() {
+        viewModel.stopDisplayingMap()
+        super.onDestroy()
+        Log.v("VKMAP", "MainActivity destroyed")
     }
 
     private fun checkPermission(permission: String){

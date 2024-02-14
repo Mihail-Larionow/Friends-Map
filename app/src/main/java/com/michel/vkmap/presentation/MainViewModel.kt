@@ -11,6 +11,7 @@ import com.michel.vkmap.domain.usecases.GetPhotosUseCase
 import com.michel.vkmap.domain.usecases.SaveLocationUseCase
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
 import com.michel.vkmap.domain.usecases.ZoomUseCase
+import androidx.activity.result.contract.ActivityResultContracts
 import com.vk.api.sdk.VK
 
 class MainViewModel(
@@ -26,11 +27,9 @@ class MainViewModel(
 
     init{
         Log.v("VKMAP", "MainViewModel created")
-        trackLocationUseCase.execute()
     }
 
     override fun onCleared() {
-        trackLocationUseCase.abandon()
         Log.v("VKMAP", "MainViewModel cleared")
         super.onCleared()
     }
@@ -49,6 +48,20 @@ class MainViewModel(
 
     fun stopDisplayingMap(){
         displayMapUseCase.abandon()
+    }
+
+    fun startLocationTracking(): Boolean{
+        trackLocationUseCase.execute()
+        return true
+    }
+
+    fun stopLocationTracking(): Boolean{
+        trackLocationUseCase.abandon()
+        return false
+    }
+
+    fun checkPermissions(){
+
     }
 
 }

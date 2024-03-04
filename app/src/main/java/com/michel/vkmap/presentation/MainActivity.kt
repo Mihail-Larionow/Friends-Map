@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
             permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
                 Log.i("VKMAP", "Only approximate location access granted")
                 locationTracking = viewModel.startLocationTracking()
-
             }
             else -> {
                 Log.e("VKMAP", "Location access not granted")

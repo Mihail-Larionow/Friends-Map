@@ -27,6 +27,6 @@ class PlaceMarkAppearAnimation(private val mark: PlacemarkMapObject) {
 
     companion object{
         private const val MAX_VALUE: Float = 100f
-        private const val DEFAULT_DURATION: Long = 1000
+        private const val DEFAULT_DURATION: Long = 500
     }
 }

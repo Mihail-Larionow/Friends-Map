@@ -2,26 +2,19 @@ package com.michel.vkmap.presentation
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.michel.vkmap.domain.models.LocationModel
-import com.michel.vkmap.domain.models.MapViewModel
-import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
-import com.michel.vkmap.domain.usecases.DisplayMapUseCase
-import com.michel.vkmap.domain.usecases.GetLocationUseCase
-import com.michel.vkmap.domain.usecases.GetPhotosUseCase
-import com.michel.vkmap.domain.usecases.SaveLocationUseCase
-import com.michel.vkmap.domain.usecases.TrackLocationUseCase
-import com.michel.vkmap.domain.usecases.ZoomUseCase
-import androidx.activity.result.contract.ActivityResultContracts
+import com.michel.vkmap.data.models.LocationModel
+import androidx.lifecycle.LiveData
+import com.michel.vkmap.data.db.FirebaseDataBase
+import com.michel.vkmap.data.db.FirebaseListener
 import com.vk.api.sdk.VK
+import com.yandex.mapkit.mapview.MapView
 
 class MainViewModel(
-    private val getLocationUseCase: GetLocationUseCase,
-    private val saveLocationUseCase: SaveLocationUseCase,
-    private val trackLocationUseCase: TrackLocationUseCase,
-    private val zoomUseCase: ZoomUseCase,
-    private val displayMapUseCase: DisplayMapUseCase,
-    private val addPlaceMarkUseCase: AddPlaceMarkUseCase,
+
 ): ViewModel() {
+
+    private val db = FirebaseDataBase(FirebaseListener())
+    val data: LiveData<Map<String, LocationModel>> = db.getData()
 
     val id = VK.getUserId().toString()
 
@@ -35,28 +28,24 @@ class MainViewModel(
     }
 
     fun zoom(location: LocationModel){
-        zoomUseCase.execute(location = location)
+        //zoomUseCase.execute(location = location)
     }
 
-    fun getLocation(): LocationModel {
-        return getLocationUseCase.execute()
-    }
-
-    fun startDisplayingMap(view: MapViewModel){
-        displayMapUseCase.execute(view = view)
+    fun startDisplayingMap(view: MapView){
+        //displayMapUseCase.execute(view = view)
     }
 
     fun stopDisplayingMap(){
-        displayMapUseCase.abandon()
+        //displayMapUseCase.abandon()
     }
 
     fun startLocationTracking(): Boolean{
-        trackLocationUseCase.execute()
+        //trackLocationUseCase.execute()
         return true
     }
 
     fun stopLocationTracking(): Boolean{
-        trackLocationUseCase.abandon()
+        //trackLocationUseCase.abandon()
         return false
     }
 

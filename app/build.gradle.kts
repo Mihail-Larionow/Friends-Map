@@ -49,9 +49,6 @@ android {
 
 dependencies {
 
-    implementation(project(path = ":data"))
-    implementation(project(path = ":domain"))
-
     implementation("com.vk:android-sdk-core:4.1.0")
     implementation("com.vk:android-sdk-api:4.1.0")
 

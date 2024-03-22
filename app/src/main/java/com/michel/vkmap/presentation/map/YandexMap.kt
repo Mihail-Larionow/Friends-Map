@@ -1,45 +1,24 @@
 package com.michel.vkmap.presentation.map
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import com.michel.vkmap.anim.PlaceMarkMoveAnimation
-import com.michel.vkmap.domain.models.LocationModel
-import com.michel.vkmap.domain.map.IMap
-import com.michel.vkmap.domain.models.MapViewModel
-import com.michel.vkmap.domain.usecases.GetPhotosUseCase
-import com.michel.vkmap.presentation.models.Location
-import com.michel.vkmap.ui.PlaceMarkView
-import com.vk.api.sdk.VK
+import com.michel.vkmap.data.models.LocationModel
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
-import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.mapview.MapView
-import com.yandex.runtime.image.ImageProvider
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import org.koin.java.KoinJavaComponent.inject
-import kotlin.random.Random
-import kotlin.time.Duration.Companion.milliseconds
 
-class YandexMap: IMap {
+class YandexMap {
 
     private val locationList: MutableMap<String, LocationModel> = mutableMapOf()
     private val placeMarkList: MutableMap<String, PlaceMark> = mutableMapOf()
 
     private lateinit var mapView: MapView
 
-    override fun start(view: MapViewModel){
+    fun start(view: MapView){
         Log.v("VKMAP", "YandexMap starting")
 
         placeMarkList.clear()
-        mapView = view.mapView
+        mapView = view
         MapKitFactory.getInstance().onStart()
         mapView.onStart()
 
@@ -48,14 +27,14 @@ class YandexMap: IMap {
         }
     }
 
-    override fun stop(){
+    fun stop(){
         mapView.onStop()
         MapKitFactory.getInstance().onStop()
 
         Log.v("VKMAP", "YandexMap stopped")
     }
 
-    override fun zoom(location: LocationModel) {
+    fun zoom(location: LocationModel) {
         Log.v("VKMAP", "YandexMap zooming")
         mapView.mapWindow.map.move(
             CameraPosition(
@@ -70,7 +49,7 @@ class YandexMap: IMap {
         )
     }
 
-    override fun updatePlaceMark(location: LocationModel, userId: String) {
+    fun updatePlaceMark(location: LocationModel, userId: String) {
         Log.v("VKMAP", "Placemark $userId updating")
 
         val placeMark = placeMarkList[userId]
@@ -81,7 +60,7 @@ class YandexMap: IMap {
         locationList[userId] = location
     }
 
-    override fun addPlaceMark(
+    fun addPlaceMark(
         location: LocationModel,
         userId: String
     ){

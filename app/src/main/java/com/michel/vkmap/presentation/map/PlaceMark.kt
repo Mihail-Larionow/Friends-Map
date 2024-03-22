@@ -2,13 +2,11 @@ package com.michel.vkmap.presentation.map
 
 import android.graphics.BitmapFactory
 import android.util.Log
-import com.michel.vkmap.anim.PlaceMarkAppearAnimation
-import com.michel.vkmap.anim.PlaceMarkMoveAnimation
-import com.michel.vkmap.domain.models.LocationModel
-import com.michel.vkmap.domain.usecases.GetPhotosUseCase
-import com.michel.vkmap.ui.PlaceMarkView
+import com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation
+import com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation
+import com.michel.vkmap.data.models.LocationModel
+import com.michel.vkmap.presentation.ui.PlaceMarkView
 import com.yandex.mapkit.geometry.Point
-import com.yandex.mapkit.map.PlacemarkAnimation
 import com.yandex.mapkit.map.PlacemarkMapObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +24,6 @@ class PlaceMark(
     private val view = PlaceMarkView()
     private var currentLocation = location
 
-    private val getPhotosUseCase by inject<GetPhotosUseCase>()
     private val moveAnimation = PlaceMarkMoveAnimation(mark = mark)
     private val appearAnimation = PlaceMarkAppearAnimation(mark = mark)
 
@@ -62,14 +59,7 @@ class PlaceMark(
     }
 
     private fun uploadIcon(userId: String){
-        runBlocking{
-            launch{
-                val input = withContext(Dispatchers.IO){
-                    getPhotosUseCase.execute(userId)
-                }
-                this@PlaceMark.setIcon(input)
-            }
-        }
+
     }
 
     companion object{

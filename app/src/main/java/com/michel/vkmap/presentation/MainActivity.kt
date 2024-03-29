@@ -9,12 +9,19 @@ import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import com.michel.vkmap.R
+import com.michel.vkmap.data.models.LocationModel
+import com.michel.vkmap.presentation.map.PlaceMark
 import com.vk.api.sdk.VK
+import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.mapview.MapView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
 
+    private val placeMarkList: MutableMap<String, PlaceMark> = mutableMapOf()
+
     private val viewModel by viewModel<MainViewModel>()
+    private lateinit var mapView: MapView
     private var locationTracking = false
 
     private val locationPermissionRequest = registerForActivityResult(
@@ -38,14 +45,19 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        MapKitFactory.getInstance().onStart()
 
-        checkPermission()
+        mapView = findViewById(R.id.mapView)
+        mapView.onStart()
+
+        locationPermissionRequest.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
 
         Log.v("VKMAP", "MainActivity created")
-
-        viewModel.startDisplayingMap(
-            findViewById(R.id.mapView)
-        )
 
     }
 
@@ -53,30 +65,28 @@ class MainActivity : ComponentActivity() {
         super.onStart()
         Log.v("VKMAP", "MainActivity starting")
 
-        val logoutButton = findViewById<Button>(R.id.logoutButton)
-        logoutButton.setOnClickListener {
+        findViewById<Button>(R.id.logoutButton).setOnClickListener {
             VK.logout()
             WelcomeActivity.startFrom(this)
             finish()
         }
 
-        //val startLocation = viewModel.getLocation()
-        //viewModel.zoom(startLocation)
-
-        val zoomButton = findViewById<Button>(R.id.zoomButton)
-        zoomButton.setOnClickListener {
-            //val location = viewModel.getLocation()
-            //viewModel.zoom(location)
+        //Map zooming
+        findViewById<Button>(R.id.zoomButton).setOnClickListener {
+            val currentLocation: LocationModel? = viewModel.userLocation.value
+            if(currentLocation != null)
+                viewModel.zoom(mapView, currentLocation)
         }
 
-        val chatButton = findViewById<Button>(R.id.chatButton)
-        chatButton.setOnClickListener {
+        findViewById<Button>(R.id.chatButton).setOnClickListener {
             ChatActivity.startFrom(this)
         }
 
-        viewModel.data.observe(this){
-            for (entry in it) {
-                Log.i("VKMAP", entry.toString())
+        viewModel.friendsLocations.observe(this){
+            for ((id, location) in it) {
+                val placeMark = placeMarkList[id]
+                if(placeMark != null) placeMark.move(newLocation = location)
+                else placeMarkList[id] = viewModel.addPlaceMark(mapView, location, id)
             }
         }
 
@@ -86,20 +96,14 @@ class MainActivity : ComponentActivity() {
         if(locationTracking) {
             locationTracking = viewModel.stopLocationTracking()
         }
+        mapView.onStop()
         super.onStop()
         Log.v("VKMAP", "MainActivity stopped")
     }
 
     override fun onDestroy() {
-        viewModel.stopDisplayingMap()
         super.onDestroy()
         Log.v("VKMAP", "MainActivity destroyed")
-    }
-
-    private fun checkPermission(){
-        locationPermissionRequest.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION))
     }
 
     companion object{

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.michel.vkmap.data.listeners.FirebaseListener
 import com.michel.vkmap.data.models.LocationDataModel
 import com.michel.vkmap.data.models.LocationDataPackModel
 import com.michel.vkmap.data.models.LocationModel
@@ -40,7 +41,7 @@ class FirebaseDataBase(private val dataListener: FirebaseListener) {
         Log.i("VKMAP", "Firebase saved " + dataPack.text + " " + dataPack.senderId)
     }
 
-    fun getData(): LiveData<Map<String, LocationModel>> {
+    fun getLocations(): LiveData<Map<String, LocationModel>> {
         return dataListener.getData()
     }
 

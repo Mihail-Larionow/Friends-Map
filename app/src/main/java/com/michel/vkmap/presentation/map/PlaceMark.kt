@@ -40,7 +40,7 @@ class PlaceMark(
         mark.setIcon(view.getImage())
 
         uploadIcon(userId = id)
-        appearAnimation.execute()
+        //appearAnimation.execute()
     }
 
     fun move(newLocation: LocationModel){
@@ -52,7 +52,7 @@ class PlaceMark(
         currentLocation = newLocation
     }
 
-    private fun setIcon(input: ByteArray){
+    fun setIcon(input: ByteArray){
         val bitmap = BitmapFactory.decodeByteArray(input, 0, input.size)
         view.resourceBitmap = bitmap
         mark.setIcon(view.getImage())

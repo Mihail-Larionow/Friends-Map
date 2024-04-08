@@ -14,6 +14,17 @@ import com.yandex.runtime.image.ImageProvider
 
 class PlaceMarkView(){
 
+    companion object{
+        private const val DEFAULT_ICON_SIZE: Int = 192
+        private const val DEFAULT_BORDER_WIDTH: Float = 20f
+        private const val OFFLINE_BORDER_COLOR: Int = Color.WHITE
+        private const val ONLINE_BORDER_COLOR: Int = Color.GREEN
+        private const val DEFAULT_TEXT_COLOR: Int = Color.GRAY
+        private const val DEFAULT_LABEL_WIDTH: Int = 128
+        private const val DEFAULT_LABEL_HEIGHT: Int = 32
+        private const val DEFAULT_TEXT_SIZE: Float = 28f
+    }
+
     var resourceBitmap: Bitmap = Bitmap.createBitmap(
         DEFAULT_ICON_SIZE,
         (DEFAULT_ICON_SIZE + DEFAULT_LABEL_HEIGHT),
@@ -86,17 +97,6 @@ class PlaceMarkView(){
         paint.textSize = DEFAULT_TEXT_SIZE
 
         canvas.drawText("", centerX, (DEFAULT_ICON_SIZE + 16).toFloat(), paint)
-    }
-
-    companion object{
-        private const val DEFAULT_ICON_SIZE: Int = 192
-        private const val DEFAULT_BORDER_WIDTH: Float = 20f
-        private const val OFFLINE_BORDER_COLOR: Int = Color.WHITE
-        private const val ONLINE_BORDER_COLOR: Int = Color.GREEN
-        private const val DEFAULT_TEXT_COLOR: Int = Color.GRAY
-        private const val DEFAULT_LABEL_WIDTH: Int = 128
-        private const val DEFAULT_LABEL_HEIGHT: Int = 32
-        private const val DEFAULT_TEXT_SIZE: Float = 28f
     }
 
 }

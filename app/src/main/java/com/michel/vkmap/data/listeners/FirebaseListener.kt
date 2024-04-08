@@ -10,7 +10,7 @@ import com.google.firebase.database.getValue
 import com.michel.vkmap.data.models.FirebaseDataModel
 import com.michel.vkmap.data.models.LocationModel
 
-class FirebaseListener: ValueEventListener {
+class FirebaseListener(private val friends: ArrayList<String>): ValueEventListener {
 
     private val data: MutableLiveData<Map<String, LocationModel>> = MutableLiveData()
 
@@ -21,7 +21,7 @@ class FirebaseListener: ValueEventListener {
 
         snapshot.children.forEach lit@{ dataPack ->
             val userId = dataPack.key
-            //if(userId !in friends) return@lit
+            if(userId !in friends) return@lit
             val data = dataPack.getValue<FirebaseDataModel>()
             Log.d("VKMAP", "data: " + dataPack.key)
             data?.let{

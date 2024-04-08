@@ -2,6 +2,7 @@ package com.michel.vkmap.data.db
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.michel.vkmap.data.listeners.FirebaseListener
@@ -11,12 +12,14 @@ import com.michel.vkmap.data.models.LocationModel
 import com.michel.vkmap.data.models.MessageDataModel
 import com.michel.vkmap.data.models.MessageDataPackModel
 
-class FirebaseDataBase(private val dataListener: FirebaseListener) {
+class FirebaseDataBase {
 
     private val dataBase = Firebase.database
 
-    init {
+    fun startListening(friends: ArrayList<String>): LiveData<Map<String, LocationModel>> {
+        val dataListener = FirebaseListener(friends = friends)
         dataBase.getReference(USERS_KEY).addValueEventListener(dataListener)
+        return dataListener.getData()
     }
 
     fun saveLocation(dataPack: LocationDataPackModel) {
@@ -39,10 +42,6 @@ class FirebaseDataBase(private val dataListener: FirebaseListener) {
                 )
             )
         Log.i("VKMAP", "Firebase saved " + dataPack.text + " " + dataPack.senderId)
-    }
-
-    fun getLocations(): LiveData<Map<String, LocationModel>> {
-        return dataListener.getData()
     }
 
     companion object {

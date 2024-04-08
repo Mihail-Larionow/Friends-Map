@@ -8,6 +8,7 @@ import com.michel.vkmap.data.manager.YandexManager
 import com.michel.vkmap.data.repository.UserRepository
 import com.michel.vkmap.data.sharedpref.SharedPrefStorage
 import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
+import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase
 import com.michel.vkmap.domain.usecases.GetPhotoUseCase
 import com.michel.vkmap.domain.usecases.GetUserLocationUseCase
@@ -21,6 +22,7 @@ val appModule = module {
     viewModel<MainViewModel>{
         MainViewModel(
             addPlaceMarkUseCase = get(),
+            getFriendsListUseCase = get(),
             getFriendsLocationsUseCase = get(),
             getPhotoUseCase = get(),
             getUserLocationUseCase = get(),
@@ -31,6 +33,12 @@ val appModule = module {
 
     factory<AddPlaceMarkUseCase>{
         AddPlaceMarkUseCase()
+    }
+
+    factory<GetFriendsListUseCase>{
+        GetFriendsListUseCase(
+            repository = get()
+        )
     }
 
     factory<GetFriendsLocationsUseCase>{
@@ -70,14 +78,9 @@ val appModule = module {
     }
 
     single<FirebaseDataBase>{
-        FirebaseDataBase(
-            dataListener = get()
-        )
+        FirebaseDataBase()
     }
 
-    single<FirebaseListener>{
-        FirebaseListener()
-    }
 
     single<VKApi>{
         VKApi()

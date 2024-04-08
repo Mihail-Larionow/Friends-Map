@@ -30,9 +30,9 @@ class UserRepository(
         return api.friendsListRequest(userId)
     }
 
-    fun getFriendsLocations(): LiveData<Map<String, LocationModel>>{
-        Log.v("VKMAP", "Locations updating")
-        return db.getLocations()
+    fun getFriendsLocations(friends: ArrayList<String>): LiveData<Map<String, LocationModel>>{
+        Log.v("VKMAP", "Getting friends locations")
+        return db.startListening(friends)
     }
 
     fun saveLocation(location: LocationModel){

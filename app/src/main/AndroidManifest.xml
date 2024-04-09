@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.MapActivity"
             android:exported="false"></activity>
     </application>
 

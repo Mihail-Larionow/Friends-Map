@@ -2,41 +2,44 @@ package com.michel.vkmap.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.michel.vkmap.data.api.VKApi
-import com.michel.vkmap.data.db.FirebaseDataBase
+import com.michel.vkmap.data.api.IApi
+import com.michel.vkmap.data.db.IDataBase
+import com.michel.vkmap.data.models.LocationDataModel
+import com.michel.vkmap.data.models.LocationDataPackModel
 import com.michel.vkmap.data.models.LocationModel
 import com.michel.vkmap.data.sharedpref.SharedPrefStorage
 
 class UserRepository(
-    private val api: VKApi,
-    private val db: FirebaseDataBase,
+    private val api: IApi,
+    private val dataBase: IDataBase,
     private val sharedPref: SharedPrefStorage
-) {
+): IRepository {
 
     private val images: MutableMap<String, LiveData<ByteArray>> = mutableMapOf()
 
-    fun getPhoto(userId: String): LiveData<ByteArray> {
+    override fun getPhoto(userId: String): LiveData<ByteArray> {
         images[userId]?.let {
             return it
         }
-        Log.v("VKMAP", "Image $userId uploading")
+        Log.i("VKMAP", "Image $userId uploading")
         val image = api.photoUrlRequest(userId = userId)
         images[userId] = image
         return image
     }
 
-    fun getFriendsList(userId: String): LiveData<ArrayList<String>> {
+    override fun getFriendsList(userId: String): LiveData<ArrayList<String>> {
         Log.v("VKMAP", "Friends $userId uploading")
         return api.friendsListRequest(userId)
     }
 
-    fun getFriendsLocations(friends: ArrayList<String>): LiveData<Map<String, LocationModel>>{
+    override fun getFriendsLocations(friends: ArrayList<String>): LiveData<Map<String, LocationDataModel>>{
         Log.v("VKMAP", "Getting friends locations")
-        return db.startListening(friends)
+        return dataBase.startListening(friends)
     }
 
-    fun saveLocation(location: LocationModel){
-        sharedPref.saveLocation(userLocation = location)
+    override fun saveLocation(dataPack: LocationDataPackModel){
+        sharedPref.saveLocation(userLocation = dataPack.data.location)
+        dataBase.saveLocation(dataPack)
     }
 
     fun getLocation(): LocationModel{

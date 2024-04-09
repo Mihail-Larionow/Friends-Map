@@ -2,6 +2,7 @@ package com.michel.vkmap.presentation.map
 
 import android.graphics.BitmapFactory
 import android.util.Log
+import com.michel.vkmap.data.models.LocationDataModel
 import com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation
 import com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation
 import com.michel.vkmap.data.models.LocationModel
@@ -14,15 +15,16 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.util.Date
 
 class PlaceMark(
     private val id: String,
     private val mark: PlacemarkMapObject,
-    private val location: LocationModel
+    private val locationData: LocationDataModel
 ) : KoinComponent {
 
     private val view = PlaceMarkView()
-    private var currentLocation = location
+    private var currentLocation = locationData.location
 
     private val moveAnimation = PlaceMarkMoveAnimation(mark = mark)
     private val appearAnimation = PlaceMarkAppearAnimation(mark = mark)
@@ -30,26 +32,34 @@ class PlaceMark(
     init{
         Log.v("VKMAP","PlaceMark $id added")
 
-        val point = Point(
-            location.latitude,
-            location.longitude
-        )
-
-        mark.geometry = point
         mark.isDraggable = DRAGGABLE
         mark.setIcon(view.getImage())
 
-        uploadIcon(userId = id)
+        update(data = locationData)
+
         //appearAnimation.execute()
     }
 
-    fun move(newLocation: LocationModel){
-        moveAnimation.execute(
-            startLocation = currentLocation,
-            endLocation = newLocation
+    fun update(data: LocationDataModel){
+        this.move(newLocation = data.location)
+        val text = getTimeText(data.date)
+        view.setLabelText(text)
+
+        if(text == "online") view.setBorderColor(true)
+        else view.setBorderColor(false)
+
+        view.update()
+    }
+
+    private fun move(newLocation: LocationModel){
+        currentLocation = newLocation
+
+        val point = Point(
+            currentLocation.latitude,
+            currentLocation.longitude
         )
 
-        currentLocation = newLocation
+        mark.geometry = point
     }
 
     fun setIcon(input: ByteArray){
@@ -58,10 +68,15 @@ class PlaceMark(
         mark.setIcon(view.getImage())
     }
 
-    private fun uploadIcon(userId: String){
+    private fun getTimeText(date: Long): String {
+        val currentDate = Date().time
+        val timeDifference = (currentDate - date) / 1000
 
+        return if(timeDifference < 10) "online"
+            else if(timeDifference < 60) "${timeDifference}s"
+            else if (timeDifference < 3600) "${timeDifference/60}m"
+            else "${timeDifference/3600}h"
     }
-
     companion object{
         private const val DEFAULT_OPACITY = 1f
         private const val DRAGGABLE = false

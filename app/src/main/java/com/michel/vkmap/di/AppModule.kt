@@ -1,10 +1,12 @@
 package com.michel.vkmap.di
 
+import com.michel.vkmap.data.api.IApi
 import com.michel.vkmap.data.api.VKApi
 import com.michel.vkmap.data.db.FirebaseDataBase
-import com.michel.vkmap.data.listeners.FirebaseListener
+import com.michel.vkmap.data.db.IDataBase
 import com.michel.vkmap.data.listeners.YandexListener
 import com.michel.vkmap.data.manager.YandexManager
+import com.michel.vkmap.data.repository.IRepository
 import com.michel.vkmap.data.repository.UserRepository
 import com.michel.vkmap.data.sharedpref.SharedPrefStorage
 import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
@@ -12,6 +14,7 @@ import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase
 import com.michel.vkmap.domain.usecases.GetPhotoUseCase
 import com.michel.vkmap.domain.usecases.GetUserLocationUseCase
+import com.michel.vkmap.domain.usecases.SaveUserLocationUseCase
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
 import com.michel.vkmap.domain.usecases.ZoomUseCase
 import com.michel.vkmap.presentation.MainViewModel
@@ -27,7 +30,8 @@ val appModule = module {
             getPhotoUseCase = get(),
             getUserLocationUseCase = get(),
             trackLocationUseCase = get(),
-            zoomUseCase = get()
+            zoomUseCase = get(),
+            saveUserLocationUseCase = get()
         )
     }
 
@@ -69,20 +73,26 @@ val appModule = module {
         ZoomUseCase()
     }
 
-    single<UserRepository>{
+    factory<SaveUserLocationUseCase>{
+        SaveUserLocationUseCase(
+            repository = get()
+        )
+    }
+
+    single<IRepository>{
         UserRepository(
             api = get(),
-            db = get(),
+            dataBase = get(),
             sharedPref = get()
         )
     }
 
-    single<FirebaseDataBase>{
+    single<IDataBase>{
         FirebaseDataBase()
     }
 
 
-    single<VKApi>{
+    single<IApi>{
         VKApi()
     }
 

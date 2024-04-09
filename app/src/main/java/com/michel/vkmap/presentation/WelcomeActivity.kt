@@ -22,7 +22,7 @@ class WelcomeActivity : ComponentActivity() {
 
         if(VK.isLoggedIn()){
             Log.i("VKMAP",VK.getUserId().toString() + " is logged")
-            MainActivity.startFrom(this@WelcomeActivity)
+            MapActivity.startFrom(this@WelcomeActivity)
             finish()
         }
 
@@ -44,7 +44,7 @@ class WelcomeActivity : ComponentActivity() {
 
     private fun onLoginSuccess(){
         Log.i("VKMAP",VK.getUserId().toString() + " passed authorization")
-        MainActivity.startFrom(this@WelcomeActivity)
+        MapActivity.startFrom(this@WelcomeActivity)
         finish()
     }
 

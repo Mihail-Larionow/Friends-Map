@@ -1,7 +1,8 @@
 package com.michel.vkmap.data.models
 
+import java.util.Date
+
 data class LocationDataPackModel(
-    val latitude: Double,
-    val longitude: Double,
-    val userId: String
+    val userId: String,
+    val data: LocationDataModel
 )

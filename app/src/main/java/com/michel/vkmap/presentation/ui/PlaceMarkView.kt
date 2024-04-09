@@ -38,23 +38,27 @@ class PlaceMarkView(){
     )
 
     private val centerX: Float = (DEFAULT_ICON_SIZE / 2).toFloat()
+    private var labelText: String = ""
+    private var borderColor = OFFLINE_BORDER_COLOR
 
     fun getImage(): ImageProvider {
         this.update()
         return ImageProvider.fromBitmap(placeMarkIconBitmap)
     }
 
-    fun changeColor(){
-        val canvas = Canvas(placeMarkIconBitmap)
-        drawIcon(canvas)
-        drawBorder(canvas, OFFLINE_BORDER_COLOR)
-        drawLabel(canvas)
+    fun setBorderColor(isOnline: Boolean){
+        borderColor = if(isOnline) ONLINE_BORDER_COLOR
+        else OFFLINE_BORDER_COLOR
     }
 
-    private fun update(){
+    fun setLabelText(text: String){
+        labelText = text
+    }
+
+    fun update(){
         val canvas = Canvas(placeMarkIconBitmap)
         drawIcon(canvas)
-        drawBorder(canvas, ONLINE_BORDER_COLOR)
+        drawBorder(canvas)
         drawLabel(canvas)
     }
 
@@ -73,7 +77,7 @@ class PlaceMarkView(){
         canvas.drawBitmap(resourceBitmap, 0f, 0f, paint)
     }
 
-    private fun drawBorder(canvas: Canvas, borderColor: Int){
+    private fun drawBorder(canvas: Canvas){
         var paint = Paint()
         paint.color = borderColor
         paint.style = Paint.Style.STROKE
@@ -96,7 +100,7 @@ class PlaceMarkView(){
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = DEFAULT_TEXT_SIZE
 
-        canvas.drawText("", centerX, (DEFAULT_ICON_SIZE + 16).toFloat(), paint)
+        canvas.drawText(labelText, centerX, (DEFAULT_ICON_SIZE + 16).toFloat(), paint)
     }
 
 }

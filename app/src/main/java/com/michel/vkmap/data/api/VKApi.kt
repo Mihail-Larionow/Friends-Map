@@ -7,12 +7,10 @@ import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 import java.net.URL
 
-class VKApi {
+class VKApi: IApi {
 
-    private val friends: MutableLiveData<ArrayList<String>> = MutableLiveData()
-    private val photo: MutableLiveData<ByteArray> = MutableLiveData()
-
-    fun photoUrlRequest(userId: String): LiveData<ByteArray> {
+    override fun photoUrlRequest(userId: String): LiveData<ByteArray> {
+        val photo: MutableLiveData<ByteArray> = MutableLiveData()
         VK.execute(GetUserPhotoCommand(userId = userId), object: VKApiCallback<ByteArray>{
             override fun fail(error: Exception) {
                 Log.e("VKMAP", "${error.message}")
@@ -25,12 +23,12 @@ class VKApi {
                     )
                 }
             }
-
         })
         return photo
     }
 
-    fun friendsListRequest(userId: String): LiveData<ArrayList<String>> {
+    override fun friendsListRequest(userId: String): LiveData<ArrayList<String>> {
+        val friends: MutableLiveData<ArrayList<String>> = MutableLiveData()
         VK.execute(GetFriendsListCommand(userId = userId), object : VKApiCallback<ArrayList<String>>{
             override fun fail(error: Exception) {
                 Log.e("VKMAP", "${error.message}")

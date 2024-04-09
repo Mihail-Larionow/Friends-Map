@@ -2,7 +2,6 @@ package com.michel.vkmap.domain.usecases
 
 import android.util.Log
 import com.michel.vkmap.data.models.LocationModel
-import com.michel.vkmap.presentation.MainActivity
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.mapview.MapView

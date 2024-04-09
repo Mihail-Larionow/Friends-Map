@@ -5,11 +5,14 @@ import androidx.lifecycle.ViewModel
 import com.michel.vkmap.data.models.LocationModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.michel.vkmap.data.models.LocationDataModel
+import com.michel.vkmap.data.models.LocationDataPackModel
 import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase
 import com.michel.vkmap.domain.usecases.GetPhotoUseCase
 import com.michel.vkmap.domain.usecases.GetUserLocationUseCase
+import com.michel.vkmap.domain.usecases.SaveUserLocationUseCase
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
 import com.michel.vkmap.domain.usecases.ZoomUseCase
 import com.michel.vkmap.presentation.map.PlaceMark
@@ -23,11 +26,12 @@ class MainViewModel(
     private val getPhotoUseCase: GetPhotoUseCase,
     private val getUserLocationUseCase: GetUserLocationUseCase,
     private val trackLocationUseCase: TrackLocationUseCase,
-    private val zoomUseCase: ZoomUseCase
+    private val zoomUseCase: ZoomUseCase,
+    private val saveUserLocationUseCase: SaveUserLocationUseCase
 ): ViewModel() {
     val id = VK.getUserId().toString()
 
-    private var friendsLocations: LiveData<Map<String, LocationModel>> = MutableLiveData()
+    private var friendsLocations: LiveData<Map<String, LocationDataModel>> = MutableLiveData()
     val friendsList: LiveData<ArrayList<String>> = getFriendsListUseCase.execute(id)
     val userLocation: LiveData<LocationModel> = getUserLocationUseCase.execute()
 
@@ -48,10 +52,10 @@ class MainViewModel(
         super.onCleared()
     }
 
-    fun addPlaceMark(mapView: MapView, location: LocationModel, id: String): PlaceMark{
+    fun addPlaceMark(mapView: MapView, locationData: LocationDataModel, id: String): PlaceMark{
         return addPlaceMarkUseCase.execute(
             mapView = mapView,
-            location = location,
+            locationData = locationData,
             id = id
         )
     }
@@ -68,7 +72,8 @@ class MainViewModel(
         return false
     }
 
-    fun startFriendsLocationsTracking(friends: ArrayList<String>): LiveData<Map<String, LocationModel>>{
+    fun startFriendsLocationsTracking(friends: ArrayList<String>): LiveData<Map<String, LocationDataModel>>{
+        friends.add(id)
         if(!friendsLocationsTracking)
             friendsLocations = getFriendsLocationsUseCase.execute(friends = friends)
         friendsLocationsTracking = true
@@ -77,6 +82,17 @@ class MainViewModel(
 
     fun getPhoto(userId: String): LiveData<ByteArray>{
         return getPhotoUseCase.execute(id = userId)
+    }
+
+    fun saveLocation(location: LocationModel){
+        saveUserLocationUseCase.execute(
+            locationDataPack = LocationDataPackModel(
+                userId = id,
+                data = LocationDataModel(
+                    location = location
+                )
+            )
+        )
     }
 
     fun zoom(mapView: MapView, location: LocationModel){

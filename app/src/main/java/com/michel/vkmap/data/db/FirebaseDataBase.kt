@@ -30,7 +30,7 @@ class FirebaseDataBase: IDataBase {
             .setValue(
                 dataPack.data
             )
-        Log.i("VKMAP", "Firebase saved ${dataPack.data.location}")
+        Log.i("VKMAP", "Firebase saved ${dataPack.data}")
     }
 
     override fun saveMessage(dataPack: MessageDataPackModel) {

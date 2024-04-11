@@ -90,13 +90,13 @@ class MapActivity : ComponentActivity() {
         }
 
         viewModel.userLocation.observe(this){
-            viewModel.saveLocation(it)
             addPlaceMarkOnMap(
                 viewModel.id,
                 locationData = LocationDataModel(
                     location = it
                 )
             )
+            viewModel.saveLocation(it)
         }
 
     }

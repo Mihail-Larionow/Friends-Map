@@ -41,6 +41,8 @@ class PlaceMark(
     }
 
     fun update(data: LocationDataModel){
+        Log.v("VKMAP","PlaceMark $id updated")
+
         this.move(newLocation = data.location)
         val text = getTimeText(data.date)
         view.setLabelText(text)
@@ -49,6 +51,7 @@ class PlaceMark(
         else view.setBorderColor(false)
 
         view.update()
+        mark.setIcon(view.getImage())
     }
 
     private fun move(newLocation: LocationModel){
@@ -74,8 +77,9 @@ class PlaceMark(
 
         return if(timeDifference < 10) "online"
             else if(timeDifference < 60) "${timeDifference}s"
-            else if (timeDifference < 3600) "${timeDifference/60}m"
-            else "${timeDifference/3600}h"
+            else if(timeDifference < 60 * 60) "${timeDifference / 60}m"
+            else if(timeDifference < 60 * 60 * 24) "${timeDifference / (60 * 60)}h"
+            else "${timeDifference / (60 * 60 * 24)}d"
     }
     companion object{
         private const val DEFAULT_OPACITY = 1f

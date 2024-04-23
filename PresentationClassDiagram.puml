@@ -1,0 +1,106 @@
+@startuml
+class com.michel.vkmap.presentation.ChatActivity$Companion {
++ void startFrom(Context)
+}
+
+class com.michel.vkmap.presentation.ChatActivity {
++ void onCreate(Bundle?)
+}
+
+class com.michel.vkmap.presentation.map.PlaceMark {
+}
+class com.michel.vkmap.presentation.map.MapActivity$Companion {
++ void startFrom(Context)
+}
+
+class com.michel.vkmap.presentation.map.MapActivity {
+- MutableMap<String, PlaceMark> placeMarkList
+-  viewModel
+- MapView mapView
+-  locationPermissionRequest
++ void null()
++ void onCreate(Bundle?)
++ void onStart()
++ void onStop()
++ void onDestroy()
+- void updateFriendsLocations(ArrayList<String>)
+- void addPlaceMarkOnMap(String,LocationDataModel)
+}
+
+
+class com.michel.vkmap.presentation.ui.PlaceMarkView$Companion {
+- Int DEFAULT_ICON_SIZE
+- Float DEFAULT_BORDER_WIDTH
+- Int OFFLINE_BORDER_COLOR
+- Int ONLINE_BORDER_COLOR
+- Int DEFAULT_TEXT_COLOR
+- Int DEFAULT_LABEL_WIDTH
+- Int DEFAULT_LABEL_HEIGHT
+- Float DEFAULT_TEXT_SIZE
+}
+
+class com.michel.vkmap.presentation.ui.PlaceMarkView {
++ Bitmap resourceBitmap
+-  placeMarkIconBitmap
+- Float centerX
+- String labelText
+-  borderColor
++ ImageProvider getImage()
++ void setBorderColor(Boolean)
++ void setLabelText(String)
++ void update()
+- void drawIcon(Canvas)
+- void drawBorder(Canvas)
+- void drawLabel(Canvas)
+}
+
+
+class com.michel.vkmap.presentation.WelcomeActivity$Companion {
++ void startFrom(Context)
+}
+
+class com.michel.vkmap.presentation.WelcomeActivity {
+- Button loginButton
++ void onCreate(Bundle?)
+- void onLoginSuccess()
+- void onLoginFailed(VKAuthException)
+}
+
+
+class com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation$Companion {
+- Float MAX_VALUE
+- Long DEFAULT_DURATION
+}
+
+class com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation {
+-  animation
++ void execute()
+- void changeOpacity(Float)
+}
+
+
+class com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation$Companion {
+- Float MAX_VALUE
+- Long DEFAULT_DURATION
+}
+
+class com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation {
+-  animation
++ void execute(LocationModel,LocationModel)
+}
+
+
+class com.michel.vkmap.presentation.MainViewModel {
+}
+
+
+com.michel.vkmap.presentation.ChatActivity +.. com.michel.vkmap.presentation.ChatActivity$Companion
+androidx.activity.ComponentActivity <|-- com.michel.vkmap.presentation.ChatActivity
+com.michel.vkmap.presentation.map.MapActivity +.. com.michel.vkmap.presentation.map.MapActivity$Companion
+androidx.activity.ComponentActivity <|-- com.michel.vkmap.presentation.map.MapActivity
+com.michel.vkmap.presentation.ui.PlaceMarkView +.. com.michel.vkmap.presentation.ui.PlaceMarkView$Companion
+com.michel.vkmap.presentation.WelcomeActivity +.. com.michel.vkmap.presentation.WelcomeActivity$Companion
+androidx.activity.ComponentActivity <|-- com.michel.vkmap.presentation.WelcomeActivity
+com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation +.. com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation$Companion
+com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation +.. com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation$Companion
+@enduml

@@ -2,8 +2,7 @@ package com.michel.vkmap.domain.usecases
 
 import android.util.Log
 import com.michel.vkmap.data.models.LocationDataPackModel
-import com.michel.vkmap.data.models.LocationModel
-import com.michel.vkmap.data.repository.IRepository
+import com.michel.vkmap.domain.repository.IRepository
 
 class SaveUserLocationUseCase(private val repository: IRepository) {
 

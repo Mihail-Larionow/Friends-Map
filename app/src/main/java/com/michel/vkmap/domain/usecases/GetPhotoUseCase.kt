@@ -1,7 +1,7 @@
 package com.michel.vkmap.domain.usecases
 
 import androidx.lifecycle.LiveData
-import com.michel.vkmap.data.repository.IRepository
+import com.michel.vkmap.domain.repository.IRepository
 
 class GetPhotoUseCase(private val repository: IRepository) {
     fun execute(id: String): LiveData<ByteArray> {

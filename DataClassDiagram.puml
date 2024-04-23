@@ -1,0 +1,133 @@
+@startuml
+
+class com.michel.vkmap.data.api.GetFriendsListCommand$ResponseApiParser {
++ ArrayList<String> parse(JSONObject)
+}
+
+
+class com.michel.vkmap.data.api.GetFriendsListCommand {
++ ArrayList<String> onExecute(VKApiManager)
+}
+
+interface com.michel.vkmap.data.db.IDataBase {
++ LiveData<Map<String, LocationDataModel>> startListening(ArrayList<String>)
++ void saveLocation(LocationDataPackModel)
++ void saveMessage(MessageDataPackModel)
+}
+
+interface com.michel.vkmap.data.api.IApi {
++ LiveData<ByteArray> photoUrlRequest(String)
++ LiveData<ArrayList<String>> friendsListRequest(String)
+}
+
+class com.michel.vkmap.data.db.FirebaseDataBase$Companion {
+-  USERS_KEY
+-  MESSAGES_KEY
+}
+
+class com.michel.vkmap.data.db.FirebaseDataBase {
+- FirebaseDatabase dataBase
++ LiveData<Map<String, LocationDataModel>> startListening(ArrayList<String>)
++ void saveLocation(LocationDataPackModel)
++ void saveMessage(MessageDataPackModel)
+}
+
+
+class com.michel.vkmap.data.manager.YandexManager$Companion {
+- Double DESIRED_ACCURACY
+- Long MIN_TIME
+- Double MIN_DISTANCE
+- Boolean ALLOW_USE_IN_BACKGROUND
+- FilteringMode FILTERING_MODE
+}
+
+class com.michel.vkmap.data.manager.YandexManager {
+- LocationManager locationManager
++ void start()
++ void pause()
++ void resume()
++ void stop()
++ LiveData<LocationModel> getData()
+}
+
+
+class com.michel.vkmap.data.api.VKApi {
++ LiveData<ByteArray> photoUrlRequest(String)
++ LiveData<ArrayList<String>> friendsListRequest(String)
+}
+
+class com.michel.vkmap.data.models.LocationDataModel {
++ Long date
++ LocationModel location
+}
+class com.michel.vkmap.data.sharedpref.SharedPrefStorage$Companion {
+-  KEY_LATITUDE
+-  KEY_LONGITUDE
+-  SHARED_PREFS_NAME
+}
+
+class com.michel.vkmap.data.sharedpref.SharedPrefStorage {
+-  sharedPreferences
++ void saveLocation(LocationModel)
++ LocationModel getLocation()
+}
+
+
+class com.michel.vkmap.data.listeners.YandexListener {
+- MutableLiveData<LocationModel> location
++ void onLocationUpdated(Location)
++ void onLocationStatusUpdated(LocationStatus)
++ LiveData<LocationModel> getData()
+}
+
+
+class com.michel.vkmap.data.models.LocationModel {
++ Double latitude
++ Double longitude
+}
+class com.michel.vkmap.data.listeners.FirebaseListener {
+- MutableLiveData<Map<String, LocationDataModel>> data
++ void onDataChange(DataSnapshot)
++ void onCancelled(DatabaseError)
++ LiveData<Map<String, LocationDataModel>> getData()
+}
+
+
+class com.michel.vkmap.data.api.GetUserPhotoCommand$ResponseApiParser {
++ ByteArray parse(JSONObject)
+}
+
+class com.michel.vkmap.data.api.GetUserPhotoCommand {
++ ByteArray onExecute(VKApiManager)
+}
+
+class com.michel.vkmap.data.repository.UserRepository {
+- IApi api
+- IDatabase dataBase
+- SharedPrefStorage sharedPref
++ LiveData<ByteArray> getPhoto(String)
++ LiveData<ArrayList<String>> getFriendList(String)
++ LiveData<Map<String, LocationDataModel>> getFriendsLocations(ArrayList<String>)
++ void saveLocation()
++ LocationModel getLocation()
+}
+class com.michel.vkmap.data.models.LocationDataPackModel {
++ String userId
++ LocationDataModel data
+}
+
+
+com.michel.vkmap.data.api.GetFriendsListCommand +.. com.michel.vkmap.data.api.GetFriendsListCommand$ResponseApiParser
+com.michel.vkmap.data.api.VKApiJSONResponseParser <|.. com.michel.vkmap.data.api.GetFriendsListCommand$ResponseApiParser
+com.vk.api.sdk.internal.ApiCommand <|-- com.michel.vkmap.data.api.GetFriendsListCommand
+com.michel.vkmap.data.db.FirebaseDataBase +.. com.michel.vkmap.data.db.FirebaseDataBase$Companion
+com.michel.vkmap.data.db.IDataBase <|.. com.michel.vkmap.data.db.FirebaseDataBase
+com.michel.vkmap.data.manager.YandexManager +.. com.michel.vkmap.data.manager.YandexManager$Companion
+com.michel.vkmap.data.api.IApi <|.. com.michel.vkmap.data.api.VKApi
+com.michel.vkmap.data.sharedpref.SharedPrefStorage +.. com.michel.vkmap.data.sharedpref.SharedPrefStorage$Companion
+com.yandex.mapkit.location.LocationListener <|.. com.michel.vkmap.data.listeners.YandexListener
+com.google.firebase.database.ValueEventListener <|.. com.michel.vkmap.data.listeners.FirebaseListener
+com.michel.vkmap.data.api.GetUserPhotoCommand +.. com.michel.vkmap.data.api.GetUserPhotoCommand$ResponseApiParser
+com.michel.vkmap.data.api.VKApiJSONResponseParser <|.. com.michel.vkmap.data.api.GetUserPhotoCommand$ResponseApiParser
+com.vk.api.sdk.internal.ApiCommand <|-- com.michel.vkmap.data.api.GetUserPhotoCommand
+@enduml

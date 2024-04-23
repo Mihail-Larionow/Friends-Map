@@ -18,7 +18,7 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.ChatActivity"
+            android:name=".presentation.chat.ChatActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.WelcomeActivity"
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.MapActivity"
+            android:name=".presentation.map.MapActivity"
             android:exported="false"></activity>
     </application>
 

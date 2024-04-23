@@ -6,7 +6,7 @@ import com.michel.vkmap.data.db.FirebaseDataBase
 import com.michel.vkmap.data.db.IDataBase
 import com.michel.vkmap.data.listeners.YandexListener
 import com.michel.vkmap.data.manager.YandexManager
-import com.michel.vkmap.data.repository.IRepository
+import com.michel.vkmap.domain.repository.IRepository
 import com.michel.vkmap.data.repository.UserRepository
 import com.michel.vkmap.data.sharedpref.SharedPrefStorage
 import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
@@ -17,7 +17,7 @@ import com.michel.vkmap.domain.usecases.GetUserLocationUseCase
 import com.michel.vkmap.domain.usecases.SaveUserLocationUseCase
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
 import com.michel.vkmap.domain.usecases.ZoomUseCase
-import com.michel.vkmap.presentation.MainViewModel
+import com.michel.vkmap.presentation.map.MainViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

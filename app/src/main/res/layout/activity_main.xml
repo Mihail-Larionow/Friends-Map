@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.MapActivity">
+    tools:context=".presentation.map.MapActivity">
 
     <com.yandex.mapkit.mapview.MapView
         android:id="@+id/mapView"
@@ -16,10 +16,10 @@
         android:id="@+id/logoutButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
         android:background="@drawable/logout_button"
-        android:backgroundTint="@color/platinum"
+        android:backgroundTint="@color/dark_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,6 +36,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
+        android:visibility="gone"
         android:id="@+id/chatButton"
         android:layout_width="50dp"
         android:layout_height="50dp"

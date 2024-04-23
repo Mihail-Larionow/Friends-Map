@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+:Пользователь: as User
+(Запуск приложения) as (start)
+(Авторизация) as (auth)
+
+(Отображение\nместоположения друзей) as (getFriendsLocations)
+(Сохранение местоположения) as (saveLocation)
+(Получение местоположения) as (getLocation)
+(Запуск чата) as (Chat)
+(Выбор переписки) as (Conversation)
+(Отправка сообщения) as (write)
+(Получение сообщения) as (read)
+
+
+User --> (start)
+(start) -> (auth)
+(auth) --> (saveLocation)
+(auth) --> (getLocation)
+(auth) --> (getFriendsLocations)
+(auth) --> (Chat)
+(Chat) ---> (Conversation)
+(Conversation) --> (write)
+(Conversation) --> (read)
+
+
+@enduml

@@ -32,7 +32,7 @@ class PlaceMark(
     init{
         Log.v("VKMAP","PlaceMark $id added")
 
-        mark.isDraggable = DRAGGABLE
+        mark.isDraggable = false
         mark.setIcon(view.getImage())
 
         update(data = locationData)
@@ -81,8 +81,5 @@ class PlaceMark(
             else if(timeDifference < 60 * 60 * 24) "${timeDifference / (60 * 60)}h"
             else "${timeDifference / (60 * 60 * 24)}d"
     }
-    companion object{
-        private const val DEFAULT_OPACITY = 1f
-        private const val DRAGGABLE = false
-    }
+
 }

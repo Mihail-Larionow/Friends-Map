@@ -1,0 +1,51 @@
+@startuml
+class com.michel.vkmap.domain.usecases.GetPhotoUseCase {
++ LiveData<ByteArray> execute(String)
+}
+
+class com.michel.vkmap.domain.usecases.GetFriendsListUseCase {
++ LiveData<ArrayList<String>> execute(String)
+}
+
+class com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase {
++ PlaceMark execute(MapView,LocationDataModel,String)
+}
+
+interface com.michel.vkmap.domain.repository.IRepository {
++ LiveData<ByteArray> getPhoto(String)
++ void saveLocation(LocationDataPackModel)
++ LiveData<ArrayList<String>> getFriendsList(String)
++ LiveData<Map<String, LocationDataModel>> getFriendsLocations(ArrayList<String>)
+}
+
+class com.michel.vkmap.domain.usecases.TrackLocationUseCase {
++ void execute()
++ void abandon()
+}
+
+class com.michel.vkmap.domain.usecases.GetUserLocationUseCase {
++ LiveData<LocationModel> execute()
+}
+
+class com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase {
++ LiveData<Map<String, LocationDataModel>> execute(ArrayList<String>)
+}
+
+class com.michel.vkmap.domain.usecases.ZoomUseCase$Companion {
+- Float DEFAULT_ZOOM
+- Float DEFAULT_AZIMUTH
+- Float DEFAULT_TILT
+}
+
+class com.michel.vkmap.domain.usecases.ZoomUseCase {
++ void execute(MapView,LocationModel)
+}
+
+class com.michel.vkmap.domain.usecases.SaveUserLocationUseCase {
++ void execute(LocationDataPackModel)
+}
+
+
+
+com.michel.vkmap.domain.usecases.ZoomUseCase +.. com.michel.vkmap.domain.usecases.ZoomUseCase$Companion
+@enduml

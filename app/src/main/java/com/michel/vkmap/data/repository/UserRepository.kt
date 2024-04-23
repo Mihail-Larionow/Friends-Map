@@ -8,6 +8,7 @@ import com.michel.vkmap.data.models.LocationDataModel
 import com.michel.vkmap.data.models.LocationDataPackModel
 import com.michel.vkmap.data.models.LocationModel
 import com.michel.vkmap.data.sharedpref.SharedPrefStorage
+import com.michel.vkmap.domain.repository.IRepository
 
 class UserRepository(
     private val api: IApi,

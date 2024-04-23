@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import androidx.activity.ComponentActivity
 import com.michel.vkmap.R
+import com.michel.vkmap.presentation.map.MapActivity
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
 import com.vk.api.sdk.auth.VKScope

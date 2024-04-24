@@ -5,12 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import com.michel.vkmap.R
 import com.michel.vkmap.data.models.LocationDataModel
 import com.michel.vkmap.data.models.LocationModel
+import com.michel.vkmap.data.models.NetworkState
 import com.michel.vkmap.presentation.WelcomeActivity
 import com.michel.vkmap.presentation.chat.DialogsActivity
 import com.vk.api.sdk.VK
@@ -21,6 +26,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MapActivity : ComponentActivity() {
 
     private val placeMarkList: MutableMap<String, PlaceMark> = mutableMapOf()
+
+    private lateinit var zoomButton: Button
+    private lateinit var logoutButton: ImageView
+    private lateinit var chatButton: ImageView
+    private lateinit var errorText: TextView
+    private lateinit var progressBar: ProgressBar
 
     private val viewModel by viewModel<MapViewModel>()
     private lateinit var mapView: MapView
@@ -61,24 +72,31 @@ class MapActivity : ComponentActivity() {
         )
 
         //mLogout button
-        findViewById<Button>(R.id.logoutButton).setOnClickListener {
+        logoutButton = findViewById<ImageView>(R.id.logoutButton)
+        logoutButton.setOnClickListener {
             VK.logout()
             WelcomeActivity.startFrom(this)
             finish()
         }
 
         // Map zoom button
-        findViewById<Button>(R.id.zoomButton).setOnClickListener {
+        zoomButton = findViewById<Button>(R.id.zoomButton)
+        zoomButton.setOnClickListener {
             val currentLocation: LocationModel? = viewModel.userLocation.value
             if(currentLocation != null)
                 viewModel.zoom(mapView, currentLocation)
         }
 
         // Chat activity button
-        findViewById<Button>(R.id.chatButton).setOnClickListener {
+        chatButton = findViewById<ImageView>(R.id.chatButton)
+        chatButton.setOnClickListener {
             DialogsActivity.startFrom(this)
             finish()
         }
+
+        errorText = findViewById(R.id.errorText)
+
+        progressBar = findViewById(R.id.progressBar)
 
     }
 
@@ -98,6 +116,10 @@ class MapActivity : ComponentActivity() {
                 )
             )
             viewModel.saveLocation(it)
+        }
+
+        viewModel.networkState.observe(this){
+            setNetworkState(state = it)
         }
 
     }
@@ -135,6 +157,32 @@ class MapActivity : ComponentActivity() {
                 newPlaceMark.setIcon(it)
             }
             placeMarkList[id] = newPlaceMark
+        }
+    }
+
+    private fun setNetworkState(state: NetworkState){
+        when(state){
+            NetworkState.LOADING ->{
+                chatButton.isClickable = false
+                zoomButton.isClickable = false
+                zoomButton.isActivated = true
+                progressBar.visibility = View.VISIBLE
+                errorText.visibility = View.GONE
+            }
+            NetworkState.LOADED -> {
+                chatButton.isClickable = true
+                zoomButton.isClickable = true
+                zoomButton.isActivated = false
+                progressBar.visibility = View.GONE
+                errorText.visibility = View.GONE
+            }
+            NetworkState.ERROR -> {
+                chatButton.isClickable = false
+                zoomButton.isClickable = false
+                zoomButton.isActivated = true
+                progressBar.visibility = View.VISIBLE
+                errorText.visibility = View.VISIBLE
+            }
         }
     }
 

@@ -4,9 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.michel.vkmap.R
+import com.michel.vkmap.data.models.NetworkState
 import com.michel.vkmap.presentation.map.MapActivity
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
@@ -16,6 +21,7 @@ import com.vk.api.sdk.exceptions.VKAuthException
 class WelcomeActivity : ComponentActivity() {
 
     private lateinit var loginButton: Button
+    private lateinit var messageText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,18 +47,35 @@ class WelcomeActivity : ComponentActivity() {
             loginButton.isClickable = false
             authLauncher.launch(arrayListOf(VKScope.FRIENDS, VKScope.PHOTOS))
         }
+
+        messageText = findViewById<TextView>(R.id.messageText)
     }
 
     private fun onLoginSuccess(){
         Log.i("VKMAP",VK.getUserId().toString() + " passed authorization")
-        MapActivity.startFrom(this@WelcomeActivity)
-        finish()
+        setNetworkState(NetworkState.LOADED)
     }
 
     private fun onLoginFailed(exception: VKAuthException){
         Log.w("VKMAP", "User didn't pass authorization")
-        Log.e("VKMAP", exception.toString())
-        loginButton.isClickable = true
+        Log.e("VKMAP", "$exception")
+        setNetworkState(NetworkState.ERROR)
+    }
+
+    private fun setNetworkState(state: NetworkState){
+        when(state){
+            NetworkState.LOADED -> {
+                messageText.text = "Успех!"
+                messageText.visibility = View.VISIBLE
+                MapActivity.startFrom(this@WelcomeActivity)
+                finish()
+            }
+            NetworkState.ERROR -> {
+                messageText.text = "Произошла ошибка"
+                messageText.visibility = View.VISIBLE
+                loginButton.isClickable = true
+            }
+        }
     }
 
     companion object{

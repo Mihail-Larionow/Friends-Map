@@ -7,9 +7,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.michel.vkmap.data.models.LocationDataModel
 import com.michel.vkmap.data.models.LocationDataPackModel
+import com.michel.vkmap.data.models.NetworkState
 import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase
+import com.michel.vkmap.domain.usecases.GetNetworkStateUseCase
 import com.michel.vkmap.domain.usecases.GetPhotoUseCase
 import com.michel.vkmap.domain.usecases.GetUserLocationUseCase
 import com.michel.vkmap.domain.usecases.SaveUserLocationUseCase
@@ -26,6 +28,7 @@ class MapViewModel(
     private val getUserLocationUseCase: GetUserLocationUseCase,
     private val trackLocationUseCase: TrackLocationUseCase,
     private val zoomUseCase: ZoomUseCase,
+    private val getNetworkStateUseCase: GetNetworkStateUseCase,
     private val saveUserLocationUseCase: SaveUserLocationUseCase
 ): ViewModel() {
     val id = VK.getUserId().toString()
@@ -33,6 +36,7 @@ class MapViewModel(
     private var friendsLocations: LiveData<Map<String, LiveData<LocationDataModel>>> = MutableLiveData()
     val friendsList: LiveData<ArrayList<String>> = getFriendsListUseCase.execute(id)
     val userLocation: LiveData<LocationModel> = getUserLocationUseCase.execute()
+    val networkState: LiveData<NetworkState> = getNetworkStateUseCase.execute()
 
     private var userLocationTracking = false
     private var friendsLocationsTracking = false

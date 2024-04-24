@@ -16,6 +16,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/messageText" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/messageText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/loginButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logo" />
 
     <ImageView
@@ -23,7 +35,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/vk_logo_white"
-        app:layout_constraintBottom_toTopOf="@+id/loginButton"
+        app:layout_constraintBottom_toTopOf="@+id/messageText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

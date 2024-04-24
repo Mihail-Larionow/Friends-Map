@@ -8,13 +8,14 @@
     android:background="@color/vk_blue"
     tools:context=".presentation.chat.DialogsActivity">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/backButton"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="15dp"
         android:layout_marginStart="20dp"
-        android:src="@drawable/vk_logo_white"
+        android:src="@drawable/ic_back"
+        android:tint="@color/white"
         app:layout_constraintStart_toStartOf="parent"
 
         app:layout_constraintTop_toTopOf="parent" />

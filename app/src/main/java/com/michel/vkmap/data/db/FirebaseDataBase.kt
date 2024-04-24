@@ -10,6 +10,7 @@ import com.michel.vkmap.data.models.LocationDataModel
 import com.michel.vkmap.data.models.LocationDataPackModel
 import com.michel.vkmap.data.models.MessageDataModel
 import com.michel.vkmap.data.models.MessageDataPackModel
+import com.michel.vkmap.data.models.NetworkState
 
 class FirebaseDataBase: IDataBase {
 
@@ -19,6 +20,7 @@ class FirebaseDataBase: IDataBase {
     }
 
     private val dataBase = Firebase.database
+    private val networkState: LiveData<NetworkState> = MutableLiveData()
 
     override fun startListening(friendsVK: ArrayList<String>): MutableLiveData<Map<String, LiveData<LocationDataModel>>>{
         val friendsData:  MutableLiveData<Map<String, LiveData<LocationDataModel>>> = MutableLiveData()
@@ -43,12 +45,8 @@ class FirebaseDataBase: IDataBase {
         return dataListener.getData()
     }
 
-
     override fun saveLocation(dataPack: LocationDataPackModel) {
-        dataBase.getReference(USERS_KEY + "/" + dataPack.userId)
-            .setValue(
-                dataPack.data
-            )
+        dataBase.getReference(USERS_KEY + "/" + dataPack.userId).setValue(dataPack.data)
         Log.i("VKMAP", "Firebase saved ${dataPack.data}")
     }
 
@@ -62,5 +60,7 @@ class FirebaseDataBase: IDataBase {
             )
         Log.i("VKMAP", "Firebase saved " + dataPack.text + " " + dataPack.senderId)
     }
+
+    override fun getNetworkState(): LiveData<NetworkState> = networkState
 
 }

@@ -6,12 +6,13 @@ import com.michel.vkmap.data.db.FirebaseDataBase
 import com.michel.vkmap.data.db.IDataBase
 import com.michel.vkmap.data.listeners.YandexListener
 import com.michel.vkmap.data.manager.YandexManager
-import com.michel.vkmap.domain.repository.IRepository
-import com.michel.vkmap.data.repository.UserRepository
+import com.michel.vkmap.domain.repository.IMapRepository
+import com.michel.vkmap.data.repository.MapRepository
 import com.michel.vkmap.data.sharedpref.SharedPrefStorage
 import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase
+import com.michel.vkmap.domain.usecases.GetNetworkStateUseCase
 import com.michel.vkmap.domain.usecases.GetPhotoUseCase
 import com.michel.vkmap.domain.usecases.GetUserLocationUseCase
 import com.michel.vkmap.domain.usecases.SaveUserLocationUseCase
@@ -31,6 +32,7 @@ val appModule = module {
             getUserLocationUseCase = get(),
             trackLocationUseCase = get(),
             zoomUseCase = get(),
+            getNetworkStateUseCase = get(),
             saveUserLocationUseCase = get()
         )
     }
@@ -47,6 +49,12 @@ val appModule = module {
 
     factory<GetFriendsLocationsUseCase>{
         GetFriendsLocationsUseCase(
+            repository = get()
+        )
+    }
+
+    factory<GetNetworkStateUseCase> {
+        GetNetworkStateUseCase(
             repository = get()
         )
     }
@@ -79,8 +87,8 @@ val appModule = module {
         )
     }
 
-    single<IRepository>{
-        UserRepository(
+    single<IMapRepository>{
+        MapRepository(
             api = get(),
             dataBase = get(),
             sharedPref = get()

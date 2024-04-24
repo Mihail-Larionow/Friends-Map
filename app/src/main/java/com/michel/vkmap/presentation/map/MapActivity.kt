@@ -11,8 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.michel.vkmap.R
 import com.michel.vkmap.data.models.LocationDataModel
 import com.michel.vkmap.data.models.LocationModel
-import com.michel.vkmap.presentation.chat.ChatActivity
 import com.michel.vkmap.presentation.WelcomeActivity
+import com.michel.vkmap.presentation.chat.DialogsActivity
 import com.vk.api.sdk.VK
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.mapview.MapView
@@ -22,7 +22,7 @@ class MapActivity : ComponentActivity() {
 
     private val placeMarkList: MutableMap<String, PlaceMark> = mutableMapOf()
 
-    private val viewModel by viewModel<MainViewModel>()
+    private val viewModel by viewModel<MapViewModel>()
     private lateinit var mapView: MapView
 
     private val locationPermissionRequest = registerForActivityResult(
@@ -76,7 +76,7 @@ class MapActivity : ComponentActivity() {
 
         // Chat activity button
         findViewById<Button>(R.id.chatButton).setOnClickListener {
-            ChatActivity.startFrom(this)
+            DialogsActivity.startFrom(this)
             finish()
         }
 
@@ -117,7 +117,7 @@ class MapActivity : ComponentActivity() {
         val friendsLocations = viewModel.startFriendsLocationsTracking(list)
         friendsLocations.observe(this){
             for ((id, data) in it) {
-                addPlaceMarkOnMap(id, data)
+                data.observe(this){ locationData -> addPlaceMarkOnMap(id, locationData) }
             }
         }
     }

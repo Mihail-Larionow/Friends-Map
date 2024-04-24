@@ -17,13 +17,13 @@ import com.michel.vkmap.domain.usecases.GetUserLocationUseCase
 import com.michel.vkmap.domain.usecases.SaveUserLocationUseCase
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
 import com.michel.vkmap.domain.usecases.ZoomUseCase
-import com.michel.vkmap.presentation.map.MainViewModel
+import com.michel.vkmap.presentation.map.MapViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    viewModel<MainViewModel>{
-        MainViewModel(
+    viewModel<MapViewModel>{
+        MapViewModel(
             addPlaceMarkUseCase = get(),
             getFriendsListUseCase = get(),
             getFriendsLocationsUseCase = get(),

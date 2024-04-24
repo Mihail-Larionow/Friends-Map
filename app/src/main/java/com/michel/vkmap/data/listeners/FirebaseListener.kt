@@ -11,42 +11,36 @@ import com.michel.vkmap.data.models.FirebaseLocationDataModel
 import com.michel.vkmap.data.models.LocationDataModel
 import com.michel.vkmap.data.models.LocationModel
 
-class FirebaseListener(private val friends: ArrayList<String>): ValueEventListener {
+class FirebaseListener(): ValueEventListener {
 
-    private val data: MutableLiveData<Map<String, LocationDataModel>> = MutableLiveData()
+    private val data: MutableLiveData<LocationDataModel> = MutableLiveData()
 
     override fun onDataChange(snapshot: DataSnapshot) {
-        Log.v("VKMAP", "Firebase data changed")
 
-        val locationsData: MutableMap<String, LocationDataModel> = mutableMapOf()
-
-        snapshot.children.forEach lit@{ dataPack ->
-            val userId = dataPack.key
-            if(userId !in friends) return@lit
-            val data = dataPack.getValue<FirebaseLocationDataModel>()
-            Log.d("VKMAP", "data: " + dataPack.key)
-            data?.let{
-                if(it.location != null && it.date != null && userId != null){
-                    if(it.location.latitude != null && it.location.longitude != null)
-                        locationsData[userId] = LocationDataModel(
+        val id = snapshot.key
+        Log.v("VKMAP", "Firebase ${id} data changed")
+        val pack = snapshot.getValue<FirebaseLocationDataModel>()
+        pack?.let {
+            if (it.location != null && it.date != null && id != null) {
+                if (it.location.latitude != null && it.location.longitude != null)
+                    data.postValue(
+                        LocationDataModel(
                             date = it.date,
                             location = LocationModel(
                                 latitude = it.location.latitude,
                                 longitude = it.location.longitude
                             )
                         )
-                }
+                    )
             }
         }
-
-        data.postValue(locationsData)
     }
 
     override fun onCancelled(error: DatabaseError) {
 
     }
 
-    fun getData(): LiveData<Map<String, LocationDataModel>> {
+    fun getData(): LiveData<LocationDataModel> {
         return data
     }
 

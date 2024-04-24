@@ -15,11 +15,10 @@ import com.michel.vkmap.domain.usecases.GetUserLocationUseCase
 import com.michel.vkmap.domain.usecases.SaveUserLocationUseCase
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
 import com.michel.vkmap.domain.usecases.ZoomUseCase
-import com.michel.vkmap.presentation.map.PlaceMark
 import com.vk.api.sdk.VK
 import com.yandex.mapkit.mapview.MapView
 
-class MainViewModel(
+class MapViewModel(
     private val addPlaceMarkUseCase: AddPlaceMarkUseCase,
     private val getFriendsListUseCase: GetFriendsListUseCase,
     private val getFriendsLocationsUseCase: GetFriendsLocationsUseCase,
@@ -31,7 +30,7 @@ class MainViewModel(
 ): ViewModel() {
     val id = VK.getUserId().toString()
 
-    private var friendsLocations: LiveData<Map<String, LocationDataModel>> = MutableLiveData()
+    private var friendsLocations: LiveData<Map<String, LiveData<LocationDataModel>>> = MutableLiveData()
     val friendsList: LiveData<ArrayList<String>> = getFriendsListUseCase.execute(id)
     val userLocation: LiveData<LocationModel> = getUserLocationUseCase.execute()
 
@@ -72,8 +71,7 @@ class MainViewModel(
         return false
     }
 
-    fun startFriendsLocationsTracking(friends: ArrayList<String>): LiveData<Map<String, LocationDataModel>>{
-        friends.add(id)
+    fun startFriendsLocationsTracking(friends: ArrayList<String>): LiveData<Map<String, LiveData<LocationDataModel>>>{
         if(!friendsLocationsTracking)
             friendsLocations = getFriendsLocationsUseCase.execute(friends = friends)
         friendsLocationsTracking = true

@@ -12,6 +12,6 @@ interface IRepository {
 
     fun getFriendsList(userId: String): LiveData<ArrayList<String>>
 
-    fun getFriendsLocations(friends: ArrayList<String>): LiveData<Map<String, LocationDataModel>>
+    fun getFriendsLocations(friends: ArrayList<String>): LiveData<Map<String, LiveData<LocationDataModel>>>
 
 }

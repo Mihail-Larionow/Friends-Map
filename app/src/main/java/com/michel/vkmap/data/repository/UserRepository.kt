@@ -33,7 +33,7 @@ class UserRepository(
         return api.friendsListRequest(userId)
     }
 
-    override fun getFriendsLocations(friends: ArrayList<String>): LiveData<Map<String, LocationDataModel>>{
+    override fun getFriendsLocations(friends: ArrayList<String>): LiveData<Map<String, LiveData<LocationDataModel>>>{
         Log.v("VKMAP", "Getting friends locations")
         return dataBase.startListening(friends)
     }

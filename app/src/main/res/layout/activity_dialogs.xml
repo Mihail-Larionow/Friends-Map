@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/vk_blue"
-    tools:context=".presentation.chat.UsersActivity">
+    tools:context=".presentation.chat.DialogsActivity">
 
     <ImageView
         android:id="@+id/backButton"
@@ -14,8 +14,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="15dp"
         android:layout_marginStart="20dp"
-        android:src="@drawable/ic_back"
-        app:tint="@color/white"
+        android:src="@drawable/vk_logo_white"
         app:layout_constraintStart_toStartOf="parent"
 
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,7 +23,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ПОЛЬЗОВАТЕЛИ"
+        android:text="ДИАЛОГИ"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -50,7 +49,7 @@
             android:padding="20dp"
             android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-        
+
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="30dp"
@@ -67,5 +66,16 @@
 
     </FrameLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_add"
+        android:backgroundTint="@color/vk_blue"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

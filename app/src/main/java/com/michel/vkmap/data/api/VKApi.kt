@@ -3,7 +3,7 @@ package com.michel.vkmap.data.api
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.michel.vkmap.data.models.NetworkState
+import com.michel.vkmap.domain.models.NetworkState
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 import java.net.URL
@@ -30,7 +30,7 @@ class VKApi: IApi {
         return photo
     }
 
-    override fun friendsListRequest(userId: String): LiveData<ArrayList<String>> {
+    override fun friendsListRequest(userId: String, callback: (ArrayList<String>) -> Unit) {
         networkState.postValue(NetworkState.LOADING)
         val friends: MutableLiveData<ArrayList<String>> = MutableLiveData()
         VK.execute(GetFriendsListCommand(userId = userId), object : VKApiCallback<ArrayList<String>>{
@@ -42,12 +42,11 @@ class VKApi: IApi {
             override fun success(result: ArrayList<String>) {
                 networkState.postValue(NetworkState.LOADED)
                 if(result.isNotEmpty()){
-                    friends.postValue(result)
+                    callback(result)
                 }
             }
 
         })
-        return friends
     }
 
     override fun getNetworkState(): LiveData<NetworkState> = networkState

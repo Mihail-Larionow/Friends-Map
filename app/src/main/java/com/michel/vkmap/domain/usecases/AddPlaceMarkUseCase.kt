@@ -1,6 +1,6 @@
 package com.michel.vkmap.domain.usecases
 
-import com.michel.vkmap.data.models.LocationDataModel
+import com.michel.vkmap.domain.models.LocationDataModel
 import com.michel.vkmap.presentation.map.PlaceMark
 import com.yandex.mapkit.mapview.MapView
 

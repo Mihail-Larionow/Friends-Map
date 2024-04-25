@@ -2,10 +2,10 @@ package com.michel.vkmap.presentation.map
 
 import android.graphics.BitmapFactory
 import android.util.Log
-import com.michel.vkmap.data.models.LocationDataModel
+import com.michel.vkmap.domain.models.LocationDataModel
 import com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation
 import com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation
-import com.michel.vkmap.data.models.LocationModel
+import com.michel.vkmap.domain.models.LocationModel
 import com.michel.vkmap.presentation.ui.PlaceMarkView
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.PlacemarkMapObject

@@ -1,7 +1,7 @@
 package com.michel.vkmap.presentation.anim
 
 import android.animation.ValueAnimator
-import com.michel.vkmap.data.models.LocationModel
+import com.michel.vkmap.domain.models.LocationModel
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.PlacemarkMapObject
 

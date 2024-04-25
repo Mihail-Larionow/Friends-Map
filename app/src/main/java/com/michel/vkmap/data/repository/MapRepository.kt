@@ -2,12 +2,13 @@ package com.michel.vkmap.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.michel.vkmap.data.api.IApi
 import com.michel.vkmap.data.db.IDataBase
-import com.michel.vkmap.data.models.LocationDataModel
-import com.michel.vkmap.data.models.LocationDataPackModel
-import com.michel.vkmap.data.models.LocationModel
-import com.michel.vkmap.data.models.NetworkState
+import com.michel.vkmap.domain.models.LocationDataModel
+import com.michel.vkmap.domain.models.LocationDataPackModel
+import com.michel.vkmap.domain.models.LocationModel
+import com.michel.vkmap.domain.models.NetworkState
 import com.michel.vkmap.data.sharedpref.SharedPrefStorage
 import com.michel.vkmap.domain.repository.IMapRepository
 
@@ -18,6 +19,7 @@ class MapRepository(
 ): IMapRepository {
 
     private val images: MutableMap<String, LiveData<ByteArray>> = mutableMapOf()
+    private val friends: MutableLiveData<ArrayList<String>> = MutableLiveData()
 
     override fun getPhoto(userId: String): LiveData<ByteArray> {
         images[userId]?.let {
@@ -31,7 +33,13 @@ class MapRepository(
 
     override fun getFriendsList(userId: String): LiveData<ArrayList<String>> {
         Log.v("VKMAP", "Friends $userId uploading")
-        return api.friendsListRequest(userId)
+        api.friendsListRequest(userId){ friendsVK ->
+            dataBase.getFriendsList(friendsVK = friendsVK){ list ->
+                Log.v("VKMAP", "Friends $list")
+                friends.postValue(list)
+            }
+        }
+        return friends
     }
 
     override fun getFriendsLocations(friends: ArrayList<String>): LiveData<Map<String, LiveData<LocationDataModel>>>{
@@ -48,7 +56,7 @@ class MapRepository(
         dataBase.saveLocation(dataPack)
     }
 
-    fun getLocation(): LocationModel{
+    fun getLocation(): LocationModel {
         return sharedPref.getLocation()
     }
     

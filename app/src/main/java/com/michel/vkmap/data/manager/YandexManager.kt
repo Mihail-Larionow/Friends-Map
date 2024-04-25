@@ -3,7 +3,7 @@ package com.michel.vkmap.data.manager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.michel.vkmap.data.listeners.YandexListener
-import com.michel.vkmap.data.models.LocationModel
+import com.michel.vkmap.domain.models.LocationModel
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.location.FilteringMode
 import com.yandex.mapkit.location.LocationManager

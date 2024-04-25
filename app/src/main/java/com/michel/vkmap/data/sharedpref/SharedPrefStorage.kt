@@ -2,7 +2,7 @@ package com.michel.vkmap.data.sharedpref
 
 import android.content.Context
 import android.util.Log
-import com.michel.vkmap.data.models.LocationModel
+import com.michel.vkmap.domain.models.LocationModel
 
 class SharedPrefStorage(context: Context) {
 

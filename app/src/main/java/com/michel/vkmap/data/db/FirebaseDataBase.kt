@@ -6,11 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.michel.vkmap.data.listeners.FirebaseListener
-import com.michel.vkmap.data.models.LocationDataModel
-import com.michel.vkmap.data.models.LocationDataPackModel
-import com.michel.vkmap.data.models.MessageDataModel
-import com.michel.vkmap.data.models.MessageDataPackModel
-import com.michel.vkmap.data.models.NetworkState
+import com.michel.vkmap.domain.models.LocationDataModel
+import com.michel.vkmap.domain.models.LocationDataPackModel
+import com.michel.vkmap.domain.models.MessageDataModel
+import com.michel.vkmap.domain.models.MessageDataPackModel
+import com.michel.vkmap.domain.models.NetworkState
 
 class FirebaseDataBase: IDataBase {
 
@@ -22,20 +22,15 @@ class FirebaseDataBase: IDataBase {
     private val dataBase = Firebase.database
     private val networkState: LiveData<NetworkState> = MutableLiveData()
 
-    override fun startListening(friendsVK: ArrayList<String>): MutableLiveData<Map<String, LiveData<LocationDataModel>>>{
+    override fun startListening(friendsList: ArrayList<String>): MutableLiveData<Map<String, LiveData<LocationDataModel>>>{
         val friendsData:  MutableLiveData<Map<String, LiveData<LocationDataModel>>> = MutableLiveData()
-        dataBase.getReference(USERS_KEY).get().addOnSuccessListener { data ->
-            val dataMap: MutableMap<String, LiveData<LocationDataModel>> = mutableMapOf()
-            data.children.forEach {
-                val friendId = it.key
-                if(friendId != null && friendId in friendsVK) {
-                    dataMap[friendId] = addListener(friendId)
-                }
-            }
-            friendsData.postValue(dataMap)
-        }.addOnFailureListener{
-            Log.e("VKMAP", "Error getting data", it)
+        val dataMap: MutableMap<String, LiveData<LocationDataModel>> = mutableMapOf()
+
+        friendsList.forEach { friendId ->
+            dataMap[friendId] = addListener(friendId)
         }
+        friendsData.postValue(dataMap)
+
         return friendsData
     }
 
@@ -62,5 +57,13 @@ class FirebaseDataBase: IDataBase {
     }
 
     override fun getNetworkState(): LiveData<NetworkState> = networkState
+
+    override fun getFriendsList(friendsVK: ArrayList<String>, callback: (ArrayList<String>) -> Unit) {
+        dataBase.getReference(USERS_KEY).get().addOnSuccessListener { data ->
+            callback.invoke(ArrayList(data.children.map { "${it.key}" }.filter{ it in friendsVK}))
+        }.addOnFailureListener{
+            Log.e("VKMAP", "Error getting data", it)
+        }
+    }
 
 }

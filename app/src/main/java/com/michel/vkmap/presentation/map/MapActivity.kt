@@ -13,9 +13,9 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import com.michel.vkmap.R
-import com.michel.vkmap.data.models.LocationDataModel
-import com.michel.vkmap.data.models.LocationModel
-import com.michel.vkmap.data.models.NetworkState
+import com.michel.vkmap.domain.models.LocationDataModel
+import com.michel.vkmap.domain.models.LocationModel
+import com.michel.vkmap.domain.models.NetworkState
 import com.michel.vkmap.presentation.WelcomeActivity
 import com.michel.vkmap.presentation.chat.DialogsActivity
 import com.vk.api.sdk.VK

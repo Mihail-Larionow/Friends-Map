@@ -1,4 +1,4 @@
-package com.michel.vkmap.data.models
+package com.michel.vkmap.domain.models
 
 class NetworkState {
 

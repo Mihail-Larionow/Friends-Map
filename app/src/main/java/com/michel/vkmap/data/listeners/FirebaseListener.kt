@@ -7,9 +7,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
-import com.michel.vkmap.data.models.FirebaseLocationDataModel
-import com.michel.vkmap.data.models.LocationDataModel
-import com.michel.vkmap.data.models.LocationModel
+import com.michel.vkmap.domain.models.FirebaseLocationDataModel
+import com.michel.vkmap.domain.models.LocationDataModel
+import com.michel.vkmap.domain.models.LocationModel
 
 class FirebaseListener(): ValueEventListener {
 

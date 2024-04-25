@@ -3,7 +3,7 @@ package com.michel.vkmap.data.listeners
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.michel.vkmap.data.models.LocationModel
+import com.michel.vkmap.domain.models.LocationModel
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.location.Location
 import com.yandex.mapkit.location.LocationListener

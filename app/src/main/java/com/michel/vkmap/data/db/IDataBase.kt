@@ -2,10 +2,10 @@ package com.michel.vkmap.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.michel.vkmap.data.models.LocationDataModel
-import com.michel.vkmap.data.models.LocationDataPackModel
-import com.michel.vkmap.data.models.MessageDataPackModel
-import com.michel.vkmap.data.models.NetworkState
+import com.michel.vkmap.domain.models.LocationDataModel
+import com.michel.vkmap.domain.models.LocationDataPackModel
+import com.michel.vkmap.domain.models.MessageDataPackModel
+import com.michel.vkmap.domain.models.NetworkState
 
 interface IDataBase {
 
@@ -16,5 +16,7 @@ interface IDataBase {
     fun saveMessage(dataPack: MessageDataPackModel)
 
     fun getNetworkState(): LiveData<NetworkState>
+
+    fun getFriendsList(friendsVK: ArrayList<String>, callback: (ArrayList<String>) -> Unit)
 
 }

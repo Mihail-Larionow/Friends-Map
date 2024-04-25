@@ -11,7 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.michel.vkmap.R
-import com.michel.vkmap.data.models.NetworkState
+import com.michel.vkmap.domain.models.NetworkState
 import com.michel.vkmap.presentation.map.MapActivity
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult

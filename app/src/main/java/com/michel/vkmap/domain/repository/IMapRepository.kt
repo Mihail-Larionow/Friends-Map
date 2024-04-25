@@ -1,9 +1,9 @@
 package com.michel.vkmap.domain.repository
 
 import androidx.lifecycle.LiveData
-import com.michel.vkmap.data.models.LocationDataModel
-import com.michel.vkmap.data.models.LocationDataPackModel
-import com.michel.vkmap.data.models.NetworkState
+import com.michel.vkmap.domain.models.LocationDataModel
+import com.michel.vkmap.domain.models.LocationDataPackModel
+import com.michel.vkmap.domain.models.NetworkState
 
 interface IMapRepository {
 

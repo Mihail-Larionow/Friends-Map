@@ -2,12 +2,12 @@ package com.michel.vkmap.presentation.map
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.michel.vkmap.data.models.LocationModel
+import com.michel.vkmap.domain.models.LocationModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.michel.vkmap.data.models.LocationDataModel
-import com.michel.vkmap.data.models.LocationDataPackModel
-import com.michel.vkmap.data.models.NetworkState
+import com.michel.vkmap.domain.models.LocationDataModel
+import com.michel.vkmap.domain.models.LocationDataPackModel
+import com.michel.vkmap.domain.models.NetworkState
 import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase

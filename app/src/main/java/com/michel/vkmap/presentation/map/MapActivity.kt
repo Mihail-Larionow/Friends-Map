@@ -95,7 +95,6 @@ class MapActivity : ComponentActivity() {
         }
 
         errorText = findViewById(R.id.errorText)
-
         progressBar = findViewById(R.id.progressBar)
 
     }
@@ -153,8 +152,8 @@ class MapActivity : ComponentActivity() {
                 locationData = locationData,
                 id = id
             )
-            viewModel.getPhoto(userId = id).observe(this){
-                newPlaceMark.setIcon(it)
+            viewModel.getUserInfo(userId = id).observe(this){
+                newPlaceMark.setIcon(it.second)
             }
             placeMarkList[id] = newPlaceMark
         }

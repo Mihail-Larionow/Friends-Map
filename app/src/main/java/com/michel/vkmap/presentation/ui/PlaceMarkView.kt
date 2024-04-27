@@ -12,7 +12,7 @@ import android.graphics.RectF
 import android.util.Log
 import com.yandex.runtime.image.ImageProvider
 
-class PlaceMarkView(){
+class PlaceMarkView{
 
     companion object{
         private const val DEFAULT_ICON_SIZE: Int = 192

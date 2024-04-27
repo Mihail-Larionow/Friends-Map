@@ -22,11 +22,11 @@ class FirebaseDataBase: IDataBase {
     private val dataBase = Firebase.database
     private val networkState: LiveData<NetworkState> = MutableLiveData()
 
-    override fun startListening(friendsList: ArrayList<String>): MutableLiveData<Map<String, LiveData<LocationDataModel>>>{
+    override fun startListening(friends: ArrayList<String>): MutableLiveData<Map<String, LiveData<LocationDataModel>>>{
         val friendsData:  MutableLiveData<Map<String, LiveData<LocationDataModel>>> = MutableLiveData()
         val dataMap: MutableMap<String, LiveData<LocationDataModel>> = mutableMapOf()
 
-        friendsList.forEach { friendId ->
+        friends.forEach { friendId ->
             dataMap[friendId] = addListener(friendId)
         }
         friendsData.postValue(dataMap)

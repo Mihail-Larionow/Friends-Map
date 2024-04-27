@@ -5,9 +5,9 @@ import com.michel.vkmap.domain.models.LocationDataModel
 import com.michel.vkmap.domain.models.LocationDataPackModel
 import com.michel.vkmap.domain.models.NetworkState
 
-interface IMapRepository {
+interface IRepository {
 
-    fun getPhoto(userId: String): LiveData<ByteArray>
+    fun getInfo(userId: String): LiveData<Pair<String, ByteArray>>
 
     fun saveLocation(dataPack: LocationDataPackModel)
 

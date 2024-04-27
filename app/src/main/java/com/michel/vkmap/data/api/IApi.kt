@@ -5,9 +5,9 @@ import com.michel.vkmap.domain.models.NetworkState
 
 interface IApi {
 
-    fun photoUrlRequest(userId: String): LiveData<ByteArray>
-
     fun friendsListRequest(userId: String, callback: (ArrayList<String>) -> Unit)
+
+    fun infoRequest(userId: String, callback: (Pair<String, ByteArray>) -> Unit)
 
     fun getNetworkState(): LiveData<NetworkState>
 

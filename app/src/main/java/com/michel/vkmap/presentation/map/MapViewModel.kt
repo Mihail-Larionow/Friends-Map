@@ -12,7 +12,7 @@ import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase
 import com.michel.vkmap.domain.usecases.GetNetworkStateUseCase
-import com.michel.vkmap.domain.usecases.GetPhotoUseCase
+import com.michel.vkmap.domain.usecases.GetUserInfoUseCase
 import com.michel.vkmap.domain.usecases.GetUserLocationUseCase
 import com.michel.vkmap.domain.usecases.SaveUserLocationUseCase
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
@@ -24,7 +24,7 @@ class MapViewModel(
     private val addPlaceMarkUseCase: AddPlaceMarkUseCase,
     private val getFriendsListUseCase: GetFriendsListUseCase,
     private val getFriendsLocationsUseCase: GetFriendsLocationsUseCase,
-    private val getPhotoUseCase: GetPhotoUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getUserLocationUseCase: GetUserLocationUseCase,
     private val trackLocationUseCase: TrackLocationUseCase,
     private val zoomUseCase: ZoomUseCase,
@@ -82,8 +82,8 @@ class MapViewModel(
         return friendsLocations
     }
 
-    fun getPhoto(userId: String): LiveData<ByteArray>{
-        return getPhotoUseCase.execute(id = userId)
+    fun getUserInfo(userId: String): LiveData<Pair<String, ByteArray>>{
+        return getUserInfoUseCase.execute(id = userId)
     }
 
     fun saveLocation(location: LocationModel){

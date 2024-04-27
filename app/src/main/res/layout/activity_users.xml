@@ -42,15 +42,17 @@
         app:layout_constraintTop_toBottomOf="@+id/backButton">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
             android:clipToPadding="false"
             android:orientation="vertical"
             android:padding="20dp"
-            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-        
+
+
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="30dp"
@@ -58,12 +60,14 @@
             android:layout_gravity="center"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:id="@+id/errorText"
+            android:textColor="@color/vk_blue"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="error"
-            android:gravity="center"
-            android:visibility="gone" />
+            android:text="Нет доступа к сети"
+            android:layout_gravity="center"/>
+
 
     </FrameLayout>
 

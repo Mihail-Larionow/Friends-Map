@@ -7,35 +7,39 @@ import com.michel.vkmap.data.api.IApi
 import com.michel.vkmap.data.db.IDataBase
 import com.michel.vkmap.domain.models.LocationDataModel
 import com.michel.vkmap.domain.models.LocationDataPackModel
-import com.michel.vkmap.domain.models.LocationModel
 import com.michel.vkmap.domain.models.NetworkState
 import com.michel.vkmap.data.sharedpref.SharedPrefStorage
-import com.michel.vkmap.domain.repository.IMapRepository
+import com.michel.vkmap.domain.repository.IRepository
 
-class MapRepository(
+class UserRepository(
     private val api: IApi,
     private val dataBase: IDataBase,
     private val sharedPref: SharedPrefStorage
-): IMapRepository {
+): IRepository {
 
-    private val images: MutableMap<String, LiveData<ByteArray>> = mutableMapOf()
+    private val users: MutableMap<String, MutableLiveData<Pair<String, ByteArray>>> = mutableMapOf()
     private val friends: MutableLiveData<ArrayList<String>> = MutableLiveData()
 
-    override fun getPhoto(userId: String): LiveData<ByteArray> {
-        images[userId]?.let {
+    override fun getInfo(userId: String): LiveData<Pair<String, ByteArray>> {
+        users[userId]?.let {
             return it
         }
-        Log.i("VKMAP", "Image $userId uploading")
-        val image = api.photoUrlRequest(userId = userId)
-        images[userId] = image
-        return image
+        Log.i("VKMAP", "Info $userId uploading")
+        val info = MutableLiveData<Pair<String, ByteArray>>()
+        api.infoRequest(userId = userId) {
+            info.postValue(it)
+        }
+        users[userId] = info
+        return info
     }
 
     override fun getFriendsList(userId: String): LiveData<ArrayList<String>> {
+        if(friends.value != null) {
+            return friends
+        }
         Log.v("VKMAP", "Friends $userId uploading")
         api.friendsListRequest(userId){ friendsVK ->
             dataBase.getFriendsList(friendsVK = friendsVK){ list ->
-                Log.v("VKMAP", "Friends $list")
                 friends.postValue(list)
             }
         }
@@ -54,10 +58,6 @@ class MapRepository(
     override fun saveLocation(dataPack: LocationDataPackModel){
         sharedPref.saveLocation(userLocation = dataPack.data.location)
         dataBase.saveLocation(dataPack)
-    }
-
-    fun getLocation(): LocationModel {
-        return sharedPref.getLocation()
     }
     
 }

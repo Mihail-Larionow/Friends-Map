@@ -58,6 +58,7 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.5.3")
     implementation("com.google.firebase:firebase-database-ktx:20.3.0")
     implementation("androidx.activity:activity:1.8.0")
+    implementation("com.makeramen:roundedimageview:2.3.0")
     testImplementation("io.insert-koin:koin-test:3.5.3")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")

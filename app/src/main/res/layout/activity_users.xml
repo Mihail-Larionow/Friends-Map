@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/vk_blue"
-    tools:context=".presentation.chat.UsersActivity">
+    tools:context=".presentation.chat.users.UsersActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/backButton"
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/background_content"
+        android:background="@drawable/background_content_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backButton">
 

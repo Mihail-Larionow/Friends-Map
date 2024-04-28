@@ -1,10 +1,9 @@
-package com.michel.vkmap.presentation.chat
+package com.michel.vkmap.presentation.chat.users
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.michel.vkmap.domain.models.NetworkState
-import com.michel.vkmap.domain.models.UserModel
 import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetNetworkStateUseCase
 import com.michel.vkmap.domain.usecases.GetUserInfoUseCase
@@ -32,5 +31,6 @@ class UsersViewModel(
     fun getUserInfo(userId: String): LiveData<Pair<String, ByteArray>>{
         return getUserInfoUseCase.execute(id = userId)
     }
+
 
 }

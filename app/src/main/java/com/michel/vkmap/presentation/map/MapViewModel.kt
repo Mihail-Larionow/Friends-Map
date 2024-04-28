@@ -2,7 +2,6 @@ package com.michel.vkmap.presentation.map
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.michel.vkmap.domain.models.LocationModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.michel.vkmap.domain.models.LocationDataModel
@@ -35,7 +34,7 @@ class MapViewModel(
 
     private var friendsLocations: LiveData<Map<String, LiveData<LocationDataModel>>> = MutableLiveData()
     val friendsList: LiveData<ArrayList<String>> = getFriendsListUseCase.execute(id)
-    val userLocation: LiveData<LocationModel> = getUserLocationUseCase.execute()
+    val userLocation: LiveData<LocationDataModel> = getUserLocationUseCase.execute()
     val networkState: LiveData<NetworkState> = getNetworkStateUseCase.execute()
 
     private var userLocationTracking = false
@@ -86,21 +85,20 @@ class MapViewModel(
         return getUserInfoUseCase.execute(id = userId)
     }
 
-    fun saveLocation(location: LocationModel){
+    fun saveLocation(data: LocationDataModel){
         saveUserLocationUseCase.execute(
             locationDataPack = LocationDataPackModel(
                 userId = id,
-                data = LocationDataModel(
-                    location = location
-                )
+                data = data
             )
         )
     }
 
-    fun zoom(mapView: MapView, location: LocationModel){
+    fun zoom(mapView: MapView, latitude: Double, longitude: Double){
         zoomUseCase.execute(
             mapView = mapView,
-            location = location
+            latitude = latitude,
+            longitude = longitude
         )
     }
 

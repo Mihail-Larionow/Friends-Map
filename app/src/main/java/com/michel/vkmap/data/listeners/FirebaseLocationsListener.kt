@@ -9,9 +9,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.michel.vkmap.domain.models.FirebaseLocationDataModel
 import com.michel.vkmap.domain.models.LocationDataModel
-import com.michel.vkmap.domain.models.LocationModel
 
-class FirebaseListener(): ValueEventListener {
+class FirebaseLocationsListener: ValueEventListener {
 
     private val data: MutableLiveData<LocationDataModel> = MutableLiveData()
 
@@ -21,15 +20,12 @@ class FirebaseListener(): ValueEventListener {
         Log.v("VKMAP", "Firebase ${id} data changed")
         val pack = snapshot.getValue<FirebaseLocationDataModel>()
         pack?.let {
-            if (it.location != null && it.date != null && id != null) {
-                if (it.location.latitude != null && it.location.longitude != null)
+            if (it.latitude != null && it.longitude != null && it.date != null && id != null) {
                     data.postValue(
                         LocationDataModel(
                             date = it.date,
-                            location = LocationModel(
-                                latitude = it.location.latitude,
-                                longitude = it.location.longitude
-                            )
+                            latitude = it.latitude,
+                            longitude = it.longitude
                         )
                     )
             }
@@ -37,7 +33,7 @@ class FirebaseListener(): ValueEventListener {
     }
 
     override fun onCancelled(error: DatabaseError) {
-
+        Log.e("VKMAP", "Location listening cancelled")
     }
 
     fun getData(): LiveData<LocationDataModel> {

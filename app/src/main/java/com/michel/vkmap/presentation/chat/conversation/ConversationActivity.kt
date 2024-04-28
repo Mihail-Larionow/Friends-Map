@@ -1,10 +1,9 @@
-package com.michel.vkmap.presentation.chat
+package com.michel.vkmap.presentation.chat.conversation
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -12,23 +11,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.michel.vkmap.R
 import com.michel.vkmap.domain.models.NetworkState
-import com.michel.vkmap.domain.models.UserModel
-import com.michel.vkmap.presentation.chat.adapters.UsersRecyclerAdapter
+import com.michel.vkmap.presentation.chat.dialogs.DialogsActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class UsersActivity : AppCompatActivity() {
+class ConversationActivity : AppCompatActivity() {
 
     private lateinit var errorText: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
-    private val usersList: ArrayList<UserModel> = arrayListOf()
+    private lateinit var editText: EditText
 
-    private val viewModel by viewModel<UsersViewModel>()
+    private val viewModel by viewModel<ConversationViewModel>()
+    private var conversationId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_users)
+        setContentView(R.layout.activity_conversation)
 
+        val userId = intent.getStringExtra("userId")
+        conversationId = intent.getStringExtra("conversationId")
+
+        Log.e("VKMAP", "$userId, $conversationId")
 
         findViewById<ImageView>(R.id.backButton).setOnClickListener {
             DialogsActivity.startFrom(this)
@@ -36,32 +39,27 @@ class UsersActivity : AppCompatActivity() {
 
         progressBar = findViewById(R.id.progressBar)
         errorText = findViewById(R.id.errorText)
+        editText = findViewById(R.id.editText)
 
         recyclerView = findViewById(R.id.recyclerView)
-        val adapter = UsersRecyclerAdapter(context = this, usersList = usersList)
-        recyclerView.adapter = adapter
 
-        viewModel.friendsList.observe(this){ list ->
-            list.forEach {
-                id -> addUserToList(userId = id)
-                Log.v("VKMAP", "$usersList ${usersList.size}")
-                adapter.notifyItemInserted(usersList.size - 1)
-            }
+        findViewById<ImageView>(R.id.sendButton).setOnClickListener {
+            sendMessage(editText.text.toString(), userId)
         }
 
-        viewModel.networkState.observe(this){ state ->
-            setNetworkState(state)
-        }
     }
 
-    private fun addUserToList(userId: String){
-        viewModel.getUserInfo(userId).observe(this){
-            Log.v("VKMAP", "$it")
-            usersList.add(UserModel(
-                id = userId,
-                fullName = it.first,
-                photo = it.second
-            ))
+    private fun sendMessage(text: String, userId: String?){
+        if(conversationId == null && userId != null) {
+            conversationId = viewModel.createConversation(
+                usersList = arrayListOf(userId)
+            )
+        }
+        conversationId?.let{
+            viewModel.sendMessage(
+                conversationId = it,
+                text = text
+            )
         }
     }
 
@@ -85,10 +83,6 @@ class UsersActivity : AppCompatActivity() {
         }
     }
 
-    companion object{
-        fun startFrom(context: Context){
-            val intent = Intent(context, UsersActivity::class.java)
-            context.startActivity(intent)
-        }
-    }
+
+
 }

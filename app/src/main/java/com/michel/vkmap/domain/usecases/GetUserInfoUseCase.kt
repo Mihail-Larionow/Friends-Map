@@ -5,6 +5,6 @@ import com.michel.vkmap.domain.repository.IRepository
 
 class GetUserInfoUseCase(private val repository: IRepository) {
     fun execute(id: String): LiveData<Pair<String, ByteArray>> {
-        return repository.getInfo(userId = id)
+        return repository.getUserInfo(id = id)
     }
 }

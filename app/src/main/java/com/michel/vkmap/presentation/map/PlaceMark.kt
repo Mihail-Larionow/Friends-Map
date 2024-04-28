@@ -5,16 +5,10 @@ import android.util.Log
 import com.michel.vkmap.domain.models.LocationDataModel
 import com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation
 import com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation
-import com.michel.vkmap.domain.models.LocationModel
 import com.michel.vkmap.presentation.ui.PlaceMarkView
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.PlacemarkMapObject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import java.util.Date
 
 class PlaceMark(
@@ -24,7 +18,6 @@ class PlaceMark(
 ) : KoinComponent {
 
     private val view = PlaceMarkView()
-    private var currentLocation = locationData.location
 
     private val moveAnimation = PlaceMarkMoveAnimation(mark = mark)
     private val appearAnimation = PlaceMarkAppearAnimation(mark = mark)
@@ -43,7 +36,7 @@ class PlaceMark(
     fun update(data: LocationDataModel){
         Log.v("VKMAP","PlaceMark $id updated")
 
-        this.move(newLocation = data.location)
+        this.move(latitude = data.latitude, longitude = data.longitude)
         val text = getTimeText(data.date)
         view.setLabelText(text)
 
@@ -54,12 +47,11 @@ class PlaceMark(
         mark.setIcon(view.getImage())
     }
 
-    private fun move(newLocation: LocationModel){
-        currentLocation = newLocation
+    private fun move(latitude: Double, longitude: Double){
 
         val point = Point(
-            currentLocation.latitude,
-            currentLocation.longitude
+            latitude,
+            longitude
         )
 
         mark.geometry = point

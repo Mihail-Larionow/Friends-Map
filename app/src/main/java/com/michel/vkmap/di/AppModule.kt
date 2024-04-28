@@ -10,12 +10,16 @@ import com.michel.vkmap.domain.repository.IRepository
 import com.michel.vkmap.data.repository.UserRepository
 import com.michel.vkmap.data.sharedpref.SharedPrefStorage
 import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
+import com.michel.vkmap.domain.usecases.CreateConversationUseCase
+import com.michel.vkmap.domain.usecases.GetConversationInfoUseCase
+import com.michel.vkmap.domain.usecases.GetConversationsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase
 import com.michel.vkmap.domain.usecases.GetUserInfoUseCase
 import com.michel.vkmap.domain.usecases.GetNetworkStateUseCase
 import com.michel.vkmap.domain.usecases.GetUserLocationUseCase
 import com.michel.vkmap.domain.usecases.SaveUserLocationUseCase
+import com.michel.vkmap.domain.usecases.SendMessageUseCase
 import com.michel.vkmap.domain.usecases.TrackLocationUseCase
 import com.michel.vkmap.domain.usecases.ZoomUseCase
 import org.koin.dsl.module
@@ -68,6 +72,30 @@ val appModule = module {
 
     factory<SaveUserLocationUseCase>{
         SaveUserLocationUseCase(
+            repository = get()
+        )
+    }
+
+    factory<SendMessageUseCase> {
+        SendMessageUseCase(
+            repository = get()
+        )
+    }
+
+    factory<CreateConversationUseCase> {
+        CreateConversationUseCase(
+            repository = get()
+        )
+    }
+
+    factory<GetConversationsListUseCase> {
+        GetConversationsListUseCase(
+            repository = get()
+        )
+    }
+
+    factory<GetConversationInfoUseCase> {
+        GetConversationInfoUseCase(
             repository = get()
         )
     }

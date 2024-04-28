@@ -9,6 +9,9 @@ import com.michel.vkmap.domain.models.LocationDataModel
 import com.michel.vkmap.domain.models.LocationDataPackModel
 import com.michel.vkmap.domain.models.NetworkState
 import com.michel.vkmap.data.sharedpref.SharedPrefStorage
+import com.michel.vkmap.domain.models.ConversationDataPackModel
+import com.michel.vkmap.domain.models.ConversationModel
+import com.michel.vkmap.domain.models.MessageDataPackModel
 import com.michel.vkmap.domain.repository.IRepository
 
 class UserRepository(
@@ -17,19 +20,34 @@ class UserRepository(
     private val sharedPref: SharedPrefStorage
 ): IRepository {
 
-    private val users: MutableMap<String, MutableLiveData<Pair<String, ByteArray>>> = mutableMapOf()
+    private val usersInfo: MutableMap<String, LiveData<Pair<String, ByteArray>>> = mutableMapOf()
+    private val conversationsInfo: MutableMap<String, LiveData<ConversationModel>> = mutableMapOf()
     private val friends: MutableLiveData<ArrayList<String>> = MutableLiveData()
+    private val conversations: MutableLiveData<ArrayList<String>> = MutableLiveData()
 
-    override fun getInfo(userId: String): LiveData<Pair<String, ByteArray>> {
-        users[userId]?.let {
+    override fun getUserInfo(id: String): LiveData<Pair<String, ByteArray>> {
+        usersInfo[id]?.let {
             return it
         }
-        Log.i("VKMAP", "Info $userId uploading")
+        Log.i("VKMAP", "Info $id uploading")
         val info = MutableLiveData<Pair<String, ByteArray>>()
-        api.infoRequest(userId = userId) {
+        api.infoRequest(userId = id) {
             info.postValue(it)
         }
-        users[userId] = info
+        usersInfo[id] = info
+        return info
+    }
+
+    override fun getConversationInfo(id: String): LiveData<ConversationModel> {
+        conversationsInfo[id]?.let{
+            return it
+        }
+        Log.i("VKMAP", "Info $id uploading")
+        val info = MutableLiveData<ConversationModel>()
+        dataBase.getConversationsInfo(conversationId = id){
+            info.postValue(it)
+        }
+        conversationsInfo[id] = info
         return info
     }
 
@@ -46,9 +64,20 @@ class UserRepository(
         return friends
     }
 
+    override fun getConversationsList(userId: String): LiveData<ArrayList<String>> {
+        if(conversations.value != null) {
+            return conversations
+        }
+        Log.v("VKMAP", "Conversations $userId uploading")
+        dataBase.getConversationsList(userId = userId) { list ->
+            conversations.postValue(list)
+        }
+        return conversations
+    }
+
     override fun getFriendsLocations(friends: ArrayList<String>): LiveData<Map<String, LiveData<LocationDataModel>>>{
         Log.v("VKMAP", "Getting friends locations")
-        return dataBase.startListening(friends)
+        return dataBase.startLocationsListening(friends)
     }
 
     override fun getNetworkState(): LiveData<NetworkState> {
@@ -56,8 +85,16 @@ class UserRepository(
     }
 
     override fun saveLocation(dataPack: LocationDataPackModel){
-        sharedPref.saveLocation(userLocation = dataPack.data.location)
-        dataBase.saveLocation(dataPack)
+        sharedPref.saveLocation(data = dataPack.data)
+        dataBase.saveLocation(dataPack = dataPack)
     }
-    
+
+    override fun saveMessage(dataPack: MessageDataPackModel) {
+        dataBase.saveMessage(dataPack = dataPack)
+    }
+
+    override fun saveConversation(dataPack: ConversationDataPackModel): String {
+        return dataBase.saveConversation(dataPack = dataPack)
+    }
+
 }

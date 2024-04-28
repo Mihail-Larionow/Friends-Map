@@ -1,19 +1,19 @@
 package com.michel.vkmap.domain.usecases
 
 import android.util.Log
-import com.michel.vkmap.domain.models.LocationModel
+import com.michel.vkmap.domain.models.LocationDataModel
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.mapview.MapView
 
 class ZoomUseCase {
-    fun execute(mapView: MapView, location: LocationModel) {
+    fun execute(mapView: MapView, latitude: Double, longitude: Double) {
         Log.v("VKMAP", "YandexMap zooming")
         mapView.mapWindow.map.move(
             CameraPosition(
                 Point(
-                    location.latitude,
-                    location.longitude
+                    latitude,
+                    longitude
                 ),
                 DEFAULT_ZOOM,
                 DEFAULT_AZIMUTH,

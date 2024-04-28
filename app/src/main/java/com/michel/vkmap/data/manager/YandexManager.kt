@@ -3,7 +3,7 @@ package com.michel.vkmap.data.manager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.michel.vkmap.data.listeners.YandexListener
-import com.michel.vkmap.domain.models.LocationModel
+import com.michel.vkmap.domain.models.LocationDataModel
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.location.FilteringMode
 import com.yandex.mapkit.location.LocationManager
@@ -48,7 +48,7 @@ class YandexManager(private val locationListener: YandexListener) {
         locationManager.unsubscribe(locationListener)
     }
 
-    fun getData(): LiveData<LocationModel>{
+    fun getData(): LiveData<LocationDataModel>{
         return locationListener.getData()
     }
 

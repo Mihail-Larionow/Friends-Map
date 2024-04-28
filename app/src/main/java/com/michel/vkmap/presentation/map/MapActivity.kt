@@ -14,10 +14,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import com.michel.vkmap.R
 import com.michel.vkmap.domain.models.LocationDataModel
-import com.michel.vkmap.domain.models.LocationModel
 import com.michel.vkmap.domain.models.NetworkState
 import com.michel.vkmap.presentation.WelcomeActivity
-import com.michel.vkmap.presentation.chat.DialogsActivity
+import com.michel.vkmap.presentation.chat.dialogs.DialogsActivity
 import com.vk.api.sdk.VK
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.mapview.MapView
@@ -82,9 +81,13 @@ class MapActivity : ComponentActivity() {
         // Map zoom button
         zoomButton = findViewById<Button>(R.id.zoomButton)
         zoomButton.setOnClickListener {
-            val currentLocation: LocationModel? = viewModel.userLocation.value
+            val currentLocation: LocationDataModel? = viewModel.userLocation.value
             if(currentLocation != null)
-                viewModel.zoom(mapView, currentLocation)
+                viewModel.zoom(
+                    mapView = mapView,
+                    latitude = currentLocation.latitude,
+                    longitude = currentLocation.longitude
+                )
         }
 
         // Chat activity button
@@ -109,10 +112,8 @@ class MapActivity : ComponentActivity() {
 
         viewModel.userLocation.observe(this){
             addPlaceMarkOnMap(
-                viewModel.id,
-                locationData = LocationDataModel(
-                    location = it
-                )
+                id = viewModel.id,
+                locationData = it
             )
             viewModel.saveLocation(it)
         }

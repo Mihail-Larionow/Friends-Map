@@ -1,7 +1,7 @@
 package com.michel.vkmap.presentation.anim
 
 import android.animation.ValueAnimator
-import com.michel.vkmap.domain.models.LocationModel
+import com.michel.vkmap.domain.models.LocationDataModel
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.PlacemarkMapObject
 
@@ -12,7 +12,7 @@ class PlaceMarkMoveAnimation(private val mark: PlacemarkMapObject) {
         animation.setDuration(DEFAULT_DURATION)
     }
 
-    fun execute(startLocation: LocationModel, endLocation: LocationModel){
+    fun execute(startLocation: LocationDataModel, endLocation: LocationDataModel){
         val deltaLatitude = (startLocation.latitude - endLocation.latitude) / MAX_VALUE
         val deltaLongitude = (startLocation.longitude - endLocation.longitude) / MAX_VALUE
         var latitude = startLocation.latitude

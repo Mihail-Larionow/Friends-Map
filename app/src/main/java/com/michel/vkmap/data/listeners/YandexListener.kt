@@ -3,7 +3,7 @@ package com.michel.vkmap.data.listeners
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.michel.vkmap.domain.models.LocationModel
+import com.michel.vkmap.domain.models.LocationDataModel
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.location.Location
 import com.yandex.mapkit.location.LocationListener
@@ -11,16 +11,16 @@ import com.yandex.mapkit.location.LocationStatus
 
 class YandexListener: LocationListener {
 
-    private val location: MutableLiveData<LocationModel> = MutableLiveData()
+    private val location: MutableLiveData<LocationDataModel> = MutableLiveData()
 
     override fun onLocationUpdated(updatedLocation: Location) {
         Log.v("VKMAP", "Location updated")
-        val locationPoint: Point = updatedLocation.position
+        val point: Point = updatedLocation.position
 
         location.postValue(
-            LocationModel(
-            latitude = locationPoint.latitude,
-            longitude = locationPoint.longitude
+            LocationDataModel(
+                latitude = point.latitude,
+                longitude = point.longitude
             )
         )
     }
@@ -31,7 +31,7 @@ class YandexListener: LocationListener {
         }
     }
 
-    fun getData(): LiveData<LocationModel>{
+    fun getData(): LiveData<LocationDataModel>{
         return location
     }
 }

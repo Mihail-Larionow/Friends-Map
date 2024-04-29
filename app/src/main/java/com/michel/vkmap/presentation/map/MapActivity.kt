@@ -106,8 +106,8 @@ class MapActivity : ComponentActivity() {
         super.onStart()
         Log.v("VKMAP", "MainActivity starting")
 
-        viewModel.friendsList.observe(this){
-            updateFriendsLocations(list = it)
+        viewModel.getFriendsList{
+            startFriendsLocationsTracking(list = it)
         }
 
         viewModel.userLocation.observe(this){
@@ -135,7 +135,7 @@ class MapActivity : ComponentActivity() {
         Log.v("VKMAP", "MainActivity destroyed")
     }
 
-    private fun updateFriendsLocations(list: ArrayList<String>){
+    private fun startFriendsLocationsTracking(list: ArrayList<String>){
         val friendsLocations = viewModel.startFriendsLocationsTracking(list)
         friendsLocations.observe(this){
             for ((id, data) in it) {
@@ -153,8 +153,8 @@ class MapActivity : ComponentActivity() {
                 locationData = locationData,
                 id = id
             )
-            viewModel.getUserInfo(userId = id).observe(this){
-                newPlaceMark.setIcon(it.second)
+            viewModel.getUserInfo(userId = id){
+                newPlaceMark.setIcon(it.photo)
             }
             placeMarkList[id] = newPlaceMark
         }

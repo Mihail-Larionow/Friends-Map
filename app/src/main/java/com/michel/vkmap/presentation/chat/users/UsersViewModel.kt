@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.michel.vkmap.domain.models.NetworkState
+import com.michel.vkmap.domain.models.UserModel
 import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetNetworkStateUseCase
 import com.michel.vkmap.domain.usecases.GetUserInfoUseCase
@@ -16,7 +17,6 @@ class UsersViewModel(
     ): ViewModel() {
 
     private val id = VK.getUserId().toString()
-    val friendsList: LiveData<ArrayList<String>> = getFriendsListUseCase.execute(id)
     val networkState: LiveData<NetworkState> = getNetworkStateUseCase.execute()
 
     init{
@@ -28,9 +28,16 @@ class UsersViewModel(
         super.onCleared()
     }
 
-    fun getUserInfo(userId: String): LiveData<Pair<String, ByteArray>>{
-        return getUserInfoUseCase.execute(id = userId)
+    fun getUserInfo(userId: String, callback: (UserModel) -> Unit){
+        getUserInfoUseCase.execute(id = userId){
+            callback.invoke(it)
+        }
     }
 
+    fun getFriendsList(callback: (ArrayList<String>) -> Unit){
+        getFriendsListUseCase.execute(userId = id){
+            callback.invoke(it)
+        }
+    }
 
 }

@@ -15,7 +15,7 @@ import com.michel.vkmap.presentation.chat.conversation.ConversationActivity
 
 class UsersRecyclerAdapter(
     private val context: Context,
-    private val usersList: ArrayList<UserItemModel>
+    private val list: ArrayList<UserItemModel>
 ): RecyclerView.Adapter<UserItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserItemViewHolder{
@@ -25,11 +25,11 @@ class UsersRecyclerAdapter(
     }
 
     override fun getItemCount(): Int {
-        return usersList.size
+        return list.size
     }
 
     override fun onBindViewHolder(holder: UserItemViewHolder, position: Int) {
-        holder.bind(usersList[position], context = context)
+        holder.bind(list[position], context = context)
     }
 
 }
@@ -38,9 +38,7 @@ class UserItemViewHolder(private val view: View): RecyclerView.ViewHolder(view){
     fun bind(user: UserItemModel, context: Context){
         view.findViewById<TextView>(R.id.userName).text = user.fullName
 
-        val photo = user.photo
-        view.findViewById<ImageView>(R.id.userPhoto)
-            .setIconByteArray(photo)
+        view.findViewById<ImageView>(R.id.userPhoto).setIconByteArray(user.photo)
         
         view.setOnClickListener{
             val intent = Intent(context, ConversationActivity::class.java)

@@ -23,7 +23,8 @@ class DialogsActivity : AppCompatActivity() {
     private lateinit var errorText: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
-    private val conversationsList: ArrayList<ConversationItemModel> = arrayListOf()
+    private val recyclerList: ArrayList<ConversationItemModel> = arrayListOf()
+    private val conversations: MutableSet<String> = mutableSetOf()
 
     private lateinit var adapter: DialogsRecyclerAdapter
 
@@ -47,15 +48,10 @@ class DialogsActivity : AppCompatActivity() {
         errorText = findViewById(R.id.errorText)
 
         recyclerView = findViewById(R.id.recyclerView)
-        adapter = DialogsRecyclerAdapter(context = this, conversationsList = conversationsList)
+        adapter = DialogsRecyclerAdapter(context = this, list = recyclerList)
         recyclerView.adapter = adapter
 
-        viewModel.conversations.observe(this){ list ->
-            Log.v("VKMAP", "observing $list")
-            list.forEach {
-                id -> addConversationToList(conversationId = id)
-            }
-        }
+        startConversationsTracking()
 
         viewModel.networkState.observe(this){  state ->
             setNetworkState(state = state)
@@ -67,32 +63,41 @@ class DialogsActivity : AppCompatActivity() {
         Log.v("VKMAP", "DialogsActivity destroyed")
     }
 
+    private fun startConversationsTracking(){
+        viewModel.conversations.observe(this){ map ->
+            map.forEach { (_, id) ->
+                if(id !in conversations){
+                    addConversationToList(conversationId = id)
+                    conversations.add(id)
+                }
+            }
+        }
+    }
 
     private fun addConversationToList(conversationId: String){
-        Log.v("VKMAP", "observing $conversationId")
-
-        viewModel.getConversationInfo(conversationId).observe(this){ conversation ->
-
-            val lastMessage = "text"
-
-
+        viewModel.getConversationInfo(conversationId){ conversation ->
             val user = conversation.users.filter { id -> id != viewModel.id }[0]
-            Log.v("VKMAP", "3 $conversation")
 
-            viewModel.getUserInfo(user).observe(this) { info ->
-                conversationsList.add(
-                    ConversationItemModel(
-                        id = conversationId,
-                        title = info.first,
-                        message = lastMessage,
-                        photo = info.second
-                    )
-                )
 
+
+            viewModel.getUserInfo(userId = user){ userInfo ->
+                viewModel.startMessagesTracking(conversationId = conversationId).observe(this){ messages ->
+                    val messageId = messages.values.first()
+                    viewModel.getMessage(messageId = messageId){ message ->
+                        Log.v("VKMAP", "$message")
+                        recyclerList.add(
+                            ConversationItemModel(
+                                id = conversationId,
+                                title = userInfo.fullName,
+                                message = message.text,
+                                photo = userInfo.photo
+                            )
+                        )
+                        adapter.notifyItemInserted(recyclerList.size - 1)
+                    }
+                }
             }
 
-            Log.v("VKMAP", "$conversationsList ${conversationsList.size}")
-            adapter.notifyItemInserted(conversationsList.size - 1)
         }
     }
 

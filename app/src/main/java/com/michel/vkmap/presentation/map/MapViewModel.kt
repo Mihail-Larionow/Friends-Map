@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.michel.vkmap.domain.models.LocationDataModel
 import com.michel.vkmap.domain.models.LocationDataPackModel
 import com.michel.vkmap.domain.models.NetworkState
+import com.michel.vkmap.domain.models.UserModel
 import com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase
@@ -33,7 +34,6 @@ class MapViewModel(
     val id = VK.getUserId().toString()
 
     private var friendsLocations: LiveData<Map<String, LiveData<LocationDataModel>>> = MutableLiveData()
-    val friendsList: LiveData<ArrayList<String>> = getFriendsListUseCase.execute(id)
     val userLocation: LiveData<LocationDataModel> = getUserLocationUseCase.execute()
     val networkState: LiveData<NetworkState> = getNetworkStateUseCase.execute()
 
@@ -81,8 +81,16 @@ class MapViewModel(
         return friendsLocations
     }
 
-    fun getUserInfo(userId: String): LiveData<Pair<String, ByteArray>>{
-        return getUserInfoUseCase.execute(id = userId)
+    fun getUserInfo(userId: String, callback: (UserModel) -> Unit){
+        getUserInfoUseCase.execute(id = userId){
+            callback.invoke(it)
+        }
+    }
+
+    fun getFriendsList(callback: (ArrayList<String>) -> Unit){
+        getFriendsListUseCase.execute(userId = id){
+            callback.invoke(it)
+        }
     }
 
     fun saveLocation(data: LocationDataModel){

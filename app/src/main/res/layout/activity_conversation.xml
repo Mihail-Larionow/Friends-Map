@@ -37,13 +37,23 @@
             android:orientation="vertical"
             android:padding="20dp"
             android:visibility="gone"
+            app:reverseLayout="true"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/emptyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/no_messages"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/errorText"
@@ -68,16 +78,29 @@
 
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/conversationName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="НАЗВАНИЕ"
+        android:textColor="@color/vk_blue"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/backButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/backButton" />
+
     <EditText
         android:id="@+id/editText"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/chat_input"
         android:padding="10dp"
-        android:hint="Введите текст"
+        android:hint="@string/input_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/sendButton"
         app:layout_constraintStart_toStartOf="parent" />
@@ -87,7 +110,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:src="@drawable/vk_logo_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

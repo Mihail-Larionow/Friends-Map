@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.michel.vkmap.domain.models.NetworkState
+import com.michel.vkmap.domain.models.UserModel
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 
@@ -29,14 +30,14 @@ class VKApi: IApi {
         })
     }
 
-    override fun infoRequest(userId: String, callback: (Pair<String, ByteArray>) -> Unit) {
+    override fun infoRequest(userId: String, callback: (UserModel) -> Unit) {
         networkState.postValue(NetworkState.LOADING)
-        VK.execute(GetUserInfoCommand(userId = userId), object: VKApiCallback<Pair<String, ByteArray>>{
+        VK.execute(GetUserInfoCommand(userId = userId), object: VKApiCallback<UserModel>{
             override fun fail(error: Exception) {
                 Log.e("VKMAP", "${error.message}")
                 networkState.postValue(NetworkState.ERROR)
             }
-            override fun success(result: Pair<String, ByteArray>) {
+            override fun success(result: UserModel) {
                 networkState.postValue(NetworkState.LOADED)
                 callback(result)
             }

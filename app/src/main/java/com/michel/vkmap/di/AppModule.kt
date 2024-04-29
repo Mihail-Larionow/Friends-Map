@@ -15,6 +15,8 @@ import com.michel.vkmap.domain.usecases.GetConversationInfoUseCase
 import com.michel.vkmap.domain.usecases.GetConversationsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsListUseCase
 import com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase
+import com.michel.vkmap.domain.usecases.GetMessageUseCase
+import com.michel.vkmap.domain.usecases.GetMessagesListUseCase
 import com.michel.vkmap.domain.usecases.GetUserInfoUseCase
 import com.michel.vkmap.domain.usecases.GetNetworkStateUseCase
 import com.michel.vkmap.domain.usecases.GetUserLocationUseCase
@@ -96,6 +98,18 @@ val appModule = module {
 
     factory<GetConversationInfoUseCase> {
         GetConversationInfoUseCase(
+            repository = get()
+        )
+    }
+
+    factory<GetMessageUseCase> {
+        GetMessageUseCase(
+            repository = get()
+        )
+    }
+
+    factory<GetMessagesListUseCase> {
+        GetMessagesListUseCase(
             repository = get()
         )
     }

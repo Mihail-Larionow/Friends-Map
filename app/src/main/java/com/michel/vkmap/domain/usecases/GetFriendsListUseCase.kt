@@ -5,8 +5,10 @@ import com.michel.vkmap.domain.repository.IRepository
 
 class GetFriendsListUseCase(private val repository: IRepository) {
 
-    fun execute(userId: String): LiveData<ArrayList<String>> {
-        return repository.getFriendsList(userId = userId)
+    fun execute(userId: String, callback: (ArrayList<String>) -> Unit) {
+        repository.getFriendsList(userId = userId){
+            callback.invoke(it)
+        }
     }
 
 }

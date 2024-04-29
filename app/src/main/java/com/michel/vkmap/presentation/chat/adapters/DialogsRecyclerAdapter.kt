@@ -15,7 +15,7 @@ import com.michel.vkmap.presentation.chat.conversation.ConversationActivity
 
 class DialogsRecyclerAdapter(
     private val context: Context,
-    private val conversationsList: ArrayList<ConversationItemModel>
+    private val list: ArrayList<ConversationItemModel>
 ): RecyclerView.Adapter<ConversationItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationItemViewHolder{
@@ -25,11 +25,11 @@ class DialogsRecyclerAdapter(
     }
 
     override fun getItemCount(): Int {
-        return conversationsList.size
+        return list.size
     }
 
     override fun onBindViewHolder(holder: ConversationItemViewHolder, position: Int) {
-        holder.bind(conversationsList[position], context = context)
+        holder.bind(list[position], context = context)
     }
 
 }

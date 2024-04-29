@@ -14,7 +14,9 @@ interface IDataBase {
 
     fun startLocationsListening(friends: ArrayList<String>): MutableLiveData<Map<String, LiveData<LocationDataModel>>>
 
-    fun startConversationListening(conversationId: String): MutableLiveData<ArrayList<String>>
+    fun startMessagesListening(conversationId: String): LiveData<Map<String, String>>
+
+    fun startConversationsListening(userId: String): LiveData<Map<String, String>>
 
     fun saveLocation(dataPack: LocationDataPackModel)
 
@@ -26,10 +28,8 @@ interface IDataBase {
 
     fun getFriendsList(friendsVK: ArrayList<String>, callback: (ArrayList<String>) -> Unit)
 
-    fun getConversationsList(userId: String, callback: (ArrayList<String>) -> Unit)
-
     fun getConversationsInfo(conversationId: String, callback: (ConversationModel) -> Unit)
 
-    fun getMessage(messageId: Int, callback: (MessageModel) -> Unit)
+    fun getMessage(messageId: String, callback: (MessageModel) -> Unit)
 
 }

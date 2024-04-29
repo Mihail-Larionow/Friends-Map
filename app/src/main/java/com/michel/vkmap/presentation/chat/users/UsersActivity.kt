@@ -22,7 +22,10 @@ class UsersActivity : AppCompatActivity() {
     private lateinit var errorText: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
-    private val usersList: ArrayList<UserItemModel> = arrayListOf()
+    private val recyclerList: ArrayList<UserItemModel> = arrayListOf()
+    private val users: MutableSet<String> = mutableSetOf()
+
+    private lateinit var adapter: UsersRecyclerAdapter
 
     private val viewModel by viewModel<UsersViewModel>()
 
@@ -38,14 +41,15 @@ class UsersActivity : AppCompatActivity() {
         errorText = findViewById(R.id.errorText)
 
         recyclerView = findViewById(R.id.recyclerView)
-        val adapter = UsersRecyclerAdapter(context = this, usersList = usersList)
+        adapter = UsersRecyclerAdapter(context = this, list = recyclerList)
         recyclerView.adapter = adapter
 
-        viewModel.friendsList.observe(this){ list ->
-            list.forEach {
-                id -> addUserToList(userId = id)
-                Log.v("VKMAP", "$usersList ${usersList.size}")
-                adapter.notifyItemInserted(usersList.size - 1)
+        viewModel.getFriendsList{ list ->
+            list.forEach { id ->
+                if(id !in users) {
+                    addUserToList(userId = id)
+                    users.add(id)
+                }
             }
         }
 
@@ -55,15 +59,16 @@ class UsersActivity : AppCompatActivity() {
     }
 
     private fun addUserToList(userId: String){
-        viewModel.getUserInfo(userId).observe(this){
+        viewModel.getUserInfo(userId = userId){
             Log.v("VKMAP", "$it")
-            usersList.add(
+            recyclerList.add(
                 UserItemModel(
                     id = userId,
-                    fullName = it.first,
-                    photo = it.second
+                    fullName = it.fullName,
+                    photo = it.photo
                 )
             )
+            adapter.notifyItemInserted(recyclerList.size - 1)
         }
     }
 

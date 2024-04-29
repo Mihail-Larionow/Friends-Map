@@ -15,20 +15,26 @@ val chatDI = module {
         )
     }
 
-    viewModel<ConversationViewModel>{
-        ConversationViewModel(
-            sendMessageUseCase = get(),
-            createConversationUseCase = get(),
-            getNetworkStateUseCase = get()
-        )
-    }
-
     viewModel<DialogsViewModel>{
         DialogsViewModel(
             getConversationsListUseCase = get(),
             getConversationInfoUseCase = get(),
             getUserInfoUseCase = get(),
-            getNetworkStateUseCase = get()
+            getMessageUseCase = get(),
+            getNetworkStateUseCase = get(),
+            getMessagesListUseCase = get()
+        )
+    }
+
+    viewModel<ConversationViewModel>{
+        ConversationViewModel(
+            sendMessageUseCase = get(),
+            getConversationInfoUseCase = get(),
+            getUserInfoUseCase = get(),
+            getMessageUseCase = get(),
+            createConversationUseCase = get(),
+            getNetworkStateUseCase = get(),
+            getMessagesListUseCase = get()
         )
     }
 }

@@ -150,7 +150,8 @@ class ConversationActivity : AppCompatActivity() {
                 )
             }
 
-            Log.v("VKMAP", "$recyclerList ${recyclerList.size}")
+            recyclerList.sortBy { it.createdAt }
+            adapter.notifyItemChanged(0)
             adapter.notifyItemInserted(recyclerList.size - 1)
         }
     }

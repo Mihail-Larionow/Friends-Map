@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.michel.vkmap.R
 import com.michel.vkmap.domain.models.ConversationItemModel
@@ -16,6 +17,7 @@ import com.michel.vkmap.domain.models.NetworkState
 import com.michel.vkmap.presentation.chat.adapters.DialogsRecyclerAdapter
 import com.michel.vkmap.presentation.chat.users.UsersActivity
 import com.michel.vkmap.presentation.map.MapActivity
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DialogsActivity : AppCompatActivity() {
@@ -78,21 +80,22 @@ class DialogsActivity : AppCompatActivity() {
         viewModel.getConversationInfo(conversationId){ conversation ->
             val user = conversation.users.filter { id -> id != viewModel.id }[0]
 
-
-
             viewModel.getUserInfo(userId = user){ userInfo ->
                 viewModel.startMessagesTracking(conversationId = conversationId).observe(this){ messages ->
-                    val messageId = messages.values.first()
+                    val messageId = messages.values.last()
                     viewModel.getMessage(messageId = messageId){ message ->
                         Log.v("VKMAP", "$message")
                         recyclerList.add(
                             ConversationItemModel(
+                                createdAt = conversation.createdAt,
                                 id = conversationId,
                                 title = userInfo.fullName,
                                 message = message.text,
                                 photo = userInfo.photo
                             )
                         )
+                        recyclerList.sortByDescending { it.createdAt }
+                        adapter.notifyItemChanged(0)
                         adapter.notifyItemInserted(recyclerList.size - 1)
                     }
                 }

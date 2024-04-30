@@ -18,7 +18,7 @@ class FirebaseListListener: ValueEventListener  {
         pack?.let { data ->
             data.forEach { (date, id) -> map[date] = id }
         }
-        data.postValue(map.toSortedMap(compareByDescending { it }))
+        data.postValue(map.toSortedMap())
     }
 
     override fun onCancelled(error: DatabaseError) {

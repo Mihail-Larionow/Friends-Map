@@ -24,7 +24,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ДИАЛОГИ"
+        android:text="@string/dialogs"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -63,7 +63,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="error"
+            android:text="@string/no_network"
+            android:textColor="@color/vk_blue"
             android:gravity="center"
             android:visibility="gone" />
 
@@ -74,11 +75,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
         android:src="@drawable/ic_add"
         android:backgroundTint="@color/vk_blue"
         android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:importantForAccessibility="no" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

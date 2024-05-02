@@ -6,17 +6,28 @@ import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.PlacemarkMapObject
 
 class PlaceMarkMoveAnimation(private val mark: PlacemarkMapObject) {
+
+    companion object{
+        private const val MAX_VALUE: Float = 100f
+        private const val DEFAULT_DURATION: Long = 1000
+    }
+
     private val animation = ValueAnimator.ofFloat(0f, MAX_VALUE)
 
     init {
         animation.setDuration(DEFAULT_DURATION)
     }
 
-    fun execute(startLocation: LocationDataModel, endLocation: LocationDataModel){
-        val deltaLatitude = (startLocation.latitude - endLocation.latitude) / MAX_VALUE
-        val deltaLongitude = (startLocation.longitude - endLocation.longitude) / MAX_VALUE
-        var latitude = startLocation.latitude
-        var longitude = startLocation.longitude
+    fun execute(
+        startLatitude: Double,
+        startLongitude: Double,
+        endLatitude: Double,
+        endLongitude: Double
+    ){
+        val deltaLatitude = (startLatitude - endLatitude) / MAX_VALUE
+        val deltaLongitude = (startLongitude - endLongitude) / MAX_VALUE
+        var latitude = startLatitude
+        var longitude = startLongitude
 
         animation.addUpdateListener {
             latitude += deltaLatitude
@@ -30,8 +41,4 @@ class PlaceMarkMoveAnimation(private val mark: PlacemarkMapObject) {
         animation.start()
     }
 
-    companion object{
-        private const val MAX_VALUE: Float = 100f
-        private const val DEFAULT_DURATION: Long = 1000
-    }
 }

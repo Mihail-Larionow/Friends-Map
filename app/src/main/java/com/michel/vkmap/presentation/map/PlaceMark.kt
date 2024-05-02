@@ -48,12 +48,7 @@ class PlaceMark(
     }
 
     private fun move(latitude: Double, longitude: Double){
-
-        val point = Point(
-            latitude,
-            longitude
-        )
-
+        val point = Point(latitude, longitude)
         mark.geometry = point
     }
 

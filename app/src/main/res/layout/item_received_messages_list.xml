@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="4dp"
-    android:paddingEnd="40dp">
+    android:padding="4dp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/senderPhoto"
@@ -19,16 +18,16 @@
     <TextView
         android:padding="10dp"
         android:id="@+id/messageText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/background_content_received"
         android:backgroundTint="@color/platinum"
-        android:text="Какой-то оооооооооооооооооо большой текст"
-        android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="20sp"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintWidth_percent="0.8"
         app:layout_constraintStart_toEndOf="@+id/senderPhoto"
         app:layout_constraintTop_toTopOf="parent" />
 

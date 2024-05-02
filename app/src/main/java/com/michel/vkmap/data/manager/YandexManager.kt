@@ -11,10 +11,10 @@ import com.yandex.mapkit.location.LocationManager
 class YandexManager(private val locationListener: YandexListener) {
 
     companion object{
-        private const val DESIRED_ACCURACY: Double = 0.0
-        private const val MIN_TIME: Long = 1000
-        private const val MIN_DISTANCE: Double = 5.0
-        private const val ALLOW_USE_IN_BACKGROUND: Boolean = true
+        private const val DESIRED_ACCURACY: Double = 1.0
+        private const val MIN_TIME: Long = 150000
+        private const val MIN_DISTANCE: Double = 0.0
+        private const val ALLOW_USE_IN_BACKGROUND: Boolean = false
         private val FILTERING_MODE: FilteringMode = FilteringMode.OFF
     }
 
@@ -23,8 +23,6 @@ class YandexManager(private val locationListener: YandexListener) {
 
     fun start() {
         Log.v("VKMAP", "Manager started")
-        locationManager.requestSingleUpdate(locationListener)
-
         locationManager.subscribeForLocationUpdates(
             DESIRED_ACCURACY,
             MIN_TIME,

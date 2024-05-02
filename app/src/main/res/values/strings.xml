@@ -2,5 +2,9 @@
     <string name="app_name">VKMap</string>
     <string name="input_text">Введите текст</string>
     <string name="no_messages">Пока здесь нет сообщений</string>
+    <string name="no_network">Нет доступа к сети</string>
+    <string name="dialogs">ДИАЛОГИ</string>
+    <string name="users">ПОЛЬЗОВАТЕЛИ</string>
+    <string name="login">ВОЙТИ</string>
     <integer name="com_vk_sdk_AppId">51582246</integer>
 </resources>

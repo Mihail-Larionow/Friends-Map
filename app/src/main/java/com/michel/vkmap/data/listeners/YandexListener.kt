@@ -34,4 +34,5 @@ class YandexListener: LocationListener {
     fun getData(): LiveData<LocationDataModel>{
         return location
     }
+
 }

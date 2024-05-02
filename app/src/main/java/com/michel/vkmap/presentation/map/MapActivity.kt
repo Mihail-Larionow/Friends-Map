@@ -58,10 +58,6 @@ class MapActivity : ComponentActivity() {
         setContentView(R.layout.activity_main)
         Log.v("VKMAP", "MainActivity creating")
 
-        MapKitFactory.getInstance().onStart()
-        mapView = findViewById(R.id.mapView)
-        mapView.onStart()
-
         // Permissions request
         locationPermissionRequest.launch(
             arrayOf(
@@ -69,6 +65,16 @@ class MapActivity : ComponentActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         )
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.v("VKMAP", "MainActivity starting")
+
+        MapKitFactory.getInstance().onStart()
+        mapView = findViewById(R.id.mapView)
+        mapView.onStart()
 
         //mLogout button
         logoutButton = findViewById<ImageView>(R.id.logoutButton)
@@ -99,12 +105,6 @@ class MapActivity : ComponentActivity() {
 
         errorText = findViewById(R.id.errorText)
         progressBar = findViewById(R.id.progressBar)
-
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.v("VKMAP", "MainActivity starting")
 
         viewModel.getFriendsList{
             startFriendsLocationsTracking(list = it)

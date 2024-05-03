@@ -1,13 +1,31 @@
 @startuml
-class com.michel.vkmap.presentation.ChatActivity$Companion {
+class com.michel.vkmap.presentation.chat.dialogs.DialogsActivity$Companion {
 + void startFrom(Context)
 }
 
-class com.michel.vkmap.presentation.ChatActivity {
+class com.michel.vkmap.presentation.chat.dialogs.DialogsActivity {
+- TextView errorText
+- ProgressBar progressBar
+- RecyclerView recyclerView
+- ArrayList<ConversationItemModel> recyclerList
+- MutableSet<String> conversations
+- DialogsRecyclerAdapter adapter
+-  viewModel
 + void onCreate(Bundle?)
++ void onDestroy()
+- void startConversationsTracking()
+- void addConversationToList(String)
+- void setNetworkState(NetworkState)
 }
 
+
+class com.michel.vkmap.presentation.chat.users.UsersViewModel {
+}
 class com.michel.vkmap.presentation.map.PlaceMark {
+}
+class com.michel.vkmap.presentation.map.MapViewModel {
+}
+class com.michel.vkmap.presentation.chat.dialogs.DialogsViewModel {
 }
 class com.michel.vkmap.presentation.map.MapActivity$Companion {
 + void startFrom(Context)
@@ -15,6 +33,11 @@ class com.michel.vkmap.presentation.map.MapActivity$Companion {
 
 class com.michel.vkmap.presentation.map.MapActivity {
 - MutableMap<String, PlaceMark> placeMarkList
+- Button zoomButton
+- ImageView logoutButton
+- ImageView chatButton
+- TextView errorText
+- ProgressBar progressBar
 -  viewModel
 - MapView mapView
 -  locationPermissionRequest
@@ -23,8 +46,75 @@ class com.michel.vkmap.presentation.map.MapActivity {
 + void onStart()
 + void onStop()
 + void onDestroy()
-- void updateFriendsLocations(ArrayList<String>)
+- void startFriendsLocationsTracking(ArrayList<String>)
 - void addPlaceMarkOnMap(String,LocationDataModel)
+- void setNetworkState(NetworkState)
+}
+
+
+class com.michel.vkmap.presentation.chat.conversation.ConversationActivity {
+- TextView errorText
+- TextView emptyText
+- TextView conversationName
+- ProgressBar progressBar
+- RecyclerView recyclerView
+- EditText editText
+- MessagesRecyclerAdapter adapter
+- ArrayList<MessageItemModel> recyclerList
+- MutableSet<String> messages
+-  viewModel
+- String? conversationId
++ void onCreate(Bundle?)
+- void setConversationInfo(String)
+- void setUserInfo(String)
+- void sendMessage(String,String?)
+- void startMessagesTracking(String)
+- void addMessageToList(String)
+- void setNetworkState(NetworkState)
+}
+
+
+class com.michel.vkmap.presentation.WelcomeActivity$Companion {
++ void startFrom(Context)
+}
+
+class com.michel.vkmap.presentation.WelcomeActivity {
+- Button loginButton
+- TextView messageText
++ void onCreate(Bundle?)
+- void onLoginSuccess()
+- void onLoginFailed(VKAuthException)
+- void setNetworkState(NetworkState)
+}
+
+
+class com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation$Companion {
+- Float MAX_VALUE
+- Long DEFAULT_DURATION
+}
+
+class com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation {
+-  animation
++ void execute()
+- void changeOpacity(Float)
+}
+
+
+class com.michel.vkmap.presentation.chat.users.UsersActivity$Companion {
++ void startFrom(Context)
+}
+
+class com.michel.vkmap.presentation.chat.users.UsersActivity {
+- TextView errorText
+- ProgressBar progressBar
+- RecyclerView recyclerView
+- ArrayList<UserItemModel> recyclerList
+- MutableSet<String> users
+- UsersRecyclerAdapter adapter
+-  viewModel
++ void onCreate(Bundle?)
+- void addUserToList(String)
+- void setNetworkState(NetworkState)
 }
 
 
@@ -55,30 +145,8 @@ class com.michel.vkmap.presentation.ui.PlaceMarkView {
 }
 
 
-class com.michel.vkmap.presentation.WelcomeActivity$Companion {
-+ void startFrom(Context)
+class com.michel.vkmap.presentation.chat.conversation.ConversationViewModel {
 }
-
-class com.michel.vkmap.presentation.WelcomeActivity {
-- Button loginButton
-+ void onCreate(Bundle?)
-- void onLoginSuccess()
-- void onLoginFailed(VKAuthException)
-}
-
-
-class com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation$Companion {
-- Float MAX_VALUE
-- Long DEFAULT_DURATION
-}
-
-class com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation {
--  animation
-+ void execute()
-- void changeOpacity(Float)
-}
-
-
 class com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation$Companion {
 - Float MAX_VALUE
 - Long DEFAULT_DURATION
@@ -86,21 +154,23 @@ class com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation$Companion {
 
 class com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation {
 -  animation
-+ void execute(LocationModel,LocationModel)
++ void execute(void,Double,void,Double,void,Double,void,Double)
++ void null()
 }
 
 
-class com.michel.vkmap.presentation.MainViewModel {
-}
 
 
-com.michel.vkmap.presentation.ChatActivity +.. com.michel.vkmap.presentation.ChatActivity$Companion
-androidx.activity.ComponentActivity <|-- com.michel.vkmap.presentation.ChatActivity
+com.michel.vkmap.presentation.chat.dialogs.DialogsActivity +.. com.michel.vkmap.presentation.chat.dialogs.DialogsActivity$Companion
+androidx.appcompat.app.AppCompatActivity <|-- com.michel.vkmap.presentation.chat.dialogs.DialogsActivity
 com.michel.vkmap.presentation.map.MapActivity +.. com.michel.vkmap.presentation.map.MapActivity$Companion
 androidx.activity.ComponentActivity <|-- com.michel.vkmap.presentation.map.MapActivity
-com.michel.vkmap.presentation.ui.PlaceMarkView +.. com.michel.vkmap.presentation.ui.PlaceMarkView$Companion
+androidx.appcompat.app.AppCompatActivity <|-- com.michel.vkmap.presentation.chat.conversation.ConversationActivity
 com.michel.vkmap.presentation.WelcomeActivity +.. com.michel.vkmap.presentation.WelcomeActivity$Companion
 androidx.activity.ComponentActivity <|-- com.michel.vkmap.presentation.WelcomeActivity
 com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation +.. com.michel.vkmap.presentation.anim.PlaceMarkAppearAnimation$Companion
+com.michel.vkmap.presentation.chat.users.UsersActivity +.. com.michel.vkmap.presentation.chat.users.UsersActivity$Companion
+androidx.appcompat.app.AppCompatActivity <|-- com.michel.vkmap.presentation.chat.users.UsersActivity
+com.michel.vkmap.presentation.ui.PlaceMarkView +.. com.michel.vkmap.presentation.ui.PlaceMarkView$Companion
 com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation +.. com.michel.vkmap.presentation.anim.PlaceMarkMoveAnimation$Companion
 @enduml

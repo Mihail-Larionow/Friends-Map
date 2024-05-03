@@ -1,0 +1,79 @@
+@startuml
+interface com.michel.vkmap.data.db.IDataBase {
++ MutableLiveData<Map<String, LiveData<LocationDataModel>>> startLocationsListening(ArrayList<String>)
++ LiveData<Map<String, String>> startMessagesListening(String)
++ LiveData<Map<String, String>> startConversationsListening(String)
++ void saveLocation(LocationDataPackModel)
++ void saveMessage(MessageDataPackModel)
++ String saveConversation(ConversationDataPackModel)
++ LiveData<NetworkState> getNetworkState()
++ void getFriendsList(ArrayList<String>,(ArrayList<String>) -> Unit)
++ void getConversationsInfo(String,(ConversationModel) -> Unit)
++ void getMessage(String,(MessageModel) -> Unit)
+}
+
+class com.michel.vkmap.data.db.FirebaseDataBase$Companion {
+-  USERS_KEY
+-  MESSAGES_KEY
+-  CONVERSATIONS_KEY
+-  LOCATION_KEY
+-  MESSAGES_ID_KEY
+-  CONVERSATIONS_ID_KEY
+}
+
+class com.michel.vkmap.data.db.FirebaseDataBase {
+-  dataBase
+- LiveData<NetworkState> networkState
+-  conversationsRef
+-  messagesRef
+-  usersRef
++ MutableLiveData<Map<String, LiveData<LocationDataModel>>> startLocationsListening(ArrayList<String>)
++ LiveData<Map<String, String>> startMessagesListening(String)
++ LiveData<Map<String, String>> startConversationsListening(String)
++ void saveLocation(LocationDataPackModel)
++ void saveMessage(MessageDataPackModel)
++ String saveConversation(ConversationDataPackModel)
++ LiveData<NetworkState> getNetworkState()
++ void getFriendsList(void,ArrayList<String>,void,(ArrayList<String>) -> Unit)
++ void null()
++ void getConversationsInfo(void,String,void,(ConversationModel) -> Unit)
++ void null()
++ void getMessage(String,(MessageModel) -> Unit)
+- LiveData<LocationDataModel> addListener(String)
+}
+
+
+class com.michel.vkmap.data.listeners.FirebaseLocationsListener {
+- MutableLiveData<LocationDataModel> data
++ void onDataChange(DataSnapshot)
++ void onCancelled(DatabaseError)
++ LiveData<LocationDataModel> getData()
+}
+
+class com.michel.vkmap.data.sharedpref.SharedPrefStorage$Companion {
+-  LATITUDE_KEY
+-  LONGITUDE_KEY
+-  DATE_KEY
+-  SHARED_PREFS_NAME
+}
+
+class com.michel.vkmap.data.sharedpref.SharedPrefStorage {
+-  sharedPreferences
++ void saveLocation(LocationDataModel)
++ LocationDataModel getLocation()
+}
+
+class com.michel.vkmap.data.listeners.FirebaseListListener {
+- MutableLiveData<Map<String, String>> data
++ void onDataChange(DataSnapshot)
++ void onCancelled(DatabaseError)
++ LiveData<Map<String, String>> getData()
+}
+
+
+com.michel.vkmap.data.db.FirebaseDataBase +.. com.michel.vkmap.data.db.FirebaseDataBase$Companion
+com.michel.vkmap.data.db.IDataBase <|.. com.michel.vkmap.data.db.FirebaseDataBase
+com.google.firebase.database.ValueEventListener <|.. com.michel.vkmap.data.listeners.FirebaseLocationsListener
+com.michel.vkmap.data.sharedpref.SharedPrefStorage +.. com.michel.vkmap.data.sharedpref.SharedPrefStorage$Companion
+com.google.firebase.database.ValueEventListener <|.. com.michel.vkmap.data.listeners.FirebaseListListener
+@enduml

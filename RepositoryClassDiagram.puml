@@ -1,0 +1,98 @@
+@startuml
+class com.michel.vkmap.data.api.GetFriendsListCommand$ResponseApiParser {
++  list
++ ArrayList<String> parse(JSONObject)
+}
+
+
+class com.michel.vkmap.data.api.GetFriendsListCommand {
++ ArrayList<String> onExecute(VKApiManager)
+}
+
+
+interface com.michel.vkmap.data.api.IApi {
++ void friendsListRequest(String,(ArrayList<String>) -> Unit)
++ void infoRequest(String,(UserModel) -> Unit)
++ LiveData<NetworkState> getNetworkState()
+}
+
+class com.michel.vkmap.data.manager.YandexManager$Companion {
+- Double DESIRED_ACCURACY
+- Long MIN_TIME
+- Double MIN_DISTANCE
+- Boolean ALLOW_USE_IN_BACKGROUND
+- FilteringMode FILTERING_MODE
+}
+
+class com.michel.vkmap.data.manager.YandexManager {
+- LocationManager locationManager
++ void start()
++ void pause()
++ void resume()
++ void stop()
++ LiveData<LocationDataModel> getData()
+}
+
+
+class com.michel.vkmap.data.api.VKApi {
++ MutableLiveData<NetworkState> networkState
++ void friendsListRequest(String,(ArrayList<String>) -> Unit)
++ void infoRequest(String,(UserModel) -> Unit)
++ LiveData<NetworkState> getNetworkState()
+}
+
+
+class com.michel.vkmap.data.api.GetUserInfoCommand$ResponseApiParser {
++ UserModel parse(JSONObject)
+}
+
+class com.michel.vkmap.data.api.GetUserInfoCommand {
++ UserModel onExecute(VKApiManager)
+}
+
+
+class com.michel.vkmap.data.listeners.YandexListener {
+- MutableLiveData<LocationDataModel> location
++ void onLocationUpdated(Location)
++ void onLocationStatusUpdated(LocationStatus)
++ LiveData<LocationDataModel> getData()
+}
+
+
+
+class com.michel.vkmap.data.api.GetUserPhotoCommand$ResponseApiParser {
++ ByteArray parse(JSONObject)
+}
+
+class com.michel.vkmap.data.api.GetUserPhotoCommand {
++ ByteArray onExecute(VKApiManager)
+}
+
+class com.michel.vkmap.data.repository.UserRepository {
++ void getUserInfo(String,(UserModel) -> Unit)
++ void getConversationInfo(String,(ConversationModel) -> Unit)
++ void getMessage(String,(MessageModel) -> Unit)
++ void saveLocation(LocationDataPackModel)
++ void saveMessage(MessageDataPackModel)
++ String saveConversation(ConversationDataPackModel)
++ void getFriendsList(String,(ArrayList<String>) -> Unit)
++ LiveData<Map<String, String>> getConversationsList(String)
++ LiveData<Map<String, LiveData<LocationDataModel>>> getFriendsLocations(ArrayList<String>)
++ LiveData<Map<String, String>> getMessagesList(String)
++ LiveData<NetworkState> getNetworkState()
+}
+
+
+com.michel.vkmap.data.api.GetFriendsListCommand +.. com.michel.vkmap.data.api.GetFriendsListCommand$ResponseApiParser
+com.michel.vkmap.data.api.VKApiJSONResponseParser <|.. com.michel.vkmap.data.api.GetFriendsListCommand$ResponseApiParser
+com.vk.api.sdk.internal.ApiCommand <|-- com.michel.vkmap.data.api.GetFriendsListCommand
+com.michel.vkmap.data.manager.YandexManager +.. com.michel.vkmap.data.manager.YandexManager$Companion
+com.michel.vkmap.data.api.IApi <|.. com.michel.vkmap.data.api.VKApi
+com.michel.vkmap.data.api.GetUserInfoCommand +.. com.michel.vkmap.data.api.GetUserInfoCommand$ResponseApiParser
+com.michel.vkmap.data.api.VKApiJSONResponseParser <|.. com.michel.vkmap.data.api.GetUserInfoCommand$ResponseApiParser
+com.vk.api.sdk.internal.ApiCommand <|-- com.michel.vkmap.data.api.GetUserInfoCommand
+com.yandex.mapkit.location.LocationListener <|.. com.michel.vkmap.data.listeners.YandexListener
+com.michel.vkmap.data.api.GetUserPhotoCommand +.. com.michel.vkmap.data.api.GetUserPhotoCommand$ResponseApiParser
+com.michel.vkmap.data.api.VKApiJSONResponseParser <|.. com.michel.vkmap.data.api.GetUserPhotoCommand$ResponseApiParser
+com.vk.api.sdk.internal.ApiCommand <|-- com.michel.vkmap.data.api.GetUserPhotoCommand
+@enduml

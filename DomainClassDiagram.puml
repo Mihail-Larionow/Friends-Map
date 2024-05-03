@@ -1,21 +1,60 @@
 @startuml
-class com.michel.vkmap.domain.usecases.GetPhotoUseCase {
-+ LiveData<ByteArray> execute(String)
+class com.michel.vkmap.domain.usecases.GetConversationInfoUseCase {
++ void execute(String,(ConversationModel) -> Unit)
+}
+
+class com.michel.vkmap.domain.usecases.GetMessagesListUseCase {
++ LiveData<Map<String, String>> execute(String)
+}
+
+class com.michel.vkmap.domain.models.NetworkState$Companion {
++ NetworkState LOADED
++ NetworkState LOADING
++ NetworkState ERROR
+}
+
+class com.michel.vkmap.domain.models.NetworkState {
+}
+class com.michel.vkmap.domain.models.LocationDataPackModel {
+}
+class com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase {
++ LiveData<Map<String, LiveData<LocationDataModel>>> execute(ArrayList<String>)
 }
 
 class com.michel.vkmap.domain.usecases.GetFriendsListUseCase {
-+ LiveData<ArrayList<String>> execute(String)
++ void execute(String,(ArrayList<String>) -> Unit)
 }
 
 class com.michel.vkmap.domain.usecases.AddPlaceMarkUseCase {
 + PlaceMark execute(MapView,LocationDataModel,String)
 }
 
-interface com.michel.vkmap.domain.repository.IRepository {
-+ LiveData<ByteArray> getPhoto(String)
-+ void saveLocation(LocationDataPackModel)
-+ LiveData<ArrayList<String>> getFriendsList(String)
-+ LiveData<Map<String, LocationDataModel>> getFriendsLocations(ArrayList<String>)
+class com.michel.vkmap.domain.models.FirebaseLocationDataModel {
+}
+class com.michel.vkmap.domain.models.ConversationModel {
+}
+class com.michel.vkmap.domain.models.ConversationItemModel {
+}
+class com.michel.vkmap.domain.models.MessageDataPackModel {
+}
+class com.michel.vkmap.domain.usecases.GetUserInfoUseCase {
++ void execute(String,(UserModel) -> Unit)
+}
+
+class com.michel.vkmap.domain.usecases.GetConversationsListUseCase {
++ LiveData<Map<String, String>> execute(String)
+}
+
+class com.michel.vkmap.domain.models.UserModel {
+}
+class com.michel.vkmap.domain.models.MessageModel {
+}
+class com.michel.vkmap.domain.usecases.GetNetworkStateUseCase {
++ LiveData<NetworkState> execute()
+}
+
+class com.michel.vkmap.domain.usecases.SendMessageUseCase {
++ void execute(MessageDataPackModel)
 }
 
 class com.michel.vkmap.domain.usecases.TrackLocationUseCase {
@@ -23,12 +62,40 @@ class com.michel.vkmap.domain.usecases.TrackLocationUseCase {
 + void abandon()
 }
 
-class com.michel.vkmap.domain.usecases.GetUserLocationUseCase {
-+ LiveData<LocationModel> execute()
+class com.michel.vkmap.domain.models.UserItemModel {
+}
+class com.michel.vkmap.domain.models.MessageItemModel {
+}
+class com.michel.vkmap.domain.usecases.CreateConversationUseCase {
++ String execute(ConversationDataPackModel)
 }
 
-class com.michel.vkmap.domain.usecases.GetFriendsLocationsUseCase {
-+ LiveData<Map<String, LocationDataModel>> execute(ArrayList<String>)
+class com.michel.vkmap.domain.models.FirebaseConversationDataModel {
+}
+interface com.michel.vkmap.domain.repository.IRepository {
++ void getUserInfo(String,(UserModel) -> Unit)
++ void getConversationInfo(String,(ConversationModel) -> Unit)
++ void getMessage(String,(MessageModel) -> Unit)
++ void saveLocation(LocationDataPackModel)
++ void saveMessage(MessageDataPackModel)
++ String saveConversation(ConversationDataPackModel)
++ void getFriendsList(String,(ArrayList<String>) -> Unit)
++ LiveData<Map<String, String>> getConversationsList(String)
++ LiveData<Map<String, LiveData<LocationDataModel>>> getFriendsLocations(ArrayList<String>)
++ LiveData<Map<String, String>> getMessagesList(String)
++ LiveData<NetworkState> getNetworkState()
+}
+
+class com.michel.vkmap.domain.models.LocationDataModel {
+}
+class com.michel.vkmap.domain.models.FirebaseMessageDataModel {
+}
+class com.michel.vkmap.domain.usecases.GetMessageUseCase {
++ void execute(String,(MessageModel) -> Unit)
+}
+
+class com.michel.vkmap.domain.usecases.GetUserLocationUseCase {
++ LiveData<LocationDataModel> execute()
 }
 
 class com.michel.vkmap.domain.usecases.ZoomUseCase$Companion {
@@ -38,14 +105,17 @@ class com.michel.vkmap.domain.usecases.ZoomUseCase$Companion {
 }
 
 class com.michel.vkmap.domain.usecases.ZoomUseCase {
-+ void execute(MapView,LocationModel)
++ void execute(MapView,Double,Double)
 }
 
 class com.michel.vkmap.domain.usecases.SaveUserLocationUseCase {
 + void execute(LocationDataPackModel)
 }
 
+class com.michel.vkmap.domain.models.ConversationDataPackModel {
+}
 
 
+com.michel.vkmap.domain.models.NetworkState +.. com.michel.vkmap.domain.models.NetworkState$Companion
 com.michel.vkmap.domain.usecases.ZoomUseCase +.. com.michel.vkmap.domain.usecases.ZoomUseCase$Companion
 @enduml

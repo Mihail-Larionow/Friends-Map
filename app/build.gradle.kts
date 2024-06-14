@@ -1,8 +1,5 @@
 import com.android.build.api.dsl.Packaging
 
-
-val mapkitApiKey: String = "9db68f6d-8b0c-45d2-80c4-a487ced945ec"
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -44,7 +41,6 @@ android {
             )
         }
         debug {
-            buildConfigField("String", "MAP_API_KEY", mapkitApiKey)
         }
     }
     compileOptions {

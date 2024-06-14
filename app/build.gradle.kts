@@ -1,5 +1,7 @@
+import com.android.build.api.dsl.Packaging
+
 val mapkitApiKey: String = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(
-    rootDir
+    rootDir, providers
 ).getProperty("MAPKIT_API_KEY")
 
 plugins {
@@ -9,6 +11,14 @@ plugins {
 }
 
 android {
+
+    packaging{
+        resources{
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+        }
+    }
+
     namespace = "com.michel.vkmap"
     compileSdk = 34
 
@@ -42,6 +52,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -59,6 +70,9 @@ dependencies {
     implementation("com.google.firebase:firebase-database-ktx:20.3.0")
     implementation("androidx.activity:activity:1.8.0")
     implementation("com.makeramen:roundedimageview:2.3.0")
+    implementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.11.0-M1")
+    implementation("org.mockito:mockito-core:5.11.0")
     testImplementation("io.insert-koin:koin-test:3.5.3")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")

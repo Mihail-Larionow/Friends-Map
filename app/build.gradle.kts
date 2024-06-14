@@ -1,9 +1,7 @@
 import com.android.build.api.dsl.Packaging
 
-val localMapKitApiKey: String? = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(
-    rootDir, providers
-).getProperty("MAPKIT_API_KEY")
-val mapkitApiKey: String = localMapKitApiKey?: ""
+
+val mapkitApiKey: String = "9db68f6d-8b0c-45d2-80c4-a487ced945ec"
 
 plugins {
     id("com.android.application")
